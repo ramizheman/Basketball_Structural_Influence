@@ -1,0 +1,29 @@
+# Secrets — never commit any .env* files (may exist locally; do not ship)
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+.venv/
+venv/
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Do NOT ignore output/ — analysis-ready CSV/parquet live there
+# Do NOT ignore figures/

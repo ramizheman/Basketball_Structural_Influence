@@ -1,0 +1,5 @@
+role,N,pct_pos,median_delta,mean_delta
+Organizer,30,70.0,0.134,0.153
+Connector,24,58.3,0.124,0.104
+Terminal,117,60.7,0.083,0.065
+Role,123,54.5,0.018,0.035

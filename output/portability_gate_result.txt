@@ -1,0 +1,8 @@
+PORTABILITY FEASIBILITY GATE
+
+movers=294 decoy>=3 frac=1.00 vacuity_rho=0.007
+G1 sample exists : PASS
+G2 decoy pools   : PASS
+G3 not vacuous   : PASS
+
+VERDICT: GATE PASSES — movers + decoys exist and the signature is separable from the play-type profile; proceed to confirmatory

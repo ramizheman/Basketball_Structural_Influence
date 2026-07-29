@@ -1,0 +1,12 @@
+PORTABILITY CONFIRMATORY RESULT
+seed=17 n_perm=5000 n_boot=2000 max_gap=0
+movers=294 dest_franchises=30 under=False
+
+median self_sim=+0.129 decoy_sim=+0.049
+T1 median Δ=+0.0557 perm_p=0.0050
+decision rule Δ>0: 173/294=0.5884 sign_test_p=2.872e-03
+  dest-fr CI [+0.0192,+0.0859] (primary)
+  origin-fr CI [+0.0115,+0.1035]  player CI [+0.0147,+0.0958]
+  (1)median>0=True (2)perm<0.01=True (3)CI excl0=True
+
+VERDICT: T1 CONFIRMED — structural role is a PORTABLE PLAYER TRAIT: a player's wiring-displacement signature travels across franchises beyond his play-type profile. Scoutable.
