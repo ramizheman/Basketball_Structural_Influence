@@ -290,8 +290,8 @@ possessions with a resolved initiator and a play type in our canonical set, the 
 contains approximately $6.5\times 10^{5}$ possessions across $90$ team-seasons.
 
 \paragraph{Play types.}
-Each possession is labeled with one of $K=8$ canonical initiating play types (pick-and-roll
-ball-handler, drive, post-up, spot-up, off-ball cut, putback, off-the-dribble/pull-up, and
+Each possession is labeled with one of $K=8$ canonical initiating play types (pick-and-roll,
+drive, post-up, spot-up, off-ball cut, putback, off-the-dribble/pull-up, and
 transition). Play type encodes \emph{how a possession is initiated}, the semantic level at
 which offensive organization operates; it is deliberately coarser than a full action taxonomy
 so that the resulting association matrices are stably estimable at the team-season level.
@@ -329,10 +329,15 @@ inferrer-native PNR label. Applied this way, seasons land within a point of each
 PNR share ($18.3$--$20.0\%$), consistent with the shot-event proxy targets.
 
 \paragraph{Initiators.}
-The \emph{initiator} is the player who begins the offensive action (ball-handler in a
-pick-and-roll, cutter on a cut, shooter on a spot-up). Initiation, rather than finishing or
-assisting, is the relation we graph, because it is the act that determines \emph{which player
-sets each possession's structural context}.
+The \emph{initiator} is the first offensive player credited with a shot, turnover, foul,
+or free throw on the possession. For most play types this coincides with the player who
+begins the action (the driver on a drive, the shooter on a spot-up, the post player on a
+post-up, the cutter on a cut). On an assisted pick-and-roll, however, the initiator is the
+player who finishes the possession---the ball-handler on a pull-up or floater, or the roll
+man on an assisted rim finish---rather than exclusively the ball-handler who set up the
+action. We graph this terminal-actor relation, rather than passing or assist credit,
+because it is the act that determines \emph{which player sets each possession's structural
+context}.
 
 \paragraph{Seasons, filtering, and pools.}
 For role assignment we define a \emph{rotation pool} of players with at least $15$ minutes per
@@ -647,9 +652,8 @@ types reorganize beyond what losing that much volume would imply?}
 
 \paragraph{How structural classes differ in offensive initiation.}
 Our graph does not track assists, within-possession passing chains, screens set without
-initiation credit, gravity, or communication (Sec.~\ref{sec:data}). An \emph{initiator} is
-the player who begins the labeled action: ball-handler on a pick-and-roll, cutter on a cut,
-post player on a post-up, shooter on a spot-up. Class-average initiation diets make the
+initiation credit, gravity, or communication. An \emph{initiator} is as defined in
+Sec.~\ref{sec:data}. Class-average initiation diets make the
 roles concrete.
 \textsc{Primary Organizers} start half-court offense on the ball: pick-and-roll
 ($\approx\!24\%$), drives ($\approx\!19\%$), and post-ups ($\approx\!16\%$) lead their mix.
@@ -1521,7 +1525,12 @@ Sec.~\ref{sec:discussion}.
   \item \textbf{Initiation, not within-possession flow.} Edges record who \emph{initiates} each
  play type, not the full pass/screen sequence; intra-possession chains are outside the data.
  \item \textbf{No player tracking.} No spatial data; organizational function is inferred from
- initiation alone: a strength for reproducibility, a limit on mechanism.
+ initiation alone: a strength for reproducibility, a limit on mechanism. As a concrete
+ illustration of this boundary: Draymond Green, commonly cited as an archetypal offensive
+ connector, classifies as \textsc{Role Occupant / Specialist} (not
+ \textsc{Connector / Hub}) in all three sample seasons under Eq.~\eqref{eq:taxonomy}, since
+ his organizational contribution is understood to operate primarily through passing and
+ communication rather than initiation, both outside what this graph represents.
   \item \textbf{Association, not causation.} Rosters are chosen, not randomized; portability is
  that wiring ability \emph{tends to reappear} (origin-side selection not fully excluded).
  \item \textbf{Small-load estimation noise.} Near $\resid=0$, taxonomy boundaries are
