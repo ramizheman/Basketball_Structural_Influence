@@ -27,7 +27,7 @@ CONF_P = 0.01
 def add_covered(df, cmap):
     """Add n_<CLASS> counts, n_classified, and COVERED (creation+connection+conversion)."""
     df = add_composition(df, cmap)
-    df["COVERED"] = ((df["n_ORGANIZER"] >= 1) & (df["n_CONNECTOR"] >= 1)
+    df["COVERED"] = ((df["n_ORGANIZER"] >= 1) & (df["n_SHAPER"] >= 1)
                      & (df["n_TERMINAL"] >= 1)).astype(int)
     return df
 

@@ -1,5 +1,5 @@
 """
-Origin cut vs drive diet within connector movers (paper Sec. travelfit).
+Origin cut vs drive diet within shaper movers (paper Sec. travelfit).
 
 Reads frozen kit tables only (no Neo4j). Writes a one-row summary CSV with the
 reported Spearman / AUC / tercile statistics.
@@ -81,7 +81,7 @@ def main() -> None:
     summary = pd.DataFrame(
         [
             {
-                "n_connectors": len(conn),
+                "n_shapers": len(conn),
                 "cut_rho": float(rho),
                 "cut_p": float(p),
                 "cut_auc": float(auc),

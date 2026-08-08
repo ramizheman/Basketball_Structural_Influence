@@ -1,15 +1,15 @@
 """
-CONFIRMATORY-DISCIPLINE — HasConn (connector presence alone) vs Talent Accumulation
+CONFIRMATORY-DISCIPLINE — HasShaper (shaper presence alone) vs Talent Accumulation
 ====================================================================================
 Fixes an asymmetry: coverage_full_study.py (COVERED) uses PRIMARY = talent-controlled,
 with "talent removed" reported only as a ROBUSTNESS check. The existing
-_connector_presence_efficiency.py ran HasConn talent-FREE as its only/primary spec,
+_shaper_presence_efficiency.py ran HasShaper talent-FREE as its only/primary spec,
 never fitting the talent-controlled primary. This script mirrors coverage_full_study.py's
 exact machinery (same design, same bootstrap, same robustness battery) with COVERED
-replaced by HasConn, so the two headline tests in Table 5 use symmetric discipline.
+replaced by HasShaper, so the two headline tests in Table 5 use symmetric discipline.
 
 Primary model M1 (no play-type FE):
-  PPP_i = b*HasConn + a1*n_ORG + a2*n_CONN + a3*n_TERM + g*TALENT
+  PPP_i = b*HasShaper + a1*n_ORG + a2*n_CONN + a3*n_TERM + g*TALENT
           + FE(team-season, absorbed) + dummies(opp, period, score-bucket) + e
 
 Run: python hasconn_full_study.py
@@ -33,7 +33,7 @@ from role_composition_playmix import pull_possessions, build_class_map
 from role_composition_ppp import dummies, demean_by_group, cluster_se, score_bucket
 from coverage_common import add_covered, build_talent, SEED, N_BOOT, CONF_P
 
-KEY = ["HasConn", "n_ORGANIZER", "n_CONNECTOR", "n_TERMINAL", "TALENT"]
+KEY = ["HasShaper", "n_ORGANIZER", "n_SHAPER", "n_TERMINAL", "TALENT"]
 
 
 def two_sided_p(t):
@@ -47,7 +47,7 @@ def build_design(df, use_playtype, use_talent=True):
     df["per"] = df["period"].fillna(0).astype(int).astype(str)
     ctrl = ["opp", "per", "sb"] + (["ptype"] if use_playtype else [])
     D = dummies(df, ctrl)
-    keycols = ["HasConn", "n_ORGANIZER", "n_CONNECTOR", "n_TERMINAL"] + (["TALENT"] if use_talent else [])
+    keycols = ["HasShaper", "n_ORGANIZER", "n_SHAPER", "n_TERMINAL"] + (["TALENT"] if use_talent else [])
     Xkey = df[keycols].astype(float)
     Z = pd.concat([Xkey, D], axis=1)
     znames = list(Z.columns)
@@ -112,15 +112,15 @@ def bootstrap_ci(blocks, cov_idx, group="ts", n_boot=N_BOOT, seed=SEED):
 def run_model(df, tag, use_playtype, use_talent, do_boot=("ts",)):
     Zb, yb, zn, ts, team = build_design(df, use_playtype, use_talent)
     beta, se = fit(Zb, yb, ts)
-    cov_idx = zn.index("HasConn")
+    cov_idx = zn.index("HasShaper")
     b = beta[cov_idx]; s = se[cov_idx]; t = b / s; pval = two_sided_p(t)
-    print(f"\n=== {tag} ===   (HasConn = >=1 connector on floor; PPP units, x100=pts/100)")
+    print(f"\n=== {tag} ===   (HasShaper = >=1 shaper on floor; PPP units, x100=pts/100)")
     print(f"    n={len(df):,}  team-seasons={len(set(ts))}")
     print(f"    {'term':<15}{'beta':>10}{'pts/100':>9}{'clustSE':>10}{'t':>7}")
     for n in KEY if use_talent else [k for k in KEY if k != "TALENT"]:
         i = zn.index(n)
         print(f"    {n:<15}{beta[i]:>10.4f}{beta[i]*100:>9.2f}{se[i]:>10.4f}{beta[i]/se[i]:>7.2f}")
-    print(f"    HasConn coef: b={b:.4f} ({b*100:+.2f} pts/100)  clustSE={s:.4f}  t={t:.2f}  p={pval:.2e}")
+    print(f"    HasShaper coef: b={b:.4f} ({b*100:+.2f} pts/100)  clustSE={s:.4f}  t={t:.2f}  p={pval:.2e}")
     mde80 = (1.959964 + 0.841621) * s
     print(f"    precision: cluster-robust SE={s*100:.2f} pts/100  MDE(80%%)={mde80*100:.2f} pts/100")
     out = dict(model=tag, beta=b, pts_per_100=b*100, cluster_se=s, t=t, p=pval, n=len(df),
@@ -135,7 +135,7 @@ def run_model(df, tag, use_playtype, use_talent, do_boot=("ts",)):
             blocks = cluster_blocks(Zb, yb, ts, team)
         lo, hi, bm, bsd = bootstrap_ci(blocks, cov_idx, group=grp)
         excl = (lo > 0) or (hi < 0)
-        print(f"    [{grp}] cluster-bootstrap 95% CI of HasConn: "
+        print(f"    [{grp}] cluster-bootstrap 95% CI of HasShaper: "
               f"[{lo*100:+.2f}, {hi*100:+.2f}] pts/100  excludes 0: {excl}")
         out[f"ci_lo_{grp}"] = lo; out[f"ci_hi_{grp}"] = hi; out[f"ci_excl0_{grp}"] = excl
     return out
@@ -147,7 +147,7 @@ def main():
     cmap, u_med, l_med = build_class_map()
     print(f"classifying {len(df):,} possessions ...", flush=True)
     df = add_covered(df, cmap)
-    df["HasConn"] = (df["n_CONNECTOR"] >= 1).astype(int)
+    df["HasShaper"] = (df["n_SHAPER"] >= 1).astype(int)
     df = df[df["pts"].notna()].copy()
 
     prim = df[df["n_classified"] == 5].copy()
@@ -156,7 +156,7 @@ def main():
     print("building frozen talent control ...", flush=True)
     prim["TALENT"] = build_talent(prim)
 
-    r_m1 = run_model(prim, "M1 PRIMARY: HasConn->PPP (no play-type FE, TALENT-controlled)", False, True,
+    r_m1 = run_model(prim, "M1 PRIMARY: HasShaper->PPP (no play-type FE, TALENT-controlled)", False, True,
                      do_boot=("ts", "franchise"))
     r_m2 = run_model(prim, "M2 robustness: WITH play-type FE (within-play)", True, True, do_boot=("ts",))
     r_naive = run_model(prim, "NAIVE robustness: talent control REMOVED (matches original paper spec)",
@@ -168,7 +168,7 @@ def main():
 
     confirmed = (r_m1["beta"] > 0) and (r_m1["p"] < CONF_P) and r_m1["ci_excl0_ts"]
     print("\n" + "=" * 78)
-    print(f"HasConn TALENT-CONTROLLED PRIMARY: {'CONFIRMED (b>0, p<0.01, CI excl 0)' if confirmed else 'NOT at the 0.01 confirmatory bar'}")
+    print(f"HasShaper TALENT-CONTROLLED PRIMARY: {'CONFIRMED (b>0, p<0.01, CI excl 0)' if confirmed else 'NOT at the 0.01 confirmatory bar'}")
     print(f"  b>0: {r_m1['beta']>0}, p<{CONF_P}: {r_m1['p']<CONF_P}, team-season CI excludes 0: {r_m1['ci_excl0_ts']}")
     print(f"  (p={r_m1['p']:.4f} at conventional 0.05 alpha: {'significant' if r_m1['p']<0.05 else 'not significant'})")
     print()
@@ -177,7 +177,7 @@ def main():
     print(f"  talent-free (paper's current spec): {r_naive['pts_per_100']:+.2f} pts/100, p={r_naive['p']:.4f}")
     print(f"  shift from adding TALENT: {r_m1['pts_per_100']-r_naive['pts_per_100']:+.2f} pts/100")
     print("  For reference, COVERED's talent-controlled vs talent-removed shift was ~0.00-0.05 pts/100")
-    print("  (materially identical) -- HasConn's shift is much larger, so the two tests in Table 5")
+    print("  (materially identical) -- HasShaper's shift is much larger, so the two tests in Table 5")
     print("  are NOT on equally robust footing re: talent control choice.")
     print("=" * 78)
 

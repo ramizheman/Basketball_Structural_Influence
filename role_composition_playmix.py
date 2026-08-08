@@ -3,7 +3,7 @@ PLAY-MIX ADAPTATION BY ON-COURT ROLE COMPOSITION  (descriptive, graph-native)
 =============================================================================
 Question (user): given every player's role class (taxonomy) and who is actually on
 the floor each possession (ON_COURT), how does the OFFENSE's play-type mix change
-when the role composition changes?  I.e. when the connector sits, does the play mix
+when the role composition changes?  I.e. when the shaper sits, does the play mix
 reorganize?
 
 This is REAL (on-court, not simulated leave-one-out), possession-level (n~650k, not
@@ -15,7 +15,7 @@ on-court offensive possessions kept (99.7%).
 
 TWO VALIDITY CAVEATS (stated, not hidden):
  1. Circularity: a high-USAGE class (TERMINAL SCORER, PRIMARY ORGANIZER) mechanically
-    runs more of its own play types when on the floor. The CONNECTOR/HUB contrast is
+    runs more of its own play types when on the floor. The SHAPER contrast is
     the clean headline (low usage => a mix shift reflects how OTHERS reorganize).
  2. Confound: a class being off-floor correlates with bench / garbage-time lineups.
     Within-team-season differencing removes team identity but not game state; this is
@@ -24,7 +24,7 @@ TWO VALIDITY CAVEATS (stated, not hidden):
 Outputs (output/):
   role_composition_possessions.parquet   cached pull (game_id, yy, team, ptype, pl0..4)
   role_composition_playmix.csv           within-team mean Δ share by class
-  fig_role_composition_playmix.png       connector with/without play mix + gradient
+  fig_role_composition_playmix.png       shaper with/without play mix + gradient
   role_composition_playmix.html          report
 
 Run: python role_composition_playmix.py
@@ -59,11 +59,11 @@ MIN_GP = 30
 MIN_POSS_STRATUM = 200          # per team-season, each of with / without
 CLASSES_SHORT = {
     "PRIMARY ORGANIZER": "ORGANIZER",
-    "CONNECTOR / HUB": "CONNECTOR",
+    "SHAPER": "SHAPER",
     "TERMINAL SCORER": "TERMINAL",
     "ROLE OCCUPANT / SPECIALIST": "OCCUPANT",
 }
-ORDER = ["CONNECTOR", "ORGANIZER", "TERMINAL", "OCCUPANT"]
+ORDER = ["SHAPER", "ORGANIZER", "TERMINAL", "OCCUPANT"]
 
 
 # ------------------------------------------------------------- data pull
@@ -178,7 +178,7 @@ def build_class_map(season_yy=(22, 23, 24)):
             continue
         hi_u = r.usg_pct >= u_med
         hi_r = r.u_resid > 0
-        full = {(True, True): "PRIMARY ORGANIZER", (False, True): "CONNECTOR / HUB",
+        full = {(True, True): "PRIMARY ORGANIZER", (False, True): "SHAPER",
                 (True, False): "TERMINAL SCORER", (False, False): "ROLE OCCUPANT / SPECIALIST"}[(hi_u, hi_r)]
         cmap[(r.tri, int(r.yy), r.player)] = CLASSES_SHORT[full]
     return cmap, u_med, 0.0
@@ -257,9 +257,9 @@ def main():
             d_hhi=float(np.mean(hhi_w) - np.mean(hhi_wo)),
         )
 
-    # gradient (pooled): play mix by number of connectors on floor
+    # gradient (pooled): play mix by number of shapers on floor
     grad = {}
-    nc = df["n_CONNECTOR"].to_numpy()
+    nc = df["n_SHAPER"].to_numpy()
     for g in [0, 1, 2, 3]:
         m = (nc == g) if g < 3 else (nc >= 3)
         if m.sum() > 500:
@@ -294,9 +294,9 @@ def save_outputs(results, grad, u_med, l_med, cov):
                              sd_pp=round(r["sd_delta"][i] * 100, 3), n_ts=r["n_ts"]))
     pd.DataFrame(rows).to_csv(OUT_DIR / "role_composition_playmix.csv", index=False)
 
-    # figure: connector with/without + gradient
+    # figure: shaper with/without + gradient
     fig, axes = plt.subplots(1, 2, figsize=(14, 6), dpi=150)
-    r = results["CONNECTOR"]
+    r = results["SHAPER"]
     if r is not None:
         order = np.argsort(-r["mean_delta"])
         pts = [PLAY_TYPES_8[i] for i in order]
@@ -307,19 +307,19 @@ def save_outputs(results, grad, u_med, l_med, cov):
         axes[0].invert_yaxis()
         axes[0].axvline(0, color="#333", lw=0.8)
         axes[0].set_xlabel("Δ play-type share (percentage points)")
-        axes[0].set_title(f"CONNECTOR on floor vs not (within team-season, n_ts={r['n_ts']})\n"
-                          "blue=more with connector · clean (low-usage) contrast", fontsize=10)
+        axes[0].set_title(f"SHAPER on floor vs not (within team-season, n_ts={r['n_ts']})\n"
+                          "blue=more with shaper · clean (low-usage) contrast", fontsize=10)
     if grad:
         gk = sorted(grad)
         x = np.arange(len(PLAY_TYPES_8))
         w = 0.8 / len(gk)
         for j, g in enumerate(gk):
-            lab = f"{g}+ connectors" if g == max(gk) else f"{g} connector" + ("s" if g != 1 else "")
+            lab = f"{g}+ shapers" if g == max(gk) else f"{g} shaper" + ("s" if g != 1 else "")
             axes[1].bar(x + j * w, grad[g] * 100, w, label=lab)
         axes[1].set_xticks(x + 0.4 - w / 2)
         axes[1].set_xticklabels(PLAY_TYPES_8, rotation=45, ha="right", fontsize=8)
         axes[1].set_ylabel("play-type share (%)")
-        axes[1].set_title("Pooled play mix by # connectors on floor", fontsize=10)
+        axes[1].set_title("Pooled play mix by # shapers on floor", fontsize=10)
         axes[1].legend(fontsize=8)
     for ax in axes:
         ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
@@ -367,7 +367,7 @@ Descriptive. Role thresholds: usage median={u_med*100:.1f}%, influence median={l
 possessions with &ge;4/5 on-court classified: {cov:.0%}.</p>
 <div class="warn"><b>Read with two caveats.</b> (1) <b>Circularity:</b> high-usage classes (TERMINAL,
 ORGANIZER) mechanically run more of their own plays when present, so their rows are partly definitional
-&mdash; the <b>CONNECTOR</b> row (low usage) is the clean signal. (2) <b>Confound:</b> a class being
+&mdash; the <b>SHAPER</b> row (low usage) is the clean signal. (2) <b>Confound:</b> a class being
 off-floor overlaps with bench / garbage-time lineups; within-team differencing removes team identity but
 not game state. This is <b>association, not proven tactical adaptation</b>.</div>
 <h2>Figure</h2>

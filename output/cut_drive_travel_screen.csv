@@ -1,2 +1,2 @@
-n_connectors,cut_rho,cut_p,cut_auc,cut_minus_drive_rho,cut_minus_drive_p,high_cut_pct_portable,high_cut_median_delta,low_cut_pct_portable,low_cut_median_delta
+n_shapers,cut_rho,cut_p,cut_auc,cut_minus_drive_rho,cut_minus_drive_p,high_cut_pct_portable,high_cut_median_delta,low_cut_pct_portable,low_cut_median_delta
 24,0.3217391304347825,0.12523945866486325,0.7142857142857143,0.3756521739130434,0.07045361689375704,75.0,0.1955,37.5,-0.061

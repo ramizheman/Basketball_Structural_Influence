@@ -2,19 +2,19 @@
 ROLE-ROUTE GRAPH  (the graph object made explicit; descriptive)
 ===============================================================
 Per possession we observe the INITIATING player's role and the play type, giving a
-real 2-node route:  role -> play_type  (e.g. organizer-PnR, connector-handoff).
-NOTE: intra-possession passing chains (organizer->connector->cutter) are NOT in the
+real 2-node route:  role -> play_type  (e.g. organizer-PnR, shaper-handoff).
+NOTE: intra-possession passing chains (organizer->shaper->cutter) are NOT in the
 data; the honest graph object is this bipartite role->play_type routing network.
 
 For each on-court role composition we build the weighted bipartite route graph and
 measure:
   * active routes    : # distinct (role,play_type) routes with share >= 1%
   * route entropy     : Shannon entropy over the route distribution
-Contrast connector-present vs connector-absent, differenced WITHIN team-season.
+Contrast shaper-present vs shaper-absent, differenced WITHIN team-season.
 
 MECHANICAL CAVEAT: adding ANY new initiator role trivially adds its own routes, so
 raw route counts rise by construction. The clean measure is NON-FOCAL route entropy
-(diversity of the OTHER roles' routes) — does a connector reorganize everyone else's
+(diversity of the OTHER roles' routes) — does a shaper reorganize everyone else's
 routing, not just add its own. Both are reported; the non-focal one is the headline.
 
 Outputs (output/):
@@ -91,10 +91,10 @@ def main():
                 c[i] = 0
         return entropy(c)
 
-    # within-team-season connector present vs absent
-    print("\n=== within-team-season: CONNECTOR present(>=1) vs absent(0) ===")
+    # within-team-season shaper present vs absent
+    print("\n=== within-team-season: SHAPER present(>=1) vs absent(0) ===")
     rows = []
-    for focal, nk_col in [("CONNECTOR", "n_CONNECTOR"), ("ORGANIZER", "n_ORGANIZER")]:
+    for focal, nk_col in [("SHAPER", "n_SHAPER"), ("ORGANIZER", "n_ORGANIZER")]:
         nk = df[nk_col].to_numpy()
         dE_all, dE_nf, dCnt, nts = [], [], [], 0
         for ts, idx in df.groupby("_ts").indices.items():
@@ -124,19 +124,19 @@ def main():
 
 
 def make_figure(df, rvec, ridx, routes):
-    """Bipartite role->play_type graph, connector-absent vs connector-present (pooled)."""
-    nc = df["n_CONNECTOR"].to_numpy()
+    """Bipartite role->play_type graph, shaper-absent vs shaper-present (pooled)."""
+    nc = df["n_SHAPER"].to_numpy()
     fig, axes = plt.subplots(1, 2, figsize=(14, 8), dpi=150)
     for ax, mask, title in [
-        (axes[0], nc == 0, "CONNECTOR ABSENT (0 on floor)"),
-        (axes[1], nc >= 1, "CONNECTOR PRESENT (>=1 on floor)"),
+        (axes[0], nc == 0, "SHAPER ABSENT (0 on floor)"),
+        (axes[1], nc >= 1, "SHAPER PRESENT (>=1 on floor)"),
     ]:
         idx = np.where(mask)[0]
         counts = np.bincount(rvec[idx], minlength=len(routes)).astype(float)
         share = counts / counts.sum()
         ry = {r: i for i, r in enumerate(ORDER[::-1])}
         py = {p: i for i, p in enumerate(PLAY_TYPES_8[::-1])}
-        rcol = {"CONNECTOR": "#3f8fd9", "ORGANIZER": "#d94f4f",
+        rcol = {"SHAPER": "#3f8fd9", "ORGANIZER": "#d94f4f",
                 "TERMINAL": "#e0a33e", "OCCUPANT": "#8a8f98"}
         n_active = 0
         for (r, p), i in ridx.items():
@@ -180,10 +180,10 @@ th{{background:#eee}} img{{max-width:100%;border:1px solid #ddd}}</style></head>
 <h1>Role &rarr; Play-Type Route Graph</h1>
 <p class="note">The graph object made explicit: each possession's <b>initiating role</b> &rarr;
 <b>play type</b> is a route. Edge width = share of possessions. We contrast the routing network when
-a connector is absent vs present on the floor.</p>
+a shaper is absent vs present on the floor.</p>
 <div class="warn"><b>Mechanical caveat:</b> adding any initiator role trivially adds its own routes, so
 raw route counts/entropy rise by construction. The clean measure is <b>non-focal route entropy</b>
-(diversity of the OTHER roles' routes) &mdash; does a connector reorganize everyone else's routing.</div>
+(diversity of the OTHER roles' routes) &mdash; does a shaper reorganize everyone else's routing.</div>
 <h2>Figure</h2>
 <img src="data:image/png;base64,{b64}" alt="role route graph">
 <h2>Within-team-season route diversity change (present &minus; absent)</h2>

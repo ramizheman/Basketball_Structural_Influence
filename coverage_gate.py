@@ -81,7 +81,7 @@ def main():
     # aux OLS: COVERED ~ 1 + n_ORG + n_CONN + n_TERM
     Xa = np.column_stack([np.ones(len(df)),
                           df["n_ORGANIZER"].to_numpy(float),
-                          df["n_CONNECTOR"].to_numpy(float),
+                          df["n_SHAPER"].to_numpy(float),
                           df["n_TERMINAL"].to_numpy(float)])
     ya = df["COVERED"].to_numpy(float)
     ba, *_ = np.linalg.lstsq(Xa, ya, rcond=None)

@@ -8,7 +8,7 @@ Primary model M1 (no play-type FE):
   PPP_i = b*COVERED + a1*n_ORG + a2*n_CONN + a3*n_TERM + g*TALENT
           + FE(team-season, absorbed) + dummies(opp, period, score-bucket) + e
 
-COVERED = (>=1 ORGANIZER & >=1 CONNECTOR & >=1 TERMINAL). Because the linear role
+COVERED = (>=1 ORGANIZER & >=1 SHAPER & >=1 TERMINAL). Because the linear role
 counts are in the model and COVERED is their non-linear threshold, b is the
 COMPLETENESS effect OVER AND ABOVE accumulation of roles and OVER AND ABOVE talent.
 
@@ -42,7 +42,7 @@ from role_composition_playmix import pull_possessions, build_class_map
 from role_composition_ppp import dummies, demean_by_group, cluster_se, score_bucket
 from coverage_common import add_covered, build_talent, SEED, N_BOOT, CONF_P
 
-KEY = ["COVERED", "n_ORGANIZER", "n_CONNECTOR", "n_TERMINAL", "TALENT"]
+KEY = ["COVERED", "n_ORGANIZER", "n_SHAPER", "n_TERMINAL", "TALENT"]
 
 
 def two_sided_p(t):
@@ -56,7 +56,7 @@ def build_design(df, use_playtype, use_talent=True):
     df["per"] = df["period"].fillna(0).astype(int).astype(str)
     ctrl = ["opp", "per", "sb"] + (["ptype"] if use_playtype else [])
     D = dummies(df, ctrl)
-    keycols = ["COVERED", "n_ORGANIZER", "n_CONNECTOR", "n_TERMINAL"] + (["TALENT"] if use_talent else [])
+    keycols = ["COVERED", "n_ORGANIZER", "n_SHAPER", "n_TERMINAL"] + (["TALENT"] if use_talent else [])
     Xkey = df[keycols].astype(float)
     Z = pd.concat([Xkey, D], axis=1)
     znames = list(Z.columns)
@@ -197,7 +197,7 @@ def main():
     pd.DataFrame([r_m1, r_m2, r_naive, r_m4]).to_csv(OUT_DIR / "coverage_full_study.csv", index=False)
     print(f"\nWrote {OUT_DIR/'coverage_full_study.csv'}")
     print("REMINDER: association conditional on measured talent; talent control under-measures")
-    print("connectors by construction (pre-reg section 4 ceiling).")
+    print("shapers by construction (pre-reg section 4 ceiling).")
     print(f"Total time {time.time()-t0:.0f}s")
 
 

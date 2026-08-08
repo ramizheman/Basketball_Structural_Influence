@@ -4,7 +4,7 @@ CONFIGURATION -> SCORING  (fixed-effects PPP model; DESCRIPTIVE association)
 Part (b) of the role-composition analysis. Regress possession points on the
 on-court ROLE COMPOSITION, with rich fixed effects, at n~650k possessions.
 
-  PPP_i = b0 + b_conn*n_CONNECTOR + b_org*n_ORGANIZER + b_term*n_TERMINAL
+  PPP_i = b0 + b_shap*n_SHAPER + b_org*n_ORGANIZER + b_term*n_TERMINAL
              + b_orgconn*(n_ORG*n_CONN)            [fit / interaction]
              + n_classified
              + FE(team-season)  [absorbed]
@@ -25,7 +25,7 @@ SE: cluster-robust by offensive team-season.
 *** THIS IS ASSOCIATION, NOT CAUSATION. *** Lineup composition is chosen, not
 assigned: a class being off-floor overlaps with bench-unit talent and game state,
 which team-season/opponent/period/score controls REDUCE but do not eliminate.
-"Adding a connector changes scoring" is NOT licensed; the coefficients describe
+"Adding a shaper changes scoring" is NOT licensed; the coefficients describe
 conditional associations only.
 
 Run: python role_composition_ppp.py
@@ -46,7 +46,7 @@ except Exception:
 from wiring_gate import PLAY_TYPES_8, OUT_DIR
 from role_composition_playmix import pull_possessions, build_class_map, ORDER
 
-KEY = ["n_CONNECTOR", "n_ORGANIZER", "n_TERMINAL"]   # OCCUPANT = reference
+KEY = ["n_SHAPER", "n_ORGANIZER", "n_TERMINAL"]   # OCCUPANT = reference
 
 
 def score_bucket(m):
@@ -111,7 +111,7 @@ def fit_fe(df, use_playtype):
     ctrl_cols = ["opp", "per", "sb"] + (["ptype"] if use_playtype else [])
     D = dummies(df, ctrl_cols)
     Xkey = df[KEY + ["n_classified"]].astype(float).copy()
-    Xkey["org_x_conn"] = df["n_ORGANIZER"].astype(float) * df["n_CONNECTOR"].astype(float)
+    Xkey["org_x_shap"] = df["n_ORGANIZER"].astype(float) * df["n_SHAPER"].astype(float)
     Z = pd.concat([Xkey, D], axis=1)
     znames = list(Z.columns)
 
@@ -132,7 +132,7 @@ def fit_fe(df, use_playtype):
 
 def report(tag, znames, beta, se, tstat):
     idx = {n: i for i, n in enumerate(znames)}
-    show = KEY + ["org_x_conn", "n_classified"]
+    show = KEY + ["org_x_shap", "n_classified"]
     print(f"\n=== {tag}  (per +1 player vs OCCUPANT; PPP units; x100 = pts/100 poss) ===")
     print(f"{'term':<16}{'beta':>9}{'pts/100':>9}{'clust SE':>10}{'t':>7}")
     rows = []
@@ -165,7 +165,7 @@ def main():
     print("\n=== decomposition: total (M1) vs within-play (M2); "
           "difference ~ routed through changing play selection ===")
     print(f"{'term':<16}{'M1 pts/100':>12}{'M2 pts/100':>12}{'via play-mix':>14}")
-    for n in KEY + ["org_x_conn"]:
+    for n in KEY + ["org_x_shap"]:
         m1v, m2v = b1[idx1[n]]*100, b2[idx2[n]]*100
         print(f"{n:<16}{m1v:>12.2f}{m2v:>12.2f}{m1v-m2v:>14.2f}")
 

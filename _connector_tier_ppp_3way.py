@@ -1,4 +1,4 @@
-"""Disaggregate the MARGINAL connector tier by position: low-influence BIG vs
+"""Disaggregate the MARGINAL shaper tier by position: low-influence BIG vs
 perimeter/SHOOTER (position has no 'C'). Three-way joint model:
   n_HUBCONN, n_MARGBIG, n_MARGWING  (+ n_ORGANIZER, n_TERMINAL controls)
 Same team-season FE + opp/period/scorebucket spec throughout.
@@ -29,7 +29,7 @@ pos_map = {(r.tri, int(r.yy), r.abbrev): r.position for r in POS.itertuples(inde
 
 def build_3way_class_map(season_yy=(22, 23, 24)):
     """Same taxonomy as role_composition_playmix.build_class_map() (Eq. 5 quadratic
-    on graph-native u), then split Connector/Hub at median residual influence and split
+    on graph-native u), then split Shaper/Hub at median residual influence and split
     the marginal half by position (big vs wing)."""
     loads = pd.read_csv(LOADS)
     stats = pd.read_csv(STATS)
@@ -167,5 +167,5 @@ for name in keycols:
     print(f"{name:<15}{b:>10.4f}{b*100:>9.2f}{s:>10.4f}{t:>7.2f}{p:>10.2e}")
     rows.append(dict(term=name, beta=b, pts100=b*100, se=s, t=t, p=p,
                       n_on=int(df[name.replace('has_', 'has_') ].sum()) if name.startswith('has_') else None))
-pd.DataFrame(rows).to_csv(OUT_DIR / "connector_tier_ppp_3way.csv", index=False)
-print(f"\nwrote {OUT_DIR / 'connector_tier_ppp_3way.csv'}")
+pd.DataFrame(rows).to_csv(OUT_DIR / "shaper_tier_ppp_3way.csv", index=False)
+print(f"\nwrote {OUT_DIR / 'shaper_tier_ppp_3way.csv'}")

@@ -16,7 +16,7 @@ Unequal class sizes are expected and fine: most players sit at or below expected
 
 Four archetypes:
   PRIMARY ORGANIZER   hi usage / resid>0  (consume AND organize beyond usage)
-  CONNECTOR / HUB     lo usage / resid>0  (organize beyond usage without consuming)
+  SHAPER     lo usage / resid>0  (organize beyond usage without consuming)
   TERMINAL SCORER     hi usage / resid<=0 (finish; influence at or below usage expectation)
   ROLE OCCUPANT       lo usage / resid<=0 (neither volume nor excess structure)
 
@@ -57,17 +57,17 @@ MIN_GP = 30
 
 CLASSES = {
     (True, True): "PRIMARY ORGANIZER",
-    (False, True): "CONNECTOR / HUB",
+    (False, True): "SHAPER",
     (True, False): "TERMINAL SCORER",
     (False, False): "ROLE OCCUPANT / SPECIALIST",
 }
 CLASS_COLOR = {
     "PRIMARY ORGANIZER": "#d94f4f",
-    "CONNECTOR / HUB": "#3f8fd9",
+    "SHAPER": "#3f8fd9",
     "TERMINAL SCORER": "#e0a33e",
     "ROLE OCCUPANT / SPECIALIST": "#8a8f98",
 }
-ORDER = ["PRIMARY ORGANIZER", "CONNECTOR / HUB", "TERMINAL SCORER",
+ORDER = ["PRIMARY ORGANIZER", "SHAPER", "TERMINAL SCORER",
          "ROLE OCCUPANT / SPECIALIST"]
 
 
@@ -111,7 +111,7 @@ def main():
         u_hi, u_lo = r["usage_percentile"] >= 75, r["usage_percentile"] <= 25
         r_pos, r_neg = r["u_resid"] > 0, r["u_resid"] <= 0
         if u_hi and r_pos: return "PRIMARY ORGANIZER"
-        if u_lo and r_pos: return "CONNECTOR / HUB"
+        if u_lo and r_pos: return "SHAPER"
         if u_hi and r_neg: return "TERMINAL SCORER"
         if u_lo and r_neg: return "ROLE OCCUPANT / SPECIALIST"
         return ""
@@ -208,7 +208,7 @@ def make_map(rot, u_med, path):
     ax.axvline(u_med * 100, color="#333", lw=0.8, ls="--", alpha=0.6)
     ax.axhline(0.0, color="#333", lw=0.8, ls="--", alpha=0.6)
 
-    for cls in ("PRIMARY ORGANIZER", "CONNECTOR / HUB"):
+    for cls in ("PRIMARY ORGANIZER", "SHAPER"):
         g = rot[rot["role_classification"] == cls].nlargest(8, "u_resid")
         for r in g.itertuples(index=False):
             ax.annotate(f"{r.player}", (r.usg_pct * 100, r.u_resid),
@@ -219,7 +219,7 @@ def make_map(rot, u_med, path):
     ymin = rot["u_resid"].min()
     cap = [
         (u_med * 100 + (xmax - u_med * 100) * 0.35, ymax * 0.85, "PRIMARY ORGANIZER"),
-        (u_med * 100 * 0.35, ymax * 0.85, "CONNECTOR / HUB"),
+        (u_med * 100 * 0.35, ymax * 0.85, "SHAPER"),
         (u_med * 100 + (xmax - u_med * 100) * 0.35, ymin * 0.55, "TERMINAL SCORER"),
         (u_med * 100 * 0.35, ymin * 0.55, "ROLE OCCUPANT"),
     ]

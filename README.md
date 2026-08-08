@@ -8,7 +8,7 @@ Code and analysis-ready data for the manuscript *Structural Influence: Measuring
 
 - **Source:** public NBA Stats API (`stats.nba.com`) via open-source [`nba_api`](https://github.com/swar/nba_api).
 - **Seasons (confirmatory):** 2022–23, 2023–24, 2024–25 regular season.
-- **Exploratory addendum:** 2025–26 connector roster in Appendix G (`connector_appendix_2526.csv`).
+- **Exploratory addendum:** 2025–26 shaper roster in Appendix G (`connector_appendix_2526.csv`).
 - **No proprietary data:** no Synergy / Second Spectrum / tracking feeds.
 - **Warehouse:** the author's possession graph (Neo4j) was used to create `output/`. The public path starts from that dump.
 
@@ -37,14 +37,14 @@ Traceability sheet (written by the audit): `PAPER_NUMBERS_SHEET.md`.
 | Orthogonality | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |
 | Play-mix / route entropy | `role_composition_playmix.py`, `role_route_graph.py` | `role_composition_playmix.csv`, `role_route_graph.csv` |
 | Covered / +2.35 organizers | `coverage_full_study.py` | `coverage_full_study.csv` |
-| HasConn null | `hasconn_full_study.py` | `hasconn_full_study.csv` |
-| Connector tiers (exploratory) | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |
+| HasShaper null | `hasconn_full_study.py` | `hasconn_full_study.csv` |
+| Shaper tiers (exploratory) | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |
 | Identity \(D_A\) | `_identity_resilience_test.py` | `identity_resilience_*.csv` |
 | Portability (n=294) | `portability_*.py` | `portability_*.csv` / `.txt` |
 | Travel score (AUC 0.61) | `travel_fit_screen.py` | `travel_fit_screen.csv` |
 | Cut vs drive (exploratory) | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |
 | Destination-side FDR (63 features) | (frozen table) | `destination_battery_connectors.csv` |
-| Appendix G 2025–26 connectors | (frozen table) | `connector_appendix_2526.csv` |
+| Appendix G 2025–26 shapers | (frozen table) | `connector_appendix_2526.csv` |
 
 Pre-registration protocols for the paper's pre-registered analyses: `PORTABILITY_PREREGISTRATION.md`, `TOPOLOGY_COVERAGE_PREREGISTRATION.md`.
 

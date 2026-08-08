@@ -17,13 +17,13 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER resid influence | 0.054 | 0.054 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER ppg | 18.4 | 18.4 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER mpg | 29.6 | 29.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB n | 103 | 103 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB % pool | 11.1 | 11.1 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB usage | 0.145 | 0.145 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB influence | 0.078 | 0.078 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB resid influence | 0.062 | 0.062 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB ppg | 9 | 9 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB mpg | 23.6 | 23.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | SHAPER n | 103 | 103 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | SHAPER % pool | 11.1 | 11.1 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | SHAPER usage | 0.145 | 0.145 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | SHAPER influence | 0.078 | 0.078 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | SHAPER resid influence | 0.062 | 0.062 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | SHAPER ppg | 9 | 9 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | SHAPER mpg | 23.6 | 23.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER n | 368 | 368 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER % pool | 39.8 | 39.8 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER usage | 0.233 | 0.233 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
@@ -86,15 +86,15 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.2 Table ortho | ρ(resid,front_ct_touches) | -0.238 | -0.237549 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(influence,net_rating) | 0.203 | 0.203141 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,net_rating) | -0.018 | -0.0177865 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.3 | connector strata team-seasons | 73 | 73 | 0.0 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
-| PASS | §6.3 | connector Δshare CUT (pp) | 1.35 | 1.353 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
-| PASS | §6.3 | connector Δshare PNR (pp) | 0.98 | 0.98 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
-| PASS | §6.3 | connector Δshare SPOT_UP (pp) | -1.25 | -1.248 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
-| PASS | §6.3 | connector Δshare DRIVE (pp) | -0.54 | -0.542 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
+| PASS | §6.3 | shaper strata team-seasons | 73 | 73 | 0.0 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
+| PASS | §6.3 | shaper Δshare CUT (pp) | 1.35 | 1.353 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
+| PASS | §6.3 | shaper Δshare PNR (pp) | 0.98 | 0.98 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
+| PASS | §6.3 | shaper Δshare SPOT_UP (pp) | -1.25 | -1.248 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
+| PASS | §6.3 | shaper Δshare DRIVE (pp) | -0.54 | -0.542 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
 | PASS | §6.3 | organizer strata team-seasons | 58 | 58 | 0.0 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
 | PASS | §6.3 | organizer Δshare POST_UP (pp) | 2.33 | 2.331 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
 | PASS | §6.3 | organizer Δshare PNR (pp) | 0.96 | 0.955 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
-| PASS | §6.3 | connector Δentropy (nonfocal) near 0 | 0 | -0.0455 | 0.1 | `role_route_graph.py` | `role_route_graph.csv` | artifact d_entropy_nonfocal=-0.045 |
+| PASS | §6.3 | shaper Δentropy (nonfocal) near 0 | 0 | -0.0455 | 0.1 | `role_route_graph.py` | `role_route_graph.csv` | artifact d_entropy_nonfocal=-0.045 |
 | PASS | §6.4 Table coverage | M1 PRIMARY pts/100 | 0.42 | 0.415785 | 0.015 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.4 Table coverage | M1 PRIMARY t | 0.53 | 0.531734 | 0.015 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.4 Table coverage | M1 PRIMARY CI lo | -1.15 | -1.15275 | 0.015 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
@@ -114,8 +114,8 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.4 | n_organizer pts/100 | 2.35 | 2.34617 | 0.015 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.4 | n_organizer t | 4.62 | 4.62243 | 0.015 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.4 | MDE(80%) pts/100 ≈2.2 | 2.2 | 2.19067 | 0.05 | `coverage_full_study.py` | `coverage_full_study.csv` | SE=0.78; formula MDE=2.19 |
-| PASS | §6.4 | HasConn pts/100 | 0 | 0.00307202 | 0.015 | `hasconn_full_study.py` | `hasconn_full_study.csv` |  |
-| PASS | §6.4 | HasConn t | 0 | 0.00448434 | 0.015 | `hasconn_full_study.py` | `hasconn_full_study.csv` |  |
+| PASS | §6.4 | HasShaper pts/100 | 0 | 0.00307202 | 0.015 | `hasconn_full_study.py` | `hasconn_full_study.csv` |  |
+| PASS | §6.4 | HasShaper t | 0 | 0.00448434 | 0.015 | `hasconn_full_study.py` | `hasconn_full_study.csv` |  |
 | PASS | §6.4.1 tiers | HasHub pts/100 | 1.1 | 1.10372 | 0.015 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
 | PASS | §6.4.1 tiers | HasHub p | 0.077 | 0.0772499 | 0.005 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
 | PASS | §6.4.1 tiers | HasMargBig pts/100 | 1.7 | 1.7042 | 0.015 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
@@ -126,10 +126,10 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER mean DA | 0.214 | 0.214056 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER median DA | 0.17 | 0.17021 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER mean usage | 0.244 | 0.243792 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
-| PASS | §6.4.2 identity | CONNECTOR / HUB n | 102 | 102 | 0.0 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
-| PASS | §6.4.2 identity | CONNECTOR / HUB mean DA | 0.202 | 0.201978 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
-| PASS | §6.4.2 identity | CONNECTOR / HUB median DA | 0.151 | 0.151242 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
-| PASS | §6.4.2 identity | CONNECTOR / HUB mean usage | 0.144 | 0.144186 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
+| PASS | §6.4.2 identity | SHAPER n | 102 | 102 | 0.0 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
+| PASS | §6.4.2 identity | SHAPER mean DA | 0.202 | 0.201978 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
+| PASS | §6.4.2 identity | SHAPER median DA | 0.151 | 0.151242 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
+| PASS | §6.4.2 identity | SHAPER mean usage | 0.144 | 0.144186 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | TERMINAL SCORER n | 361 | 361 | 0.0 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | TERMINAL SCORER mean DA | 0.112 | 0.112252 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | TERMINAL SCORER median DA | 0.094 | 0.0943863 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
@@ -155,9 +155,9 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.5 class portability | Organizer n | 30 | 30 | 0.0 | `portability_players_report.py` | `class_portability_locked.csv` |  |
 | PASS | §6.5 class portability | Organizer median Δ | 0.134 | 0.134 | 0.0055 | `portability_players_report.py` | `class_portability_locked.csv` |  |
 | PASS | §6.5 class portability | Organizer % portable | 70 | 70 | 0.06 | `portability_players_report.py` | `class_portability_locked.csv` |  |
-| PASS | §6.5 class portability | Connector n | 24 | 24 | 0.0 | `portability_players_report.py` | `class_portability_locked.csv` |  |
-| PASS | §6.5 class portability | Connector median Δ | 0.124 | 0.124 | 0.0055 | `portability_players_report.py` | `class_portability_locked.csv` |  |
-| PASS | §6.5 class portability | Connector % portable | 58.3 | 58.3 | 0.06 | `portability_players_report.py` | `class_portability_locked.csv` |  |
+| PASS | §6.5 class portability | Shaper n | 24 | 24 | 0.0 | `portability_players_report.py` | `class_portability_locked.csv` |  |
+| PASS | §6.5 class portability | Shaper median Δ | 0.124 | 0.124 | 0.0055 | `portability_players_report.py` | `class_portability_locked.csv` |  |
+| PASS | §6.5 class portability | Shaper % portable | 58.3 | 58.3 | 0.06 | `portability_players_report.py` | `class_portability_locked.csv` |  |
 | PASS | §6.5 class portability | Terminal n | 117 | 117 | 0.0 | `portability_players_report.py` | `class_portability_locked.csv` |  |
 | PASS | §6.5 class portability | Terminal median Δ | 0.083 | 0.083 | 0.0055 | `portability_players_report.py` | `class_portability_locked.csv` |  |
 | PASS | §6.5 class portability | Terminal % portable | 60.7 | 60.7 | 0.06 | `portability_players_report.py` | `class_portability_locked.csv` |  |
@@ -173,9 +173,9 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.6 | travel×fit movers n | 294 | 294 | 0.0 | `travel_fit_screen.py` | `travel_fit_screen.csv` |  |
 | PASS | §6.6 | travel score corr vs self_sim | 0.06 | 0.0626184 | 0.015 | `travel_fit_screen.py` | `travel_fit_screen.csv` |  |
 | PASS | §6.6 | travel score rank AUC | 0.61 | 0.612569 | 0.015 | `travel_fit_screen.py` | `travel_fit_screen.csv` |  |
-| PASS | §6.6 | fit vs delta corr (connectors) | -0.09 | -0.0854905 | 0.015 | `travel_fit_screen.py` | `travel_fit_screen.csv` |  |
-| PASS | §6.6 | fit vs portable corr (connectors) | -0.39 | -0.389198 | 0.015 | `travel_fit_screen.py` | `travel_fit_screen.csv` |  |
-| PASS | §6.6 | cut-drive connector n | 24 | 24 | 0.0 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
+| PASS | §6.6 | fit vs delta corr (shapers) | -0.09 | -0.0854905 | 0.015 | `travel_fit_screen.py` | `travel_fit_screen.csv` |  |
+| PASS | §6.6 | fit vs portable corr (shapers) | -0.39 | -0.389198 | 0.015 | `travel_fit_screen.py` | `travel_fit_screen.csv` |  |
+| PASS | §6.6 | cut-drive shaper n | 24 | 24 | 0.0 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
 | PASS | §6.6 | cut share Spearman rho | 0.32 | 0.321739 | 0.015 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
 | PASS | §6.6 | cut share rank AUC | 0.71 | 0.714286 | 0.015 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
 | PASS | §6.6 | cut-minus-drive Spearman rho | 0.38 | 0.375652 | 0.015 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
@@ -183,7 +183,7 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.6 | low-cut pct portable | 37.5 | 37.5 | 0.06 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
 | PASS | §6.6 | destination battery n features | 63 | 63 | 0.0 | `(frozen)` | `destination_battery_connectors.csv` |  |
 | PASS | §6.6 | destination FDR survivors q<0.05 | 0 | 0 | 0.0 | `(frozen)` | `destination_battery_connectors.csv` |  |
-| PASS | Appendix G | 2025-26 connector roster n | 41 | 41 | 0.0 | `(frozen)` | `connector_appendix_2526.csv` |  |
+| PASS | Appendix G | 2025-26 shaper roster n | 41 | 41 | 0.0 | `(frozen)` | `connector_appendix_2526.csv` |  |
 
 **Summary:** 177/177 PASS, 0 FAIL.
 

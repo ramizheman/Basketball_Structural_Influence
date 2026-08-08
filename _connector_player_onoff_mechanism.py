@@ -1,5 +1,5 @@
 """
-Per-Connector / Hub player-season on/off scoring + mechanism decomposition.
+Per-Shaper player-season on/off scoring + mechanism decomposition.
 
 IDENTITY RULE (mandatory):
   Key every player-season by NBA person_id (player_id), NEVER by abbreviated
@@ -14,10 +14,10 @@ Labels:
 
 Outputs -> output/:
   role_composition_possessions_by_id.parquet   (ON_COURT + player_ids cache)
-  connector_player_onoff.csv
-  connector_player_onoff_quadrants.csv
-  connector_player_mechanism_cases.csv
-  connector_player_onoff_report.md
+  shaper_player_onoff.csv
+  shaper_player_onoff_quadrants.csv
+  shaper_player_mechanism_cases.csv
+  shaper_player_onoff_report.md
 
 Run: python _connector_player_onoff_mechanism.py
 """
@@ -126,8 +126,8 @@ def merge_loads_stats_by_id(loads: pd.DataFrame, stats: pd.DataFrame) -> pd.Data
     return out
 
 
-def build_connector_universe() -> pd.DataFrame:
-    """Rebuild CONNECTOR / HUB list from person_id-keyed loads (Eq. 5 taxonomy).
+def build_shaper_universe() -> pd.DataFrame:
+    """Rebuild SHAPER list from person_id-keyed loads (Eq. 5 taxonomy).
 
     Do NOT read structural_role_classification.csv for identity — that table
     drops player_id and still suffers abbrev cartesian joins via load_merged.
@@ -157,20 +157,20 @@ def build_connector_universe() -> pd.DataFrame:
     rot["role_classification"] = np.where(
         (rot["usage"] >= u_med) & (rot["influence_residual"] > 0), "PRIMARY ORGANIZER",
         np.where(
-            (rot["usage"] < u_med) & (rot["influence_residual"] > 0), "CONNECTOR / HUB",
+            (rot["usage"] < u_med) & (rot["influence_residual"] > 0), "SHAPER",
             np.where(
                 (rot["usage"] >= u_med) & (rot["influence_residual"] <= 0), "TERMINAL SCORER",
                 "ROLE OCCUPANT / SPECIALIST",
             ),
         ),
     )
-    conn = rot[rot["role_classification"] == "CONNECTOR / HUB"].copy()
-    print(f"rotation pool={len(rot)}  connectors={len(conn)}  "
+    conn = rot[rot["role_classification"] == "SHAPER"].copy()
+    print(f"rotation pool={len(rot)}  shapers={len(conn)}  "
           f"usage median cut={u_med:.4f}", flush=True)
     # sanity: collided names must remain distinct person_ids
     jw = conn[(conn.team == "OKC") & (conn.season == "2022-23") & (conn.player == "J. Williams")]
     if len(jw):
-        print("OKC 2022-23 J. Williams connector rows (must be person_id-distinct):", flush=True)
+        print("OKC 2022-23 J. Williams shaper rows (must be person_id-distinct):", flush=True)
         print(jw[["player_id", "full_name", "usage", "structural_influence", "influence_residual", "u"]]
               .to_string(index=False), flush=True)
     return conn, rot
@@ -422,7 +422,7 @@ def build_talent_by_id(df):
 # ---------------------------------------------------------------------------
 def main():
     t0 = time.time()
-    conn, rot = build_connector_universe()
+    conn, rot = build_shaper_universe()
 
     # contrasts: exact (player_id, team, season) — not all seasons for that person
     loads = pd.read_csv(LOADS, dtype={"player_id": str})
@@ -456,7 +456,7 @@ def main():
             + universe.loc[dup, ["player_id", "player", "team", "season"]].to_string()
         )
 
-    print(f"universe: {(~universe.is_contrast).sum()} connectors + "
+    print(f"universe: {(~universe.is_contrast).sum()} shapers + "
           f"{universe.is_contrast.sum()} contrasts", flush=True)
 
     df = pull_possessions_by_id()
@@ -551,7 +551,7 @@ def main():
         conn_out[["player_id", "team", "season", "rank_raw", "rank_adj", "quadrant"]],
         on=["player_id", "team", "season"], how="left",
     )
-    out_path = OUT_DIR / "connector_player_onoff.csv"
+    out_path = OUT_DIR / "shaper_player_onoff.csv"
     out.sort_values(["is_contrast", "adj_pts100"], ascending=[True, False]).to_csv(
         out_path, index=False)
     print(f"\nwrote {out_path} ({len(out)} rows, "
@@ -566,7 +566,7 @@ def main():
                  mean_adj=("adj_pts100", "mean"),
                  median_adj=("adj_pts100", "median"))
             .reset_index())
-    qtab.to_csv(OUT_DIR / "connector_player_onoff_quadrants.csv", index=False)
+    qtab.to_csv(OUT_DIR / "shaper_player_onoff_quadrants.csv", index=False)
     print(f"\nQuadrant cuts: L median={L_med:.3f}, adj pts/100 median={S_med:.2f}")
     print(qtab.to_string(index=False))
 
@@ -633,10 +633,10 @@ def main():
         mech_rows.append(flat)
 
     mech_df = pd.DataFrame(mech_rows)
-    mech_df.to_csv(OUT_DIR / "connector_player_mechanism_cases.csv", index=False)
+    mech_df.to_csv(OUT_DIR / "shaper_player_mechanism_cases.csv", index=False)
 
     report = build_report(out, conn_out, qtab, mech_df, L_med, S_med)
-    (OUT_DIR / "connector_player_onoff_report.md").write_text(report, encoding="utf-8")
+    (OUT_DIR / "shaper_player_onoff_report.md").write_text(report, encoding="utf-8")
     print(f"\nDONE in {time.time()-t0:.0f}s", flush=True)
 
 
@@ -661,7 +661,7 @@ def build_report(out, conn_out, qtab, mech_df, L_med, S_med):
             return df[use].to_string(index=False)
 
     lines = [
-        "# Connector Player-Season On/Off Scoring — Full Analysis",
+        "# Shaper Player-Season On/Off Scoring — Full Analysis",
         "",
         "**Identity:** every row keyed by `player_id` (NBA person_id). "
         "ON_COURT presence uses `pl*_id`. Abbreviated names are display-only.",
@@ -670,7 +670,7 @@ def build_report(out, conn_out, qtab, mech_df, L_med, S_med):
         "Adjusted = within-team-season association controlling for opponent, period, "
         "score-margin bucket, and leave-game-out lineup TALENT. Not causal.",
         "",
-        f"- Connectors analyzed: **{len(conn_out)}**",
+        f"- Shapers analyzed: **{len(conn_out)}**",
         f"- Adequate sample (≥{MIN_POSS} on and off): **{len(ok)}**",
         f"- Quadrant cuts: median L = **{L_med:.3f}**, median adj pts/100 = **{S_med:.2f}**",
         f"- Corr(L, raw) = **{r_raw:+.3f}**; Corr(L, adj) = **{r_adj:+.3f}**; "
@@ -685,13 +685,13 @@ def build_report(out, conn_out, qtab, mech_df, L_med, S_med):
         lines.append(qtab.to_string(index=False))
     lines += [
         "",
-        "## 1. Highest scoring-impact connectors (adj pts/100)",
+        "## 1. Highest scoring-impact shapers (adj pts/100)",
         "", fmt(top10), "",
-        "## 2. High-L scoring-resilient connectors",
+        "## 2. High-L scoring-resilient shapers",
         "", fmt(resilient), "",
         "## 3. Terminal contrasts (low structural influence)",
         "", fmt(contrasts), "",
-        "## Lowest adjusted-impact connectors",
+        "## Lowest adjusted-impact shapers",
         "", fmt(bot10), "",
         "## Mechanism cases",
         "",
@@ -705,7 +705,7 @@ def build_report(out, conn_out, qtab, mech_df, L_med, S_med):
             lines.append(slim.to_string(index=False))
     lines += [
         "",
-        "## Full ranked connector table",
+        "## Full ranked shaper table",
         "",
         fmt(ok.sort_values("adj_pts100", ascending=False)),
         "",

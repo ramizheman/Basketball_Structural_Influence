@@ -1,8 +1,8 @@
 """
 Construct-native resilience / offensive-identity test.
 
-Claim tested (ONLY this — not PPP, not cost, not connector 'quality'):
-  When a Connector/Hub leaves the floor, does the team's offensive association
+Claim tested (ONLY this — not PPP, not cost, not shaper 'quality'):
+  When a Shaper/Hub leaves the floor, does the team's offensive association
   structure change more than when a usage-matched non-organizer leaves?
 
 Outcomes (identity, not scoring):
@@ -12,8 +12,8 @@ Outcomes (identity, not scoring):
 Also: does season LOO load L(p) predict D_A? (construct check)
 
 Comparisons:
-  CONNECTOR / HUB vs ROLE OCCUPANT / SPECIALIST (usage-matched)
-  CONNECTOR / HUB vs TERMINAL SCORER (usage-matched)
+  SHAPER vs ROLE OCCUPANT / SPECIALIST (usage-matched)
+  SHAPER vs TERMINAL SCORER (usage-matched)
   PRIMARY ORGANIZER reported as positive-control reference (not the claim)
 
 Run: python _identity_resilience_test.py
@@ -34,7 +34,7 @@ except Exception:
 
 from wiring_gate import PLAY_TYPES_8, OUT_DIR, IU, assoc_O, null_O_stats, standardize
 from _connector_player_onoff_mechanism import (
-    build_connector_universe,
+    build_shaper_universe,
     pull_possessions_by_id,
     player_on_mask_id,
     IDCOLS,
@@ -193,8 +193,8 @@ def regress_DA_on_L(panel: pd.DataFrame) -> dict:
     r_raw, p_raw = stats.pearsonr(d["structural_influence"], d["D_A"])
     # partial: within role
     out = dict(r_raw=r_raw, p_raw=p_raw, r_adj=r, p_adj=p, n=len(d))
-    # connectors only
-    c = d[d.role == "CONNECTOR / HUB"]
+    # shapers only
+    c = d[d.role == "SHAPER"]
     if len(c) >= 20:
         out["r_adj_conn"] = stats.pearsonr(c["structural_influence_r"], c["D_A_r"])[0]
         out["p_adj_conn"] = stats.pearsonr(c["structural_influence_r"], c["D_A_r"])[1]
@@ -230,10 +230,10 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
     lines = [
         "# Offensive-identity resilience test (construct-native)",
         "",
-        "**Claim tested:** Connector absence displaces team offensive *identity* "
+        "**Claim tested:** Shaper absence displaces team offensive *identity* "
         "(association structure / play-type mix) more than usage-matched non-organizer absence.",
         "",
-        "**Not claimed:** PPP value, cost efficiency, connector quality, defense.",
+        "**Not claimed:** PPP value, cost efficiency, shaper quality, defense.",
         "",
         f"Sample: player-seasons with ≥{MIN_ON} possessions on and off. "
         f"N kept = {len(panel)} (D_A available for {int(np.isfinite(panel.D_A).sum())}).",
@@ -254,11 +254,11 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
         "PRIMARY ORGANIZER is a positive-control reference (high usage + high residual influence).",
         "The licensed comparison for the claim excludes organizers.",
         "",
-        "## 2. Unmatched contrasts (connectors vs others)",
+        "## 2. Unmatched contrasts (shapers vs others)",
         "",
     ]
-    for name, u in [("Connector vs Role Occupant", unc_ro),
-                    ("Connector vs Terminal Scorer", unc_ts)]:
+    for name, u in [("Shaper vs Role Occupant", unc_ro),
+                    ("Shaper vs Terminal Scorer", unc_ts)]:
         lines.append(
             f"- **{name} (D_A):** "
             f"Δ = {u['diff']:+.4f} "
@@ -268,8 +268,8 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
 
     lines += ["", "## 3. Usage-matched pairs (primary test)", ""]
     for label, pairs in [
-        ("Connector vs Role Occupant", pairs_ro),
-        ("Connector vs Terminal Scorer", pairs_ts),
+        ("Shaper vs Role Occupant", pairs_ro),
+        ("Shaper vs Terminal Scorer", pairs_ts),
     ]:
         if pairs is None or len(pairs) == 0:
             lines.append(f"### {label}: no pairs within caliper {USAGE_CALIPER}")
@@ -298,7 +298,7 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
     ]
     if "r_adj_conn" in Lfit:
         lines.append(
-            f"- Within connectors only (adj): r={Lfit['r_adj_conn']:+.3f} "
+            f"- Within shapers only (adj): r={Lfit['r_adj_conn']:+.3f} "
             f"(p={Lfit['p_adj_conn']:.3g})"
         )
     lines += [
@@ -313,15 +313,15 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
     main = paired_test(pairs_ro, "d_DA") if len(pairs_ro) else dict(p=1, mean_d=0, pos_frac=0.5)
     if main["p"] < 0.05 and main["mean_d"] > 0:
         lines += [
-            "**SUPPORTED (identity value):** Connector absence displaces offensive "
+            "**SUPPORTED (identity value):** Shaper absence displaces offensive "
             "association structure more than usage-matched role-occupant absence.",
-            "Licensed claim: connectors matter for **maintaining offensive identity under "
+            "Licensed claim: shapers matter for **maintaining offensive identity under "
             "substitution** — not for points per possession.",
         ]
     elif main["p"] < 0.05 and main["mean_d"] < 0:
         lines += [
             "**REJECTED / REVERSED:** Matched role occupants displace identity *more* "
-            "than connectors. Do not claim identity-resilience value for the connector class.",
+            "than shapers. Do not claim identity-resilience value for the shaper class.",
         ]
     else:
         # check L prediction as softer support
@@ -329,19 +329,19 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
             lines += [
                 "**PARTIAL:** Class contrast vs matched role occupants is not significant, "
                 "but L(p) still predicts D_A after usage/minute controls — dependence tracks "
-                "identity break continuously. Class-level connector claim is weak; "
+                "identity break continuously. Class-level shaper claim is weak; "
                 "load-level resilience claim has support.",
             ]
         else:
             lines += [
-                "**NOT SUPPORTED:** No clear evidence that connector absence uniquely "
+                "**NOT SUPPORTED:** No clear evidence that shaper absence uniquely "
                 "threatens offensive identity versus usage-matched non-organizers. "
                 "Do not claim resilience/identity value for the class from this test.",
             ]
 
     # top examples
-    conn = panel[panel.role == "CONNECTOR / HUB"].nlargest(8, "D_A")
-    lines += ["", "### Highest D_A connectors (identity most disrupted when off)", ""]
+    conn = panel[panel.role == "SHAPER"].nlargest(8, "D_A")
+    lines += ["", "### Highest D_A shapers (identity most disrupted when off)", ""]
     for _, r in conn.iterrows():
         lines.append(
             f"- {r.full_name} ({r.team_season}): D_A={r.D_A:.3f}, D_π={r.D_pi:.3f}, "
@@ -354,7 +354,7 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
 def main():
     t0 = time.time()
     print("building role universe...", flush=True)
-    _, rot = build_connector_universe()
+    _, rot = build_shaper_universe()
     print(rot.role_classification.value_counts().to_string(), flush=True)
 
     print("loading possessions...", flush=True)
@@ -372,7 +372,7 @@ def main():
     summary = class_summary(panel)
     summary.to_csv(OUT_DIR / "identity_resilience_class_means.csv", index=False)
 
-    conn = panel[panel.role == "CONNECTOR / HUB"]
+    conn = panel[panel.role == "SHAPER"]
     ro = panel[panel.role == "ROLE OCCUPANT / SPECIALIST"]
     ts = panel[panel.role == "TERMINAL SCORER"]
     org = panel[panel.role == "PRIMARY ORGANIZER"]
@@ -400,8 +400,8 @@ def main():
     report = build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts)
     # add organizer reference line
     report += (
-        f"\n### Reference: Organizer vs Connector (unmatched D_A)\n"
-        f"Organizers mean D_A={unc_org['mean_a']:.4f} vs connectors {unc_org['mean_b']:.4f} "
+        f"\n### Reference: Organizer vs Shaper (unmatched D_A)\n"
+        f"Organizers mean D_A={unc_org['mean_a']:.4f} vs shapers {unc_org['mean_b']:.4f} "
         f"(Δ={unc_org['diff']:+.4f}, p={unc_org['p']:.3g}). "
         f"Organizers are high-usage positive controls, not part of the licensed claim.\n"
     )

@@ -443,7 +443,7 @@ def figure_shaper_dist():
     """Histogram/density of shaper-mover Δ with Gafford / Jones Jr. / Wright marked."""
     u_med = TF["origin_usage"].median()
     # principled shaper cut: low origin usage × positive residual influence
-    # (CSV role strings remain Connector; do not rewrite output tables)
+    # (CSV role strings remain Shaper; do not rewrite output tables)
     conn = TF[(TF["origin_usage"] < u_med) & (TF["origin_influence_resid"] > 0)].copy()
     d = conn["delta"].to_numpy(float)
     med = float(np.median(d))
@@ -521,7 +521,7 @@ def figure_taxonomy_exemplars():
     resid0_pct = float((resid <= 0).mean() * 100)
 
     # Same seasons as Sec. emerge prose / Table exemplars.
-    # First tuple field is display class only; CSV role strings stay Connector.
+    # First tuple field is display class only; CSV role strings stay Shaper.
     exemplars = [
         ("Organizer", "SGA", "S. Gilgeous-Alexander", "OKC", "2023-24", "#1a6b3c"),
         ("Organizer", "Jokić", "N. Jokić", "DEN", "2024-25", "#1a6b3c"),

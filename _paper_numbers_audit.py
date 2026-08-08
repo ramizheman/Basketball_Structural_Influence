@@ -103,7 +103,7 @@ def claims_taxonomy():
     expect = {
         "PRIMARY ORGANIZER": dict(n=96, pct=10.4, u=0.244, L=0.094,
                                   resid=0.054, ppg=18.4, mpg=29.6),
-        "CONNECTOR / HUB": dict(n=103, pct=11.1, u=0.145, L=0.078,
+        "SHAPER": dict(n=103, pct=11.1, u=0.145, L=0.078,
                                 resid=0.062, ppg=9.0, mpg=23.6),
         "TERMINAL SCORER": dict(n=368, pct=39.8, u=0.233, L=0.014,
                                 resid=-0.019, ppg=16.6, mpg=28.6),
@@ -207,16 +207,16 @@ def claims_ortho():
 def claims_behavior():
     pm = pd.read_csv(OUT / "role_composition_playmix.csv")
     out = []
-    conn = pm[pm["role_class"] == "CONNECTOR"].set_index("play_type")
+    conn = pm[pm["role_class"] == "SHAPER"].set_index("play_type")
     paper_conn = {
         "CUT": 1.35, "PNR": 0.98, "SPOT_UP": -1.25, "DRIVE": -0.54,
     }
     n_ts = int(conn["n_ts"].iloc[0])
-    out.append(Claim("§6.3", "connector strata team-seasons", 73, n_ts,
+    out.append(Claim("§6.3", "shaper strata team-seasons", 73, n_ts,
                      TOL["int"], "role_composition_playmix.py",
                      "role_composition_playmix.csv"))
     for pt, pv in paper_conn.items():
-        out.append(Claim("§6.3", f"connector Δshare {pt} (pp)",
+        out.append(Claim("§6.3", f"shaper Δshare {pt} (pp)",
                          pv, float(conn.loc[pt, "mean_delta_pp"]), TOL["round2"],
                          "role_composition_playmix.py",
                          "role_composition_playmix.csv"))
@@ -235,9 +235,9 @@ def claims_behavior():
                      "role_composition_playmix.csv"))
 
     rr = pd.read_csv(OUT / "role_route_graph.csv")
-    c = rr[rr["focal"] == "CONNECTOR"].iloc[0]
+    c = rr[rr["focal"] == "SHAPER"].iloc[0]
     out.append(Claim(
-        "§6.3", "connector Δentropy (nonfocal) near 0",
+        "§6.3", "shaper Δentropy (nonfocal) near 0",
         0.0, float(c["d_entropy_nonfocal"]), 0.10,
         "role_route_graph.py", "role_route_graph.csv",
         f"artifact d_entropy_nonfocal={c['d_entropy_nonfocal']:+.3f}",
@@ -285,17 +285,17 @@ def claims_efficiency():
                      f"SE={se:.2f}; formula MDE={_mde80(se):.2f}"))
 
     h = pd.read_csv(OUT / "hasconn_full_study.csv").iloc[0]
-    out.append(Claim("§6.4", "HasConn pts/100", 0.00,
-                     float(h["coef_HasConn_pts100"]), TOL["round2"],
+    out.append(Claim("§6.4", "HasShaper pts/100", 0.00,
+                     float(h["coef_HasShaper_pts100"]), TOL["round2"],
                      "hasconn_full_study.py", "hasconn_full_study.csv"))
-    out.append(Claim("§6.4", "HasConn t", 0.00,
-                     float(h["t_HasConn"]), TOL["round2"],
+    out.append(Claim("§6.4", "HasShaper t", 0.00,
+                     float(h["t_HasShaper"]), TOL["round2"],
                      "hasconn_full_study.py", "hasconn_full_study.csv"))
     return out
 
 
 def claims_connector_tiers():
-    """Exploratory Table tab:connector-tiers (M1 primary row)."""
+    """Exploratory Table tab:shaper-tiers (M1 primary row)."""
     t = pd.read_csv(OUT / "connector_tier_full_study.csv").iloc[0]
     out = []
     rows = [
@@ -321,7 +321,7 @@ def claims_identity():
     out = []
     expect = {
         "PRIMARY ORGANIZER": (96, 0.214, 0.170, 0.244),
-        "CONNECTOR / HUB": (102, 0.202, 0.151, 0.144),
+        "SHAPER": (102, 0.202, 0.151, 0.144),
         "TERMINAL SCORER": (361, 0.112, 0.094, 0.233),
         "ROLE OCCUPANT / SPECIALIST": (349, 0.102, 0.085, 0.148),
     }
@@ -418,7 +418,7 @@ def claims_portability():
     # class table
     expect_class = {
         "Organizer": (30, 0.134, 70.0),
-        "Connector": (24, 0.124, 58.3),
+        "Shaper": (24, 0.124, 58.3),
         "Terminal": (117, 0.083, 60.7),
         "Role": (123, 0.018, 54.5),
     }
@@ -437,7 +437,7 @@ def claims_portability():
                          "portability_players_report.py",
                          "class_portability_locked.csv"))
 
-    # Table tab:cases — connector distribution endpoints
+    # Table tab:cases — shaper distribution endpoints
     cases = {
         "D. Gafford": dict(self_sim=0.86, delta=0.60),
         "D. Jones Jr.": dict(self_sim=0.21, delta=0.17),
@@ -500,21 +500,21 @@ def claims_travelfit():
     out.append(Claim("§6.6", "travel score rank AUC", 0.61, auc, TOL["round2"],
                      "travel_fit_screen.py", "travel_fit_screen.csv"))
 
-    # Destination-fit null among connector movers (resid taxonomy cut)
+    # Destination-fit null among shaper movers (resid taxonomy cut)
     u_med = tf["origin_usage"].median()
     conn = tf[(tf["origin_usage"] < u_med) & (tf["origin_influence_resid"] > 0)].copy()
     fit_delta = float(conn["fit_score"].corr(conn["delta"]))
     fit_port = float(conn["fit_score"].corr((conn["delta"] > 0).astype(float)))
-    out.append(Claim("§6.6", "fit vs delta corr (connectors)", -0.09,
+    out.append(Claim("§6.6", "fit vs delta corr (shapers)", -0.09,
                      fit_delta, TOL["round2"], "travel_fit_screen.py",
                      "travel_fit_screen.csv"))
-    out.append(Claim("§6.6", "fit vs portable corr (connectors)", -0.39,
+    out.append(Claim("§6.6", "fit vs portable corr (shapers)", -0.39,
                      fit_port, TOL["round2"], "travel_fit_screen.py",
                      "travel_fit_screen.csv"))
 
     cut = pd.read_csv(OUT / "cut_drive_travel_screen.csv").iloc[0]
-    out.append(Claim("§6.6", "cut-drive connector n", 24,
-                     int(cut["n_connectors"]), TOL["int"],
+    out.append(Claim("§6.6", "cut-drive shaper n", 24,
+                     int(cut["n_shapers"]), TOL["int"],
                      "cut_drive_travel_screen.py", "cut_drive_travel_screen.csv"))
     out.append(Claim("§6.6", "cut share Spearman rho", 0.32,
                      float(cut["cut_rho"]), TOL["round2"],
@@ -546,7 +546,7 @@ def claims_travelfit():
 
 def claims_appendix():
     app = pd.read_csv(OUT / "connector_appendix_2526.csv")
-    return [Claim("Appendix G", "2025-26 connector roster n", 41,
+    return [Claim("Appendix G", "2025-26 shaper roster n", 41,
                   len(app), TOL["int"],
                   "(frozen)", "connector_appendix_2526.csv")]
 

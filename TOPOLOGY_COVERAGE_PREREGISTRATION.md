@@ -14,7 +14,7 @@ offensive functions (**creation / connection / conversion**) — rather than by 
 individually high-scoring players? Concretely:
 
 > Conditional on the individual scoring talent on the floor **and** on the linear count of each role,
-> does a lineup whose composition **covers all three core functions** (≥1 organizer AND ≥1 connector AND
+> does a lineup whose composition **covers all three core functions** (≥1 organizer AND ≥1 shaper AND
 > ≥1 terminal) produce more offense (points per possession) than one missing a function?
 
 This is the apex of the role program: taxonomy (roles exist) → orthogonality (roles ≠ value) →
@@ -94,12 +94,12 @@ sum); points-per-initiation (not ppg/usage); leave-game-out. Players with <20 se
 team-season mean q imputed (flagged).
 
 **Stated interpretation ceiling (binding, appears in every writeup):** `q_p` is a *box/initiation*
-efficiency measure and therefore **under-measures connectors by construction** (a connector's value is
-largely off the box score). Consequently a positive `β` cannot be cleanly separated from "connector
+efficiency measure and therefore **under-measures shapers by construction** (a shaper's value is
+largely off the box score). Consequently a positive `β` cannot be cleanly separated from "shaper
 talent the control missed"; and because lineups are *chosen*, not assigned, residual bench-unit/game-state
 confounding remains after FE. **The maximal licensed claim is "association consistent with a coverage
 effect, conditional on measured talent" — NOT a causal or talent-independent optimum.** No decision-support
-phrasing ("adding a connector gains X").
+phrasing ("adding a shaper gains X").
 
 ---
 
@@ -168,7 +168,7 @@ Coefficients are in PPP units; ×100 = points per 100 possessions.
 - **COVERED: b = +0.0067 (+0.67 pts/100), cluster-robust t = 1.35, p = 0.176.**
 - team-season cluster-bootstrap 95% CI: **[−0.28, +1.65] pts/100 — includes 0**.
 - franchise cluster-bootstrap 95% CI: [−0.27, +1.58] — includes 0.
-- Accumulation terms: n_ORGANIZER +2.24 pts/100 (t=7.29); n_CONNECTOR +0.53 (t=1.35);
+- Accumulation terms: n_ORGANIZER +2.24 pts/100 (t=7.29); n_SHAPER +0.53 (t=1.35);
   n_TERMINAL +0.08 (t=0.18); TALENT +3.98 pts/100 (t=0.60).
 
 **Decision rule (§2):** b>0 = True; p<0.01 = **False** (0.176); CI excludes 0 = **False**.
