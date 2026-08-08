@@ -1,7 +1,7 @@
 """
 CONFIRMATORY-DISCIPLINE — Hub / Marginal-Big / Marginal-Wing tier split vs Talent
 ==================================================================================
-Same exact machinery as coverage_full_study.py / hasconn_full_study.py, applied to
+Same exact machinery as coverage_full_study.py / hasshaper_full_study.py, applied to
 the three-way split of the Shaper/Hub class (Eq. 6 taxonomy, split at the
 within-class median residual influence, marginal half further split by position).
 
@@ -10,7 +10,7 @@ Primary model M1 (no play-type FE):
           + a1*n_ORG + a2*n_TERM + a3*n_HUBCONN + a4*n_MARGBIG + a5*n_MARGWING
           + g*TALENT + FE(team-season) + dummies(opp, period, score-bucket) + e
 
-Run: python connector_tier_full_study.py
+Run: python shaper_tier_full_study.py
 """
 from __future__ import annotations
 
@@ -30,7 +30,7 @@ from wiring_gate import OUT_DIR
 from role_composition_playmix import pull_possessions
 from role_composition_ppp import dummies, demean_by_group, cluster_se, score_bucket
 from coverage_common import build_talent, SEED, N_BOOT, CONF_P
-from _connector_tier_ppp_3way import build_3way_class_map, add_composition6
+from _shaper_tier_ppp_3way import build_3way_class_map, add_composition6
 
 TERMS = ["HasHub", "HasMargBig", "HasMargWing"]
 # Presence indicators only (no own-count collinear controls); n_ORG / n_TERM retained.
@@ -175,8 +175,8 @@ def main():
               f"{'CONFIRMED @0.01' if conf else 'not at 0.01 bar'}")
     print("=" * 78)
 
-    pd.DataFrame([r_m1, r_naive, r_m2, r_m4]).to_csv(OUT_DIR / "connector_tier_full_study.csv", index=False)
-    print(f"\nWrote {OUT_DIR/'connector_tier_full_study.csv'}")
+    pd.DataFrame([r_m1, r_naive, r_m2, r_m4]).to_csv(OUT_DIR / "shaper_tier_full_study.csv", index=False)
+    print(f"\nWrote {OUT_DIR/'shaper_tier_full_study.csv'}")
     print(f"Total time {time.time()-t0:.0f}s")
 
 

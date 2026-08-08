@@ -114,14 +114,14 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.4 | n_organizer pts/100 | 2.35 | 2.34617 | 0.015 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.4 | n_organizer t | 4.62 | 4.62243 | 0.015 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.4 | MDE(80%) pts/100 ≈2.2 | 2.2 | 2.19067 | 0.05 | `coverage_full_study.py` | `coverage_full_study.csv` | SE=0.78; formula MDE=2.19 |
-| PASS | §6.4 | HasShaper pts/100 | 0 | 0.00307202 | 0.015 | `hasconn_full_study.py` | `hasconn_full_study.csv` |  |
-| PASS | §6.4 | HasShaper t | 0 | 0.00448434 | 0.015 | `hasconn_full_study.py` | `hasconn_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasHub pts/100 | 1.1 | 1.10372 | 0.015 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasHub p | 0.077 | 0.0772499 | 0.005 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargBig pts/100 | 1.7 | 1.7042 | 0.015 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargBig p | 0.025 | 0.0252575 | 0.005 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargWing pts/100 | 1.29 | 1.28504 | 0.015 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargWing p | 0.122 | 0.121857 | 0.005 | `connector_tier_full_study.py` | `connector_tier_full_study.csv` |  |
+| PASS | §6.4 | HasShaper pts/100 | 0 | 0.00307202 | 0.015 | `hasshaper_full_study.py` | `hasshaper_full_study.csv` |  |
+| PASS | §6.4 | HasShaper t | 0 | 0.00448434 | 0.015 | `hasshaper_full_study.py` | `hasshaper_full_study.csv` |  |
+| PASS | §6.4.1 tiers | HasHub pts/100 | 1.1 | 1.10372 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | §6.4.1 tiers | HasHub p | 0.077 | 0.0772499 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | §6.4.1 tiers | HasMargBig pts/100 | 1.7 | 1.7042 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | §6.4.1 tiers | HasMargBig p | 0.025 | 0.0252575 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | §6.4.1 tiers | HasMargWing pts/100 | 1.29 | 1.28504 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | §6.4.1 tiers | HasMargWing p | 0.122 | 0.121857 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER n | 96 | 96 | 0.0 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER mean DA | 0.214 | 0.214056 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER median DA | 0.17 | 0.17021 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
@@ -181,9 +181,9 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.6 | cut-minus-drive Spearman rho | 0.38 | 0.375652 | 0.015 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
 | PASS | §6.6 | high-cut pct portable | 75 | 75 | 0.06 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
 | PASS | §6.6 | low-cut pct portable | 37.5 | 37.5 | 0.06 | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |  |
-| PASS | §6.6 | destination battery n features | 63 | 63 | 0.0 | `(frozen)` | `destination_battery_connectors.csv` |  |
-| PASS | §6.6 | destination FDR survivors q<0.05 | 0 | 0 | 0.0 | `(frozen)` | `destination_battery_connectors.csv` |  |
-| PASS | Appendix G | 2025-26 shaper roster n | 41 | 41 | 0.0 | `(frozen)` | `connector_appendix_2526.csv` |  |
+| PASS | §6.6 | destination battery n features | 63 | 63 | 0.0 | `(frozen)` | `destination_battery_shapers.csv` |  |
+| PASS | §6.6 | destination FDR survivors q<0.05 | 0 | 0 | 0.0 | `(frozen)` | `destination_battery_shapers.csv` |  |
+| PASS | Appendix G | 2025-26 shaper roster n | 41 | 41 | 0.0 | `(frozen)` | `shaper_appendix_2526.csv` |  |
 
 **Summary:** 177/177 PASS, 0 FAIL.
 

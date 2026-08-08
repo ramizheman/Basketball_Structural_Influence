@@ -33,7 +33,7 @@ except Exception:
     pass
 
 from wiring_gate import PLAY_TYPES_8, OUT_DIR, IU, assoc_O, null_O_stats, standardize
-from _connector_player_onoff_mechanism import (
+from _shaper_player_onoff_mechanism import (
     build_shaper_universe,
     pull_possessions_by_id,
     player_on_mask_id,

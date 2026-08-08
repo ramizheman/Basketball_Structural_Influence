@@ -9,10 +9,10 @@ exact machinery (same design, same bootstrap, same robustness battery) with COVE
 replaced by HasShaper, so the two headline tests in Table 5 use symmetric discipline.
 
 Primary model M1 (no play-type FE):
-  PPP_i = b*HasShaper + a1*n_ORG + a2*n_CONN + a3*n_TERM + g*TALENT
+  PPP_i = b*HasShaper + a1*n_ORG + a2*n_SHAPER + a3*n_TERM + g*TALENT
           + FE(team-season, absorbed) + dummies(opp, period, score-bucket) + e
 
-Run: python hasconn_full_study.py
+Run: python hasshaper_full_study.py
 """
 from __future__ import annotations
 
@@ -181,8 +181,8 @@ def main():
     print("  are NOT on equally robust footing re: talent control choice.")
     print("=" * 78)
 
-    pd.DataFrame([r_m1, r_m2, r_naive, r_m4]).to_csv(OUT_DIR / "hasconn_full_study.csv", index=False)
-    print(f"\nWrote {OUT_DIR/'hasconn_full_study.csv'}")
+    pd.DataFrame([r_m1, r_m2, r_naive, r_m4]).to_csv(OUT_DIR / "hasshaper_full_study.csv", index=False)
+    print(f"\nWrote {OUT_DIR/'hasshaper_full_study.csv'}")
     print(f"Total time {time.time()-t0:.0f}s")
 
 

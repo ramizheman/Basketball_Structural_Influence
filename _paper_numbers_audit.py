@@ -284,19 +284,19 @@ def claims_efficiency():
                      "coverage_full_study.py", "coverage_full_study.csv",
                      f"SE={se:.2f}; formula MDE={_mde80(se):.2f}"))
 
-    h = pd.read_csv(OUT / "hasconn_full_study.csv").iloc[0]
+    h = pd.read_csv(OUT / "hasshaper_full_study.csv").iloc[0]
     out.append(Claim("§6.4", "HasShaper pts/100", 0.00,
                      float(h["coef_HasShaper_pts100"]), TOL["round2"],
-                     "hasconn_full_study.py", "hasconn_full_study.csv"))
+                     "hasshaper_full_study.py", "hasshaper_full_study.csv"))
     out.append(Claim("§6.4", "HasShaper t", 0.00,
                      float(h["t_HasShaper"]), TOL["round2"],
-                     "hasconn_full_study.py", "hasconn_full_study.csv"))
+                     "hasshaper_full_study.py", "hasshaper_full_study.csv"))
     return out
 
 
-def claims_connector_tiers():
+def claims_shaper_tiers():
     """Exploratory Table tab:shaper-tiers (M1 primary row)."""
-    t = pd.read_csv(OUT / "connector_tier_full_study.csv").iloc[0]
+    t = pd.read_csv(OUT / "shaper_tier_full_study.csv").iloc[0]
     out = []
     rows = [
         ("HasHub", 1.10, 0.077, "coef_HasHub_pts100", "p_HasHub"),
@@ -306,12 +306,12 @@ def claims_connector_tiers():
     for name, pts, p, c_pts, c_p in rows:
         out.append(Claim("§6.4.1 tiers", f"{name} pts/100", pts,
                          float(t[c_pts]), TOL["round2"],
-                         "connector_tier_full_study.py",
-                         "connector_tier_full_study.csv"))
+                         "shaper_tier_full_study.py",
+                         "shaper_tier_full_study.csv"))
         out.append(Claim("§6.4.1 tiers", f"{name} p", p,
                          float(t[c_p]), 0.005,
-                         "connector_tier_full_study.py",
-                         "connector_tier_full_study.csv"))
+                         "shaper_tier_full_study.py",
+                         "shaper_tier_full_study.csv"))
     return out
 
 
@@ -532,23 +532,23 @@ def claims_travelfit():
                      float(cut["low_cut_pct_portable"]), TOL["round1"],
                      "cut_drive_travel_screen.py", "cut_drive_travel_screen.csv"))
 
-    bat = pd.read_csv(OUT / "destination_battery_connectors.csv")
+    bat = pd.read_csv(OUT / "destination_battery_shapers.csv")
     q = _bh_qvalues(bat["p"].to_numpy(float))
     n_surv = int((q < 0.05).sum())
     out.append(Claim("§6.6", "destination battery n features", 63,
                      len(bat), TOL["int"],
-                     "(frozen)", "destination_battery_connectors.csv"))
+                     "(frozen)", "destination_battery_shapers.csv"))
     out.append(Claim("§6.6", "destination FDR survivors q<0.05", 0,
                      n_surv, TOL["int"],
-                     "(frozen)", "destination_battery_connectors.csv"))
+                     "(frozen)", "destination_battery_shapers.csv"))
     return out
 
 
 def claims_appendix():
-    app = pd.read_csv(OUT / "connector_appendix_2526.csv")
+    app = pd.read_csv(OUT / "shaper_appendix_2526.csv")
     return [Claim("Appendix G", "2025-26 shaper roster n", 41,
                   len(app), TOL["int"],
-                  "(frozen)", "connector_appendix_2526.csv")]
+                  "(frozen)", "shaper_appendix_2526.csv")]
 
 
 # ---------------------------------------------------------------------------
@@ -605,7 +605,7 @@ def main():
         claims_ortho,
         claims_behavior,
         claims_efficiency,
-        claims_connector_tiers,
+        claims_shaper_tiers,
         claims_identity,
         claims_portability,
         claims_travelfit,

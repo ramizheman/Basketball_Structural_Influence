@@ -19,7 +19,7 @@ Outputs -> output/:
   shaper_player_mechanism_cases.csv
   shaper_player_onoff_report.md
 
-Run: python _connector_player_onoff_mechanism.py
+Run: python _shaper_player_onoff_mechanism.py
 """
 from __future__ import annotations
 
