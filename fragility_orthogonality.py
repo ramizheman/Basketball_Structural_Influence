@@ -2,15 +2,15 @@
 ORTHOGONALITY, QUADRANTS & WITHIN-PLAYER STABILITY (exploratory, §8)
 ====================================================================
 
-The reviewer-proofing analysis: is structural load just another impact metric?
+The reviewer-proofing analysis: is structural influence just another impact metric?
 
-(1) Orthogonality — Spearman of structural load (and usage-residual load)
+(1) Orthogonality — Spearman of structural influence (and usage-residual influence)
     against usage, touches, front-court touches, points, assists, assist%,
-    and on-court net rating. Structural load measuring a DIFFERENT axis =>
+    and on-court net rating. Structural influence measuring a DIFFERENT axis =>
     moderate/low correlation, and specifically identifying cases the others
     miss (the off-diagonal).
 
-(2) Quadrant matrix — usage (median split) x structural load (median split),
+(2) Quadrant matrix — usage (median split) x structural influence (median split),
     among rotation players. Populated quadrants = it measures something
     distinct from production. Names the four cells.
 
@@ -18,7 +18,7 @@ The reviewer-proofing analysis: is structural load just another impact metric?
     context trait? Within-player SD across seasons vs the between-player SD;
     name the stable hubs (SGA) vs the volatile ones (Gobert).
 
-All stats are official NBA data (fetch_traditional_stats.py); structural load
+All stats are official NBA data (fetch_traditional_stats.py); structural influence
 is our graph metric. Merged by (tri, yy, abbrev).
 
 Writes a console report + output/fragility_orthogonality.csv and a small
@@ -65,7 +65,7 @@ def spearman(x, y):
 
 
 def load_merged(season_yy=(22, 23, 24)):
-    """Canonical residual-load construction, matching paper.tex Eq. 5
+    """Canonical residual-influence construction, matching paper.tex Eq. 5
     (sec:resid): quadratic fit of Lcos ~ u (graph-native initiation share)
     across all classified players (no mpg/gp restriction on the fit sample;
     season restricted to the pre-registered 2022–25 sample by default).
@@ -104,7 +104,7 @@ def orthogonality(df):
     print("\n" + "=" * 72)
     print("(1) ORTHOGONALITY — Spearman vs conventional metrics")
     print("=" * 72)
-    print(f"{'Metric':<24}{'rho(load)':>11}{'rho(resid)':>12}{'n':>7}")
+    print(f"{'Metric':<24}{'rho(influence)':>11}{'rho(resid)':>12}{'n':>7}")
     out = []
     load = df["Lcos"].to_numpy()
     resid = df["u_resid"].to_numpy()
@@ -114,9 +114,9 @@ def orthogonality(df):
         r_res, _ = spearman(resid, v)
         out.append(dict(metric=label, rho_load=r_load, rho_resid=r_res, n=n))
         print(f"{label:<24}{r_load:>11.3f}{r_res:>12.3f}{n:>7}")
-    print("\n  Interpretation: high load correlates moderately with usage/touches")
+    print("\n  Interpretation: high influence correlates moderately with usage/touches")
     print("  (bigger role => more displacement, expected). The RESIDUAL column is")
-    print("  the key: near-zero vs production => structural load is a different axis.")
+    print("  the key: near-zero vs production => structural influence is a different axis.")
     return pd.DataFrame(out)
 
 
@@ -129,7 +129,7 @@ def quadrants(df):
     print("\n" + "=" * 72)
     print(f"(2) QUADRANT MATRIX  (rotation players: mpg>={MIN_MPG}, gp>={MIN_GP}; "
           f"n={len(rot)})")
-    print(f"    usage median={u_med:.3f}   load median={l_med:.3f}")
+    print(f"    usage median={u_med:.3f}   influence median={l_med:.3f}")
     print("=" * 72)
 
     def cell(hi_u, hi_l, sort_col, n=8):
@@ -137,10 +137,10 @@ def quadrants(df):
         return c.nlargest(n, sort_col)
 
     quads = [
-        ("HIGH usage / HIGH load  = Offensive superstructures", True, True, "Lcos"),
-        ("LOW usage  / HIGH load  = Hidden organizers", False, True, "Lcos"),
-        ("HIGH usage / LOW load   = Volume scorers", True, False, "usg_pct"),
-        ("LOW usage  / LOW load   = Replaceable pieces", False, False, "usg_pct"),
+        ("HIGH usage / HIGH influence  = Offensive superstructures", True, True, "Lcos"),
+        ("LOW usage  / HIGH influence  = Hidden organizers", False, True, "Lcos"),
+        ("HIGH usage / LOW influence   = Volume scorers", True, False, "usg_pct"),
+        ("LOW usage  / LOW influence   = Replaceable pieces", False, False, "usg_pct"),
     ]
     for title, hu, hl, sc in quads:
         c = cell(hu, hl, sc)
@@ -148,7 +148,7 @@ def quadrants(df):
         print(f"\n  {title}  (n={cnt})")
         for r in c.itertuples(index=False):
             print(f"    {r.player:<22}{r.tri} {r.season}  "
-                  f"usg={r.usg_pct*100:4.1f}%  load={r.Lcos:.3f}  "
+                  f"usg={r.usg_pct*100:4.1f}%  influence={r.Lcos:.3f}  "
                   f"pts={r.ppg:4.1f}  pos={r.position}")
     return rot
 
@@ -169,12 +169,12 @@ def stability(df):
                          mean_usage=sub["u"].mean() * 100))
     s = pd.DataFrame(rows)
     between_sd = df["Lcos"].std(ddof=1)
-    print(f"  between-player SD of load (all): {between_sd:.3f}")
+    print(f"  between-player SD of influence (all): {between_sd:.3f}")
     print(f"  players with >=3 seasons: {len(s)}")
 
-    # focus on players who are ever high-load (max >= 0.10): are they stable?
+    # focus on players who are ever high-influence (max >= 0.10): are they stable?
     hubs = s[s["max_load"] >= 0.10].sort_values("mean_load", ascending=False)
-    print(f"\n  Structural hubs (max load >= 0.10), by mean load — is it a trait?")
+    print(f"\n  Structural hubs (max influence >= 0.10), by mean influence — is it a trait?")
     print(f"    {'Player':<22}{'seasons':>8}{'mean':>7}{'sd':>7}{'min':>7}{'max':>7}"
           f"{'cv':>7}  verdict")
     for r in hubs.head(20).itertuples(index=False):
@@ -204,11 +204,11 @@ def figure(df, out_path):
                 ax.annotate(hr["player"], (hr[col] * scale, hr["Lcos"]),
                             fontsize=6.5, xytext=(4, 2), textcoords="offset points")
         ax.set_xlabel(label)
-        ax.set_ylabel("Structural load")
-        ax.set_title(f"Load vs {label}   (Spearman \u03c1 = {r:.2f})", fontsize=10)
+        ax.set_ylabel("Structural influence")
+        ax.set_title(f"Influence vs {label}   (Spearman \u03c1 = {r:.2f})", fontsize=10)
         ax.spines["top"].set_visible(False)
         ax.spines["right"].set_visible(False)
-    fig.suptitle("Structural Load vs Conventional Metrics — is it a different axis?\n"
+    fig.suptitle("Structural Influence vs Conventional Metrics — is it a different axis?\n"
                  "red = structural hubs (load \u2265 0.20) · exploratory (§8)", fontsize=12)
     fig.tight_layout(rect=(0, 0, 1, 0.96))
     fig.savefig(out_path)

@@ -1,4 +1,4 @@
-role,n,pct_of_pool,avg_usage,avg_structural_load,avg_mpg,avg_ppg,avg_load_residual,avg_within_player_load_cv,n_canonical
+role,n,pct_of_pool,avg_usage,avg_structural_influence,avg_mpg,avg_ppg,avg_influence_residual,avg_within_player_influence_cv,n_canonical
 PRIMARY ORGANIZER,96,10.4,0.244,0.094,29.6,18.4,0.054,0.793,51
 CONNECTOR / HUB,103,11.1,0.145,0.078,23.6,9.0,0.062,0.857,53
 TERMINAL SCORER,368,39.8,0.233,0.014,28.6,16.6,-0.019,0.727,180

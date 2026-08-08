@@ -1,8 +1,8 @@
-# Structural Load: Measuring the Hidden Wiring of an NBA Offense
+# Structural Influence: Measuring the Hidden Wiring of an NBA Offense
 
 **Independent verification of reported statistics uses frozen, analysis-ready tables in `output/` (Layer 1). Rebuilding the possession graph from raw NBA Stats API pulls needs the author's Neo4j warehouse and is not required for verification.**
 
-Code and analysis-ready data for the manuscript *Structural Load: Measuring the Hidden Wiring of an NBA Offense* (Rami Zheman, 2026).
+Code and analysis-ready data for the manuscript *Structural Influence: Measuring the Hidden Wiring of an NBA Offense* (Rami Zheman, 2026).
 
 ## Data
 

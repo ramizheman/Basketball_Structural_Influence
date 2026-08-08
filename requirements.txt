@@ -1,4 +1,4 @@
-# Structural Load paper - analysis dependencies (Python 3.11+)
+# Structural Influence paper - analysis dependencies (Python 3.11+)
 numpy>=1.26
 pandas>=2.0
 scipy>=1.11

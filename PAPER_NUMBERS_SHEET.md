@@ -1,6 +1,6 @@
-# PAPER_NUMBERS_SHEET - Structural Load
+# PAPER_NUMBERS_SHEET - Structural Influence
 
-_Generated: 2026-07-29 by `_paper_numbers_audit.py`_
+_Generated: 2026-08-08 by `_paper_numbers_audit.py`_
 _Source: `paper.tex`. Values recomputed from `output/` (no Neo4j)._
 
 Run `python _paper_numbers_audit.py --check` (must exit 0).
@@ -13,78 +13,78 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER n | 96 | 96 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER % pool | 10.4 | 10.4 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER usage | 0.244 | 0.244 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER load | 0.094 | 0.094 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER resid load | 0.054 | 0.054 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER influence | 0.094 | 0.094 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER resid influence | 0.054 | 0.054 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER ppg | 18.4 | 18.4 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER mpg | 29.6 | 29.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | CONNECTOR / HUB n | 103 | 103 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | CONNECTOR / HUB % pool | 11.1 | 11.1 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | CONNECTOR / HUB usage | 0.145 | 0.145 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB load | 0.078 | 0.078 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | CONNECTOR / HUB resid load | 0.062 | 0.062 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | CONNECTOR / HUB influence | 0.078 | 0.078 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | CONNECTOR / HUB resid influence | 0.062 | 0.062 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | CONNECTOR / HUB ppg | 9 | 9 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | CONNECTOR / HUB mpg | 23.6 | 23.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER n | 368 | 368 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER % pool | 39.8 | 39.8 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER usage | 0.233 | 0.233 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | TERMINAL SCORER load | 0.014 | 0.014 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | TERMINAL SCORER resid load | -0.019 | -0.019 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | TERMINAL SCORER influence | 0.014 | 0.014 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | TERMINAL SCORER resid influence | -0.019 | -0.019 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER ppg | 16.6 | 16.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | TERMINAL SCORER mpg | 28.6 | 28.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST n | 357 | 357 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST % pool | 38.6 | 38.6 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST usage | 0.147 | 0.147 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST load | 0.006 | 0.006 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
-| PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST resid load | -0.009 | -0.009 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST influence | 0.006 | 0.006 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
+| PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST resid influence | -0.009 | -0.009 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST ppg | 8.2 | 8.2 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | ROLE OCCUPANT / SPECIALIST mpg | 22.8 | 22.8 | 0.015 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 exemplars | S. Gilgeous-Alexander 2023-24 usage | 0.317 | 0.317 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | S. Gilgeous-Alexander 2023-24 load | 0.308 | 0.30808 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | S. Gilgeous-Alexander 2023-24 influence | 0.308 | 0.30808 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | S. Gilgeous-Alexander 2023-24 resid | 0.216 | 0.215751 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | A. Davis 2023-24 usage | 0.261 | 0.261 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | A. Davis 2023-24 load | 0.168 | 0.168371 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | A. Davis 2023-24 influence | 0.168 | 0.168371 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | A. Davis 2023-24 resid | 0.105 | 0.104703 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | N. Jokić 2024-25 usage | 0.285 | 0.285 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | N. Jokić 2024-25 load | 0.145 | 0.144676 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | N. Jokić 2024-25 influence | 0.145 | 0.144676 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | N. Jokić 2024-25 resid | 0.067 | 0.0674729 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | B. Adebayo 2023-24 usage | 0.247 | 0.247 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | B. Adebayo 2023-24 load | 0.211 | 0.211223 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | B. Adebayo 2023-24 influence | 0.211 | 0.211223 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | B. Adebayo 2023-24 resid | 0.166 | 0.166459 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | R. Gobert 2023-24 usage | 0.152 | 0.152 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | R. Gobert 2023-24 load | 0.62 | 0.619706 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | R. Gobert 2023-24 influence | 0.62 | 0.619706 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | R. Gobert 2023-24 resid | 0.598 | 0.598455 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | D. Gafford 2022-23 usage | 0.146 | 0.146 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | D. Gafford 2022-23 load | 0.411 | 0.41086 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | D. Gafford 2022-23 influence | 0.411 | 0.41086 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | D. Gafford 2022-23 resid | 0.397 | 0.397099 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Poeltl 2023-24 usage | 0.16 | 0.16 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | J. Poeltl 2023-24 load | 0.217 | 0.217307 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | J. Poeltl 2023-24 influence | 0.217 | 0.217307 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Poeltl 2023-24 resid | 0.203 | 0.203476 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Allen 2024-25 usage | 0.156 | 0.156 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | J. Allen 2024-25 load | 0.11 | 0.109685 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | J. Allen 2024-25 influence | 0.11 | 0.109685 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Allen 2024-25 resid | 0.088 | 0.087967 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | L. James 2023-24 usage | 0.285 | 0.285 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | L. James 2023-24 load | 0.013 | 0.0133151 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | L. James 2023-24 influence | 0.013 | 0.0133151 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | L. James 2023-24 resid | -0.054 | -0.053795 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Tatum 2022-23 usage | 0.319 | 0.319 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | J. Tatum 2022-23 load | 0.009 | 0.00941317 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | J. Tatum 2022-23 influence | 0.009 | 0.00941317 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Tatum 2022-23 resid | -0.09 | -0.0903133 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Hart 2023-24 usage | 0.133 | 0.133 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
-| PASS | §6.1 exemplars | J. Hart 2023-24 load | 0.003 | 0.00326143 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
+| PASS | §6.1 exemplars | J. Hart 2023-24 influence | 0.003 | 0.00326143 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.1 exemplars | J. Hart 2023-24 resid | -0.022 | -0.0217099 | 0.0055 | `structural_role_taxonomy.py` | `structural_role_classification.csv` |  |
 | PASS | §6.2 | orthogonality n | 1283 | 1283 | 0.0 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.2 Table ortho | ρ(load,usg_pct) | 0.27 | 0.269648 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
+| PASS | §6.2 Table ortho | ρ(influence,usg_pct) | 0.27 | 0.269648 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,usg_pct) | -0.261 | -0.260973 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.2 Table ortho | ρ(load,ppg) | 0.436 | 0.436231 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
+| PASS | §6.2 Table ortho | ρ(influence,ppg) | 0.436 | 0.436231 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,ppg) | -0.264 | -0.263713 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.2 Table ortho | ρ(load,apg) | 0.278 | 0.277526 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
+| PASS | §6.2 Table ortho | ρ(influence,apg) | 0.278 | 0.277526 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,apg) | -0.255 | -0.255002 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.2 Table ortho | ρ(load,ast_pct) | 0.106 | 0.106196 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
+| PASS | §6.2 Table ortho | ρ(influence,ast_pct) | 0.106 | 0.106196 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,ast_pct) | -0.19 | -0.189884 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.2 Table ortho | ρ(load,touches) | 0.376 | 0.375985 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
+| PASS | §6.2 Table ortho | ρ(influence,touches) | 0.376 | 0.375985 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,touches) | -0.253 | -0.253096 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.2 Table ortho | ρ(load,front_ct_touches) | 0.424 | 0.424032 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
+| PASS | §6.2 Table ortho | ρ(influence,front_ct_touches) | 0.424 | 0.424032 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,front_ct_touches) | -0.238 | -0.237549 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
-| PASS | §6.2 Table ortho | ρ(load,net_rating) | 0.203 | 0.203141 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
+| PASS | §6.2 Table ortho | ρ(influence,net_rating) | 0.203 | 0.203141 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.2 Table ortho | ρ(resid,net_rating) | -0.018 | -0.0177865 | 0.0055 | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |  |
 | PASS | §6.3 | connector strata team-seasons | 73 | 73 | 0.0 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |
 | PASS | §6.3 | connector Δshare CUT (pp) | 1.35 | 1.353 | 0.015 | `role_composition_playmix.py` | `role_composition_playmix.csv` |  |

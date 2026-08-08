@@ -1,4 +1,4 @@
-"""Disaggregate the MARGINAL connector tier by position: low-load BIG vs
+"""Disaggregate the MARGINAL connector tier by position: low-influence BIG vs
 perimeter/SHOOTER (position has no 'C'). Three-way joint model:
   n_HUBCONN, n_MARGBIG, n_MARGWING  (+ n_ORGANIZER, n_TERMINAL controls)
 Same team-season FE + opp/period/scorebucket spec throughout.
@@ -29,7 +29,7 @@ pos_map = {(r.tri, int(r.yy), r.abbrev): r.position for r in POS.itertuples(inde
 
 def build_3way_class_map(season_yy=(22, 23, 24)):
     """Same taxonomy as role_composition_playmix.build_class_map() (Eq. 5 quadratic
-    on graph-native u), then split Connector/Hub at median residual load and split
+    on graph-native u), then split Connector/Hub at median residual influence and split
     the marginal half by position (big vs wing)."""
     loads = pd.read_csv(LOADS)
     stats = pd.read_csv(STATS)

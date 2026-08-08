@@ -1,4 +1,4 @@
-player,season,team,position,gp,mpg,usage,structural_load,load_residual,usage_percentile,load_percentile,role_classification,canonical_archetype,load_cv
+player,season,team,position,gp,mpg,usage,structural_influence,influence_residual,usage_percentile,influence_percentile,role_classification,canonical_archetype,influence_cv
 R. Gobert,2022-23,MIN,C,70.0,30.7,0.161,0.7805032845213218,0.7626269522653625,34.41558441558442,100.0,CONNECTOR / HUB,,0.6281056202924915
 R. Gobert,2023-24,MIN,C,76.0,34.1,0.152,0.6197062463896956,0.598455483536847,26.56926406926407,99.89177489177489,CONNECTOR / HUB,,0.6281056202924915
 R. Gobert,2024-25,MIN,C,72.0,33.2,0.129,0.5108862830941341,0.49491648401150456,10.876623376623376,99.78354978354979,CONNECTOR / HUB,CONNECTOR / HUB,0.6281056202924915

@@ -1,5 +1,5 @@
 """
-PAPER NUMBERS AUDIT - Structural Load (paper.tex)
+PAPER NUMBERS AUDIT - Structural Influence (paper.tex)
 =================================================
 Recomputes locked numeric claims from output/ (no Neo4j).
 
@@ -116,8 +116,8 @@ def claims_taxonomy():
             ("n", e["n"], "n", TOL["int"]),
             ("% pool", e["pct"], "pct_of_pool", TOL["round2"]),
             ("usage", e["u"], "avg_usage", TOL["round3"]),
-            ("load", e["L"], "avg_structural_load", TOL["round3"]),
-            ("resid load", e["resid"], "avg_load_residual", TOL["round3"]),
+            ("influence", e["L"], "avg_structural_influence", TOL["round3"]),
+            ("resid influence", e["resid"], "avg_influence_residual", TOL["round3"]),
             ("ppg", e["ppg"], "avg_ppg", TOL["round2"]),
             ("mpg", e["mpg"], "avg_mpg", TOL["round2"]),
         ]:
@@ -163,12 +163,12 @@ def claims_exemplars():
                          u, float(r["usage"]), TOL["round3"],
                          "structural_role_taxonomy.py",
                          "structural_role_classification.csv"))
-        out.append(Claim("§6.1 exemplars", f"{label} load",
-                         L, float(r["structural_load"]), TOL["round3"],
+        out.append(Claim("§6.1 exemplars", f"{label} influence",
+                         L, float(r["structural_influence"]), TOL["round3"],
                          "structural_role_taxonomy.py",
                          "structural_role_classification.csv"))
         out.append(Claim("§6.1 exemplars", f"{label} resid",
-                         resid, float(r["load_residual"]), TOL["round3"],
+                         resid, float(r["influence_residual"]), TOL["round3"],
                          "structural_role_taxonomy.py",
                          "structural_role_classification.csv"))
     return out
@@ -193,7 +193,7 @@ def claims_ortho():
     for col, (p_load, p_resid) in paper.items():
         r_load = spearmanr(m["Lcos"], m[col], nan_policy="omit").correlation
         r_resid = spearmanr(m["u_resid"], m[col], nan_policy="omit").correlation
-        out.append(Claim("§6.2 Table ortho", f"ρ(load,{col})",
+        out.append(Claim("§6.2 Table ortho", f"ρ(influence,{col})",
                          p_load, float(r_load), TOL["round3"],
                          "fragility_orthogonality.py",
                          "fragility_orthogonality.csv"))
@@ -502,7 +502,7 @@ def claims_travelfit():
 
     # Destination-fit null among connector movers (resid taxonomy cut)
     u_med = tf["origin_usage"].median()
-    conn = tf[(tf["origin_usage"] < u_med) & (tf["origin_load_resid"] > 0)].copy()
+    conn = tf[(tf["origin_usage"] < u_med) & (tf["origin_influence_resid"] > 0)].copy()
     fit_delta = float(conn["fit_score"].corr(conn["delta"]))
     fit_port = float(conn["fit_score"].corr((conn["delta"] > 0).astype(float)))
     out.append(Claim("§6.6", "fit vs delta corr (connectors)", -0.09,
@@ -556,7 +556,7 @@ def claims_appendix():
 # ---------------------------------------------------------------------------
 def write_sheet(claims):
     lines = [
-        "# PAPER_NUMBERS_SHEET - Structural Load",
+        "# PAPER_NUMBERS_SHEET - Structural Influence",
         "",
         f"_Generated: {date.today().isoformat()} by `_paper_numbers_audit.py`_",
         "_Source: `paper.tex`. Values recomputed from `output/` (no Neo4j)._",

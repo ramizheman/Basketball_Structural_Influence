@@ -1,6 +1,6 @@
 """
 Fetch REAL traditional + advanced + tracking stats per player-season from the
-NBA Stats API, for the orthogonality argument (structural load vs conventional
+NBA Stats API, for the orthogonality argument (structural influence vs conventional
 importance). Official NBA data, matched by team-season to our graph names.
 
 Pulled per season (each endpoint returns all players in one call):

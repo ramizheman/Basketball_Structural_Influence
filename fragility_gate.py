@@ -6,7 +6,7 @@ Pre-registered kill test for FRAGILITY_PREREGISTRATION.md (§7.1). Runs the froz
 8-team pilot and reports the three gate criteria. Any single failure => do not
 run the full study.
 
-Structural load (leave-one-player-out on the Structural Load association object A):
+Structural influence (leave-one-player-out on the Structural Influence association object A):
     L(p) = 1 - cos(A_full, A_{-p})          (primary; §4)
     frobenius reported as labeled robustness only.
 
@@ -61,7 +61,7 @@ def build_B_labeled(rows: pd.DataFrame):
 
 
 def loo_loads(B, players, rng, n_null):
-    """Leave-one-player-out structural loads on A. Returns dict player -> stats."""
+    """Leave-one-player-out structural influences on A. Returns dict player -> stats."""
     E, sd, _ = null_O_stats(B, rng, n_null)
     A_full = standardize(assoc_O(B), E, sd)
     total = int(B.sum())
@@ -112,7 +112,7 @@ def main():
     full_rows = []      # (team, franchise, player, u, Lcos, Lfrob, init)
     half_rows = []      # (team, player, half, u, Lcos, init)
     g1_ok = True
-    print("\n--- per team-season: leave-one-out loads ---")
+    print("\n--- per team-season: leave-one-out influences ---")
     for tri, yy, label, franchise, role in PILOT:
         rows = team_season_rows(df, tri, yy)
         odd, even = split_halves(rows)

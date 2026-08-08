@@ -145,21 +145,21 @@ def build_connector_universe() -> pd.DataFrame:
     beta, *_ = np.linalg.lstsq(X, L[ok], rcond=None)
     resid = np.full(len(df), np.nan)
     resid[ok] = L[ok] - (beta[0] + beta[1] * u[ok] + beta[2] * u[ok] ** 2)
-    df["load_residual"] = resid
-    df["structural_load"] = df["Lcos"]
+    df["influence_residual"] = resid
+    df["structural_influence"] = df["Lcos"]
     df["usage"] = df["usg_pct"]
     df["season"] = df["yy"].map(YY_TO_SEASON)
     df["team"] = df["tri"]
 
     rot = df[(df["mpg"] >= MIN_MPG) & (df["gp"] >= MIN_GP)
-             & df["usage"].notna() & df["structural_load"].notna()].copy()
+             & df["usage"].notna() & df["structural_influence"].notna()].copy()
     u_med = float(rot["usage"].median())
     rot["role_classification"] = np.where(
-        (rot["usage"] >= u_med) & (rot["load_residual"] > 0), "PRIMARY ORGANIZER",
+        (rot["usage"] >= u_med) & (rot["influence_residual"] > 0), "PRIMARY ORGANIZER",
         np.where(
-            (rot["usage"] < u_med) & (rot["load_residual"] > 0), "CONNECTOR / HUB",
+            (rot["usage"] < u_med) & (rot["influence_residual"] > 0), "CONNECTOR / HUB",
             np.where(
-                (rot["usage"] >= u_med) & (rot["load_residual"] <= 0), "TERMINAL SCORER",
+                (rot["usage"] >= u_med) & (rot["influence_residual"] <= 0), "TERMINAL SCORER",
                 "ROLE OCCUPANT / SPECIALIST",
             ),
         ),
@@ -171,7 +171,7 @@ def build_connector_universe() -> pd.DataFrame:
     jw = conn[(conn.team == "OKC") & (conn.season == "2022-23") & (conn.player == "J. Williams")]
     if len(jw):
         print("OKC 2022-23 J. Williams connector rows (must be person_id-distinct):", flush=True)
-        print(jw[["player_id", "full_name", "usage", "structural_load", "load_residual", "u"]]
+        print(jw[["player_id", "full_name", "usage", "structural_influence", "influence_residual", "u"]]
               .to_string(index=False), flush=True)
     return conn, rot
 
@@ -511,8 +511,8 @@ def main():
             structural_class=r["role_classification"],
             is_contrast=bool(r["is_contrast"]),
             usage=float(r["usage"]),
-            structural_load=float(r["structural_load"]),
-            load_residual=float(r["load_residual"]),
+            structural_influence=float(r["structural_influence"]),
+            influence_residual=float(r["influence_residual"]),
             graph_u=float(r["u"]) if np.isfinite(r["u"]) else sig_u,
             n_on=n_on, n_off=n_off,
             on_ppp=on_ppp, off_ppp=off_ppp,
@@ -532,11 +532,11 @@ def main():
     conn_out = out[~out["is_contrast"]].copy()
     conn_out["rank_raw"] = conn_out["raw_pts100"].rank(ascending=False, method="min")
     conn_out["rank_adj"] = conn_out["adj_pts100"].rank(ascending=False, method="min")
-    L_med = float(conn_out["structural_load"].median())
+    L_med = float(conn_out["structural_influence"].median())
     S_med = float(conn_out["adj_pts100"].median())
 
     def quad(row):
-        hi_L = row["structural_load"] >= L_med
+        hi_L = row["structural_influence"] >= L_med
         hi_S = row["adj_pts100"] >= S_med if np.isfinite(row["adj_pts100"]) else False
         if hi_L and hi_S:
             return "A_highL_highScore"
@@ -559,8 +559,8 @@ def main():
 
     qtab = (conn_out.groupby("quadrant")
             .agg(n=("player_id", "size"),
-                 mean_L=("structural_load", "mean"),
-                 mean_r=("load_residual", "mean"),
+                 mean_L=("structural_influence", "mean"),
+                 mean_r=("influence_residual", "mean"),
                  mean_usage=("usage", "mean"),
                  mean_raw=("raw_pts100", "mean"),
                  mean_adj=("adj_pts100", "mean"),
@@ -595,7 +595,7 @@ def main():
         mech = mechanism_block(sub, on, r["player_id"], r["player"], rng)
         label = r.get("full_name") or r["player"]
         print(f"\n{label} [{r['player_id']}] | {r['team']} {r['season']} | {r['structural_class']}")
-        print(f"  L={r['structural_load']:.3f} r={r['load_residual']:+.3f} u={r['usage']:.3f}")
+        print(f"  L={r['structural_influence']:.3f} r={r['influence_residual']:+.3f} u={r['usage']:.3f}")
         print(f"  raw={r['raw_pts100']:+.1f} adj={r['adj_pts100']:+.1f} "
               f"[{r['adj_ci_lo']:+.1f},{r['adj_ci_hi']:+.1f}] on={r['n_on']} off={r['n_off']}")
         print(f"  own diet: {mech['own_diet']}")
@@ -612,7 +612,7 @@ def main():
             player_id=r["player_id"], player=r["player"], full_name=label,
             team=r["team"], season=r["season"],
             structural_class=r["structural_class"],
-            structural_load=r["structural_load"], load_residual=r["load_residual"],
+            structural_influence=r["structural_influence"], influence_residual=r["influence_residual"],
             usage=r["usage"], raw_pts100=r["raw_pts100"], adj_pts100=r["adj_pts100"],
             quadrant=r.get("quadrant", ""),
             own_diet=mech["own_diet"], top_mix_delta=mech["top_mix_delta"],
@@ -642,17 +642,17 @@ def main():
 
 def build_report(out, conn_out, qtab, mech_df, L_med, S_med):
     ok = conn_out[(conn_out.n_on >= MIN_POSS) & (conn_out.n_off >= MIN_POSS)]
-    r_raw = ok["structural_load"].corr(ok["raw_pts100"])
-    r_adj = ok["structural_load"].corr(ok["adj_pts100"])
-    r_res_adj = ok["load_residual"].corr(ok["adj_pts100"])
+    r_raw = ok["structural_influence"].corr(ok["raw_pts100"])
+    r_adj = ok["structural_influence"].corr(ok["adj_pts100"])
+    r_res_adj = ok["influence_residual"].corr(ok["adj_pts100"])
     top10 = ok.nlargest(10, "adj_pts100")
     bot10 = ok.nsmallest(10, "adj_pts100")
-    resilient = ok[(ok.structural_load >= L_med) & (ok.adj_pts100 <= S_med)].nsmallest(10, "adj_pts100")
+    resilient = ok[(ok.structural_influence >= L_med) & (ok.adj_pts100 <= S_med)].nsmallest(10, "adj_pts100")
     contrasts = out[out.is_contrast]
 
     def fmt(df):
-        cols = ["player_id", "full_name", "player", "team_season", "structural_load",
-                "load_residual", "usage", "raw_pts100", "adj_pts100",
+        cols = ["player_id", "full_name", "player", "team_season", "structural_influence",
+                "influence_residual", "usage", "raw_pts100", "adj_pts100",
                 "adj_ci_lo", "adj_ci_hi", "n_on", "n_off", "quadrant"]
         use = [c for c in cols if c in df.columns]
         try:
@@ -689,7 +689,7 @@ def build_report(out, conn_out, qtab, mech_df, L_med, S_med):
         "", fmt(top10), "",
         "## 2. High-L scoring-resilient connectors",
         "", fmt(resilient), "",
-        "## 3. Terminal contrasts (low structural load)",
+        "## 3. Terminal contrasts (low structural influence)",
         "", fmt(contrasts), "",
         "## Lowest adjusted-impact connectors",
         "", fmt(bot10), "",
@@ -697,7 +697,7 @@ def build_report(out, conn_out, qtab, mech_df, L_med, S_med):
         "",
     ]
     if len(mech_df):
-        slim = mech_df[["player_id", "full_name", "team", "season", "structural_load",
+        slim = mech_df[["player_id", "full_name", "team", "season", "structural_influence",
                         "adj_pts100", "own_diet", "top_mix_delta", "onoff_struct_L"]]
         try:
             lines.append(slim.to_markdown(index=False, floatfmt=".3f"))

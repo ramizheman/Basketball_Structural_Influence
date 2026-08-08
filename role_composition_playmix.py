@@ -266,7 +266,7 @@ def main():
             grad[g] = mix(np.where(m)[0])
 
     # ---- console -----------------------------------------------------------
-    print(f"\nrole thresholds: usage median={u_med:.3f}  load median={l_med:.3f}")
+    print(f"\nrole thresholds: usage median={u_med:.3f}  influence median={l_med:.3f}")
     print("\n=== within-team-season play-mix delta (WITH >=1 of class MINUS WITHOUT) ===")
     for k in ORDER:
         r = results[k]
@@ -363,7 +363,7 @@ th{{background:#eee}} img{{max-width:100%;border:1px solid #ddd}}</style></head>
 <p class="note">For each offensive possession (2022-24, exactly-5 on-court, n&asymp;650k) we know the
 role class of everyone on the floor and the play that was run. This shows how the play-type mix shifts
 when a role class is present vs absent, <b>differenced within each team-season</b> (removes team style).
-Descriptive. Role thresholds: usage median={u_med*100:.1f}%, load median={l_med:.3f};
+Descriptive. Role thresholds: usage median={u_med*100:.1f}%, influence median={l_med:.3f};
 possessions with &ge;4/5 on-court classified: {cov:.0%}.</p>
 <div class="warn"><b>Read with two caveats.</b> (1) <b>Circularity:</b> high-usage classes (TERMINAL,
 ORGANIZER) mechanically run more of their own plays when present, so their rows are partly definitional

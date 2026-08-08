@@ -5,7 +5,7 @@ Two orthogonal axes a front office needs BEFORE a signing:
 
   TRAVEL (property of the player) -- will his organizational function reproduce
     on a new team?  FORECAST from origin-only history:
-      origin structural load, year-to-year signature stability, origin usage.
+      origin structural influence, year-to-year signature stability, origin usage.
     Validated leave-one-out (closed-form OLS): the model never sees a player's
     own row when predicting it, and never sees any destination data.
 
@@ -147,7 +147,7 @@ def main():
     sig = pd.read_parquet(OUT_DIR / "portability_signatures.parquet")
     sig["player_id"] = sig["player_id"].astype(str)
     sig = sig[sig["yy"].isin((22, 23, 24))].reset_index(drop=True)  # pre-registered window
-    d = enr.dropna(subset=["self_sim", "decoy_sim", "delta", "origin_load",
+    d = enr.dropna(subset=["self_sim", "decoy_sim", "delta", "origin_influence",
                            "origin_usage"]).copy().reset_index(drop=True)
 
     # origin-team tricode (first token of "origin_team", already a tricode)
@@ -158,7 +158,7 @@ def main():
     d["stability"] = d["stability"].fillna(d["stability"].median())
 
     # ---- TRAVEL: forecast self_sim from ORIGIN-ONLY features, leave-one-out ----
-    feats = ["origin_load", "stability", "origin_usage"]
+    feats = ["origin_influence", "stability", "origin_usage"]
     Xz = np.column_stack([np.ones(len(d))] + [zscore(d[f]) for f in feats])
     y = d["self_sim"].to_numpy(float)
     loo, beta = loo_ols_predictions(Xz, y)

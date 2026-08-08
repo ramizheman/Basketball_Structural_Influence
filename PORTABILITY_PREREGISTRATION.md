@@ -9,7 +9,7 @@ a decoy null, franchise/player non-independence handling, and a pre-committed no
 
 ## 1. Question
 
-Fragility (confirmed) showed that a player's **structural load** `L(p)` — how much his removal re-wires
+Fragility (confirmed) showed that a player's **structural influence** `L(p)` — how much his removal re-wires
 his team's play-type co-initiation topology — is a real, usage-decoupled quantity. It left one thing
 undetermined that a front office would actually pay differently for:
 
@@ -57,13 +57,13 @@ the profile-matched decoy similarity:
   fixed player properties). Reported as-is, no fallback (§9).
 
 This is the **last** planned test in this line of inquiry. If T1 is not confirmed, the program's
-contribution is the confirmed descriptive result (Structural Load + Fragility); no further variants.
+contribution is the confirmed descriptive result (Structural Influence + Fragility); no further variants.
 
 ---
 
 ## 3. Representation (reused, no drift)
 
-Exactly the Structural Load / Fragility object. L2 player→play-type initiation biadjacency `B` (rows = players,
+Exactly the Structural Influence / Fragility object. L2 player→play-type initiation biadjacency `B` (rows = players,
 cols = the 8 registered play types `TRANSITION, PNR, DRIVE, POST_UP, SPOT_UP, CUT, PUTBACK, PULL_UP`),
 per regular-season team-season. Association matrix `A` = min-overlap co-initiation
 `O[i,j]=Σ_player min(B[·,i],B[·,j])` (i≠j, diagonal 0), standardized against the fixed-both-margins
@@ -85,7 +85,7 @@ each standardized against its own margin-preserving null, exactly as `fragility_
   part of a player's identity. Decoys are matched on `π`.
 
 Player inclusion: `init(p) ≥ 50` in the team-season (Fragility `MIN_INIT_SEASON`), team-season passes
-Structural Load §6 inclusion (`≥300` off. poss and `≥6` players with `≥20` init per half; we use the
+Structural Influence §6 inclusion (`≥300` off. poss and `≥6` players with `≥20` init per half; we use the
 season-level analogue already enforced by the Fragility loads pipeline).
 
 ---
@@ -214,7 +214,7 @@ cosine units) but robust across 296 players and every clustering scheme.
   *destination* context constant but cannot fully rule out origin-side selection; the claim is
   associational ("the wiring pattern co-travels"), not "the player causes the wiring".
 - **No data outside `graph_schema.md`.** Signatures and profiles come solely from `INITIATED` edges
-  and `play_type` already used by Structural Load / Fragility.
+  and `play_type` already used by Structural Influence / Fragility.
 
 ---
 

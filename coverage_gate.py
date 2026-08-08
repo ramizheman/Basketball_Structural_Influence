@@ -56,7 +56,7 @@ def main():
 
     # frozen primary inclusion: all 5 on-court classified, pts present
     df = df[(df["n_classified"] == 5) & df["pts"].notna()].copy()
-    print(f"role thresholds: usage median={u_med:.3f}  load median={l_med:.3f}")
+    print(f"role thresholds: usage median={u_med:.3f}  influence median={l_med:.3f}")
     print(f"possessions with all 5 classified + pts present: {len(df):,}")
 
     print("building frozen talent control (leave-game-out points-per-initiation) ...", flush=True)

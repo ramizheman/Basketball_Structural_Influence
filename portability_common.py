@@ -2,7 +2,7 @@
 Shared machinery for the Structural Role Portability study
 (PORTABILITY_PREREGISTRATION.md). Builds, ONCE and cached, the per-(team-season,
 player) adjacency-displacement signature ΔA_p (28-vec, off-diagonal upper triangle)
-and play-type profile π_p (8-vec). Reuses Structural Load / Fragility objects with NO drift.
+and play-type profile π_p (8-vec). Reuses Structural Influence / Fragility objects with NO drift.
 
 Signatures use cosine (pattern), so the standardization null count is a nuisance
 scale param (registered N_NULL=300).

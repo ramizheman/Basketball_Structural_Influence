@@ -5,7 +5,7 @@ Generate the paper's figures from cached output/ data (no Neo4j).
   fig5b_signatures.png
   fig_loo_displacement.png
   fig_taxonomy_map.png
-  fig_connector_delta_dist.png
+  fig_shaper_delta_dist.png
 
 Run: python make_figures.py
 """
@@ -126,14 +126,14 @@ def unit_norm_vec(v):
 def figure_loo_displacement(
     tri="MIN", yy=23,
     high_player="R. Gobert", low_player="K. Towns",
-    high_label="Connector / Hub", low_label="Terminal Scorer",
+    high_label="Shaper", low_label="Terminal Scorer",
     seed=17, n_null=1000,
 ):
-    """What structural load measures: leave-one-out displacement of the
+    """What structural influence measures: leave-one-out displacement of the
     play-type association fingerprint.
 
     Two panels, same team-season, same 8x8 play-type ordering, same diverging
-    scale, diagonal blank: A - A_{-p} for a high-load and a low-load player.
+    scale, diagonal blank: A - A_{-p} for a high-influence and a low-influence player.
     This is the exact object underlying L(p) = 1 - cos(A_full, A_{-p})
     (Eq. load in the paper) -- no new construct, just its visualization.
     """
@@ -166,7 +166,7 @@ def figure_loo_displacement(
     def resid_lookup(player):
         yy_str = f"20{yy:02d}-{yy+1:02d}"
         hit = roles[(roles.player == player) & (roles.team == tri) & (roles.season == yy_str)]
-        return float(hit.iloc[0]["load_residual"]) if not hit.empty else float("nan")
+        return float(hit.iloc[0]["influence_residual"]) if not hit.empty else float("nan")
 
     r_hi, r_lo = resid_lookup(high_player), resid_lookup(low_player)
 
@@ -209,7 +209,7 @@ def figure_loo_displacement(
 
     season_label = f"20{yy:02d}\u201320{yy+1:02d}"
     fig.suptitle(
-        "What structural load measures: leave-one-out displacement of the\n"
+        "What structural influence measures: leave-one-out displacement of the\n"
         f"play-type association fingerprint ({tri} {season_label}, same team-season)",
         fontsize=12, y=1.02,
     )
@@ -217,7 +217,7 @@ def figure_loo_displacement(
         0.5, -0.02,
         "Each heatmap is $A-A_{-p}$: the signed change in the standardized play-type\n"
         "association matrix when player $p$'s initiation row is removed. Larger, more\n"
-        "structured displacement corresponds to greater cosine-based structural load $L(p)$.\n"
+        "structured displacement corresponds to greater cosine-based structural influence $L(p)$.\n"
         "This is a leave-one-out structural perturbation, not an observed injury or causal adaptation.",
         ha="center", va="top", fontsize=8.5, color="#333",
     )
@@ -368,7 +368,7 @@ def figure5b():
         "weak traveler": "#999999",
     }
     cases = [
-        # Selected by realized Delta rank among connector movers in the
+        # Selected by realized Delta rank among shaper movers in the
         # pre-registered n=294 window (enough initiations both sides).
         ("strong traveler", "D. Gafford", "Gafford",
          ("WAS", 23), ("DAL", 23), "WAS '23 → DAL '23"),
@@ -438,12 +438,13 @@ def figure5b():
 
 
 # ----------------------------------------------------------------- Figure 7
-# ----------------------------------------------------------------- Connector Δ distribution
-def figure_connector_dist():
-    """Histogram/density of connector-mover Δ with Gafford / Jones Jr. / Wright marked."""
+# ----------------------------------------------------------------- Shaper Δ distribution
+def figure_shaper_dist():
+    """Histogram/density of shaper-mover Δ with Gafford / Jones Jr. / Wright marked."""
     u_med = TF["origin_usage"].median()
-    # principled connector cut: low origin usage × positive residual load
-    conn = TF[(TF["origin_usage"] < u_med) & (TF["origin_load_resid"] > 0)].copy()
+    # principled shaper cut: low origin usage × positive residual influence
+    # (CSV role strings remain Connector; do not rewrite output tables)
+    conn = TF[(TF["origin_usage"] < u_med) & (TF["origin_influence_resid"] > 0)].copy()
     d = conn["delta"].to_numpy(float)
     med = float(np.median(d))
 
@@ -488,16 +489,16 @@ def figure_connector_dist():
             arrowprops=dict(arrowstyle="-", color=color, lw=0.8),
         )
 
-    ax.text(0.02, 0.97, f"n={len(d)} connector movers\nmedian Δ={med:+.3f}",
+    ax.text(0.02, 0.97, f"n={len(d)} shaper movers\nmedian Δ={med:+.3f}",
             transform=ax.transAxes, ha="left", va="top", fontsize=8.5,
             bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="#ccc", alpha=0.9))
     ax.set_xlabel(r"portability excess $\Delta$ (self-sim $-$ decoy-sim)")
     ax.set_ylabel("density")
-    ax.set_title("Connector portability is a distribution, not an invariant", fontsize=11)
+    ax.set_title("Shaper portability is a distribution, not an invariant", fontsize=11)
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     fig.tight_layout()
-    out = FIG_DIR / "fig_connector_delta_dist.png"
+    out = FIG_DIR / "fig_shaper_delta_dist.png"
     fig.savefig(out, bbox_inches="tight")
     plt.close(fig)
     print(f"wrote {out.name}")
@@ -507,25 +508,26 @@ def figure_connector_dist():
 def figure_taxonomy_exemplars():
     """Usage percentile x residual percentile + hex density.
 
-    Labels tell one story: concentrically organized hubs (Organizer / Connector)
+    Labels tell one story: concentrically organized hubs (Organizer / Shaper)
     vs high-usage volume that does not reorganize wiring beyond usage (Terminal).
     LAL 2023-24 is the within-roster contrast (AD hub, LeBron volume).
     """
     roles = pd.read_csv(OUT_DIR / "structural_role_classification.csv").copy()
-    resid = roles["load_residual"].to_numpy(float)
+    resid = roles["influence_residual"].to_numpy(float)
     share_pos = float((resid > 0).mean())
 
     roles["u_pct"] = roles["usage"].rank(pct=True) * 100
-    roles["r_pct"] = roles["load_residual"].rank(pct=True) * 100
+    roles["r_pct"] = roles["influence_residual"].rank(pct=True) * 100
     resid0_pct = float((resid <= 0).mean() * 100)
 
     # Same seasons as Sec. emerge prose / Table exemplars.
+    # First tuple field is display class only; CSV role strings stay Connector.
     exemplars = [
         ("Organizer", "SGA", "S. Gilgeous-Alexander", "OKC", "2023-24", "#1a6b3c"),
         ("Organizer", "Jokić", "N. Jokić", "DEN", "2024-25", "#1a6b3c"),
         ("Organizer", "AD", "A. Davis", "LAL", "2023-24", "#1a6b3c"),
-        ("Connector", "Gobert", "R. Gobert", "MIN", "2023-24", "#2f5f8f"),
-        ("Connector", "Gafford", "D. Gafford", "WAS", "2022-23", "#2f5f8f"),
+        ("Shaper", "Gobert", "R. Gobert", "MIN", "2023-24", "#2f5f8f"),
+        ("Shaper", "Gafford", "D. Gafford", "WAS", "2022-23", "#2f5f8f"),
         ("Terminal", "LeBron", "L. James", "LAL", "2023-24", "#c0392b"),
         ("Terminal", "Tatum", "J. Tatum", "BOS", "2022-23", "#c0392b"),
         ("Specialist", "Hart", "J. Hart", "NYK", "2023-24", "#6b6b6b"),
@@ -551,10 +553,10 @@ def figure_taxonomy_exemplars():
 
     box_kw = dict(fontsize=8, fontweight="bold",
                   bbox=dict(boxstyle="round,pad=0.25", fc="white", alpha=0.92))
-    ax.text(55, 86, "Organizer\n(on-ball halfcourt hub)", transform=ax.transData,
+    ax.text(55, 86, "Organizer\n(on-ball halfcourt)", transform=ax.transData,
             ha="left", va="top", color="#1a6b3c",
             **{**box_kw, "bbox": {**box_kw["bbox"], "ec": "#1a6b3c"}})
-    ax.text(3, 93, "Connector / Hub\n(cut-and-roll, low usage)", transform=ax.transData,
+    ax.text(3, 93, "Shaper\n(cut-and-roll, low usage)", transform=ax.transData,
             ha="left", va="top", color="#2f5f8f",
             **{**box_kw, "bbox": {**box_kw["bbox"], "ec": "#2f5f8f"}})
     ax.text(55, 12, "Terminal Scorer\n(creation volume, replaceable wiring)", transform=ax.transData,
@@ -598,7 +600,7 @@ def figure_taxonomy_exemplars():
         x2, y2 = coords["LeBron"]
         ax.plot([x1, x2], [y1, y2], color="#555", lw=0.9, ls=":", zorder=4)
         ax.annotate(
-            "same Lakers roster, 2023-24:\nAD = post/cut/PnR hub\nLeBron = drive/PnR volume",
+            "same Lakers roster, 2023-24:\nAD = post/cut/PnR organizer\nLeBron = drive/PnR volume",
             xy=((x1 + x2) / 2, (y1 + y2) / 2),
             xytext=(6, 42), textcoords="data",
             fontsize=7.5, color="#333", ha="left", va="center",
@@ -611,7 +613,7 @@ def figure_taxonomy_exemplars():
     ax.set_ylim(-2, 108)
     ax.set_yticks([0, 20, 40, 60, 80, 100])
     ax.set_xlabel("usage percentile")
-    ax.set_ylabel("residual structural load percentile")
+    ax.set_ylabel("residual structural influence percentile")
     ax.set_title(
         "Organizer vs Terminal: does removal reorganize initiation pathways?\n"
         f"(hex = rotation-pool density, n={len(roles)}; only {share_pos*100:.0f}% clear resid>0)",
@@ -633,7 +635,7 @@ if __name__ == "__main__":
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     figure1()
     figure5b()
-    figure_connector_dist()
+    figure_shaper_dist()
     figure_taxonomy_exemplars()
     figure_loo_displacement()
     print(f"\nPaper figures ({len(list(FIG_DIR.glob('fig*.png')))} files) -> {FIG_DIR}")

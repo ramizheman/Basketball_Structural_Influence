@@ -1,5 +1,5 @@
 """
-Enriched portability player report: positions, roles, structural load, usage.
+Enriched portability player report: positions, roles, structural influence, usage.
 Writes output/portability_players_enriched.csv and portability_players.html
 """
 from __future__ import annotations
@@ -50,13 +50,13 @@ def usage_resid_series(u, L):
 
 
 def archetype(L, u, resid):
-    """Short scout label from load + usage (exploratory, not confirmatory)."""
+    """Short scout label from influence + usage (exploratory, not confirmatory)."""
     if L >= 0.12 and resid > 0.02:
         return "Hidden structural hub"
     if u >= 0.18 and L >= 0.10:
         return "Primary grammar carrier"
     if u >= 0.15 and resid < -0.02:
-        return "High-usage, low structural load"
+        return "High-usage, low structural influence"
     if L < 0.04:
         return "Peripheral / replaceable wiring"
     return "Standard role occupant"
@@ -123,9 +123,9 @@ def main():
             origin_top_play=top1, dest_top_play=top2,
             origin_init=init1, dest_init=init2,
             origin_usage=round(u1, 3), dest_usage=round(u2, 3),
-            origin_load=round(L1, 3), dest_load=round(L2, 3),
-            origin_load_resid=round(r1, 3) if np.isfinite(r1) else None,
-            dest_load_resid=round(r2, 3) if np.isfinite(r2) else None,
+            origin_influence=round(L1, 3), dest_influence=round(L2, 3),
+            origin_influence_resid=round(r1, 3) if np.isfinite(r1) else None,
+            dest_influence_resid=round(r2, 3) if np.isfinite(r2) else None,
             origin_archetype=archetype(L1, u1, r1) if np.isfinite(L1) else "?",
             dest_archetype=archetype(L2, u2, r2) if np.isfinite(L2) else "?",
             self_sim=round(r.self_sim, 3),
@@ -139,7 +139,7 @@ def main():
 
     def table_html(sub, title):
         cols = ["player", "position", "move", "origin_role", "dest_role",
-                "origin_load", "dest_load", "origin_usage", "dest_usage",
+                "origin_influence", "dest_influence", "origin_usage", "dest_usage",
                 "origin_archetype", "delta", "portable"]
         t = sub[cols].copy()
         return f"<h2>{title}</h2>\n{t.to_html(index=False, escape=False)}"
@@ -163,7 +163,7 @@ tr:nth-child(even) {{ background: #fafafa; }}
 <p class="note">
 <b>delta</b> = how much more similar a mover's own destination wiring is vs. a play-type-matched
 teammate on that team. Positive = structural role <b>travels with the player</b> (scoutable).
-<b>origin_load</b> = structural load L(p) on the old team (Fragility metric). <b>origin_archetype</b>
+<b>origin_influence</b> = structural influence L(p) on the old team (Fragility metric). <b>origin_archetype</b>
 is exploratory (hidden hub / grammar carrier / etc.). Positions from NBA Stats API per season.
 </p>
 {table_html(top, "Most portable — wiring travels (top 20)")}

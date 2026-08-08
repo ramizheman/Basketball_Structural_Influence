@@ -46,7 +46,7 @@ def main() -> None:
     sig["player_id"] = sig["player_id"].astype(str)
 
     u_med = tf["origin_usage"].median()
-    tf["is_conn"] = (tf["origin_usage"] < u_med) & (tf["origin_load_resid"] > 0)
+    tf["is_conn"] = (tf["origin_usage"] < u_med) & (tf["origin_influence_resid"] > 0)
     tf["portable"] = tf["delta"] > 0
     tf["origin_yy"] = tf["origin_season"].map(
         lambda s: int(str(s).split("-")[0][2:])

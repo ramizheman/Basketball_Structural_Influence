@@ -6,18 +6,18 @@ usage and position?" — classify players by their STRUCTURAL RESPONSIBILITY in 
 offensive co-initiation network, on two axes:
 
     x = usage           (real NBA USG%, possession consumption)
-    y = residual load   resid(p) = L(p) - E[L|usage]   (load above/below usage expectation)
+    y = residual influence   resid(p) = L(p) - E[L|usage]   (influence above/below usage expectation)
 
-Classification cuts are principled, not equal-mass medians on raw load:
+Classification cuts are principled, not equal-mass medians on raw influence:
     vertical:   usage median (high vs low volume)
-    horizontal: resid(p) = 0  (more vs less load than usage predicts)
+    horizontal: resid(p) = 0  (more vs less influence than usage predicts)
 
-Unequal class sizes are expected and fine: most players sit at or below expected load.
+Unequal class sizes are expected and fine: most players sit at or below expected influence.
 
 Four archetypes:
   PRIMARY ORGANIZER   hi usage / resid>0  (consume AND organize beyond usage)
   CONNECTOR / HUB     lo usage / resid>0  (organize beyond usage without consuming)
-  TERMINAL SCORER     hi usage / resid<=0 (finish; load at or below usage expectation)
+  TERMINAL SCORER     hi usage / resid<=0 (finish; influence at or below usage expectation)
   ROLE OCCUPANT       lo usage / resid<=0 (neither volume nor excess structure)
 
 Canonical corners use usage percentiles × resid sign (strong volume extremes with
@@ -72,20 +72,20 @@ ORDER = ["PRIMARY ORGANIZER", "CONNECTOR / HUB", "TERMINAL SCORER",
 
 
 def classify(df, u_cut):
-    """usage median × residual load > 0 (principled cut, not equal-mass load median)."""
+    """usage median × residual influence > 0 (principled cut, not equal-mass influence median)."""
     hi_u = df["usg_pct"] >= u_cut
     hi_r = df["u_resid"] > 0
     return [CLASSES[(bool(a), bool(b))] for a, b in zip(hi_u, hi_r)]
 
 
-def within_player_load_cv(all_loads):
+def within_player_influence_cv(all_loads):
     """Per player: SD/mean of L across seasons (>=2 seasons). trait-vs-context proxy."""
     rows = []
     for name, g in all_loads.groupby("player"):
         if g["yy"].nunique() < 2:
             continue
         m, s = g["Lcos"].mean(), g["Lcos"].std(ddof=1)
-        rows.append(dict(player=name, load_cv=(s / m if m > 0 else np.nan)))
+        rows.append(dict(player=name, influence_cv=(s / m if m > 0 else np.nan)))
     return pd.DataFrame(rows)
 
 
@@ -93,16 +93,16 @@ def main():
     df = load_merged()
     all_loads = pd.read_csv(OUT_DIR / "fragility_full_loads.csv")
 
-    # usage-residual load (already defined identically in load_merged via u; recompute on usg_pct-free axis)
+    # usage-residual influence (already defined identically in load_merged via u; recompute on usg_pct-free axis)
     rot = df[(df["mpg"] >= MIN_MPG) & (df["gp"] >= MIN_GP)
              & df["usg_pct"].notna() & df["Lcos"].notna()].copy()
     print(f"rotation player-seasons (mpg>={MIN_MPG}, gp>={MIN_GP}, usg present): {len(rot)}")
 
     # percentiles within the rotation pool
     rot["usage_percentile"] = rot["usg_pct"].rank(pct=True) * 100
-    rot["load_percentile"] = rot["Lcos"].rank(pct=True) * 100
+    rot["influence_percentile"] = rot["Lcos"].rank(pct=True) * 100
 
-    # primary classification: usage median × residual load > 0
+    # primary classification: usage median × residual influence > 0
     u_med = rot["usg_pct"].median()
     rot["role_classification"] = classify(rot, u_med)
 
@@ -118,16 +118,16 @@ def main():
     rot["canonical_archetype"] = rot.apply(canon, axis=1)
 
     # within-player stability
-    cv = within_player_load_cv(all_loads)
+    cv = within_player_influence_cv(all_loads)
     rot = rot.merge(cv, on="player", how="left")
 
     # ---- deliverable A: classification table -------------------------------
     tableA = rot[["player", "season", "tri", "position", "gp", "mpg",
-                  "usg_pct", "Lcos", "u_resid", "usage_percentile", "load_percentile",
-                  "role_classification", "canonical_archetype", "load_cv"]].copy()
+                  "usg_pct", "Lcos", "u_resid", "usage_percentile", "influence_percentile",
+                  "role_classification", "canonical_archetype", "influence_cv"]].copy()
     tableA = tableA.rename(columns={"tri": "team", "usg_pct": "usage",
-                                    "Lcos": "structural_load", "u_resid": "load_residual"})
-    tableA = tableA.sort_values(["role_classification", "structural_load"],
+                                    "Lcos": "structural_influence", "u_resid": "influence_residual"})
+    tableA = tableA.sort_values(["role_classification", "structural_influence"],
                                 ascending=[True, False])
     tableA.to_csv(OUT_DIR / "structural_role_classification.csv", index=False)
 
@@ -138,11 +138,11 @@ def main():
         srows.append(dict(
             role=cls, n=len(g), pct_of_pool=round(100 * len(g) / len(rot), 1),
             avg_usage=round(g["usg_pct"].mean(), 3),
-            avg_structural_load=round(g["Lcos"].mean(), 3),
+            avg_structural_influence=round(g["Lcos"].mean(), 3),
             avg_mpg=round(g["mpg"].mean(), 1),
             avg_ppg=round(g["ppg"].mean(), 1),
-            avg_load_residual=round(g["u_resid"].mean(), 3),
-            avg_within_player_load_cv=round(g["load_cv"].mean(), 3),
+            avg_influence_residual=round(g["u_resid"].mean(), 3),
+            avg_within_player_influence_cv=round(g["influence_cv"].mean(), 3),
             n_canonical=int((g["canonical_archetype"] == cls).sum()),
         ))
     summ = pd.DataFrame(srows)
@@ -158,7 +158,7 @@ def main():
     stab55 = float((sens["p55"] == sens["median"]).mean())
     sens_counts = {t: sens[t].value_counts().to_dict() for t in sens}
 
-    # ---- deliverable C: top 20 by residual load per class ---------------------------
+    # ---- deliverable C: top 20 by residual influence per class ---------------------------
     top_by_class = {}
     for cls in ORDER:
         g = rot[rot["role_classification"] == cls].nlargest(20, "u_resid")
@@ -170,19 +170,19 @@ def main():
 
     # ---- console -----------------------------------------------------------
     print("\n=== CLASS COUNTS (usage median × resid>0) ===")
-    print(summ[["role", "n", "pct_of_pool", "avg_usage", "avg_structural_load",
-                "avg_mpg", "avg_load_residual", "n_canonical"]].to_string(index=False))
+    print(summ[["role", "n", "pct_of_pool", "avg_usage", "avg_structural_influence",
+                "avg_mpg", "avg_influence_residual", "n_canonical"]].to_string(index=False))
     print(f"\nusage median={u_med:.3f}  residual cut=0 (share resid>0="
           f"{(rot['u_resid']>0).mean()*100:.1f}%)")
     print(f"threshold sensitivity: class-label stability vs usage-median  "
           f"p45={stab45:.2%}  p55={stab55:.2%}")
-    print(f"\northogonality (recap; already confirmed): Spearman(usage, load)={rho_ul:.3f}, "
-          f"Spearman(residual-load, usage)={rho_resid:.3f}  (n={n_ul})")
-    print("  => usage and structural load are related but far from identical;")
-    print("     usage-residual load is ~orthogonal to usage (distinct dimension).")
+    print(f"\northogonality (recap; already confirmed): Spearman(usage, influence)={rho_ul:.3f}, "
+          f"Spearman(residual-influence, usage)={rho_resid:.3f}  (n={n_ul})")
+    print("  => usage and structural influence are related but far from identical;")
+    print("     usage-residual influence is ~orthogonal to usage (distinct dimension).")
     for cls in ORDER:
         g = top_by_class[cls]
-        print(f"\n--- {cls}: top {min(8,len(g))} by residual load ---")
+        print(f"\n--- {cls}: top {min(8,len(g))} by residual influence ---")
         for r in g.head(8).itertuples(index=False):
             print(f"    {r.player:<22}{r.tri} {r.season}  usg={r.usg_pct*100:4.1f}%  "
                   f"load={r.Lcos:.3f}  resid={r.u_resid:+.3f}  pos={r.position}")
@@ -226,7 +226,7 @@ def make_map(rot, u_med, path):
     for x, y, t in cap:
         ax.text(x, y, t, fontsize=9, fontweight="bold", alpha=0.30, ha="center")
     ax.set_xlabel("Usage %  (possession consumption)")
-    ax.set_ylabel("Residual structural load  resid(p)  (load − E[load|usage])")
+    ax.set_ylabel("Residual structural influence  resid(p)  (influence − E[influence|usage])")
     ax.set_title("Structural Role Map of NBA Offensive Players\n"
                  "rotation player-seasons · dashed = usage median & resid=0 · "
                  "descriptive, no outcomes",
@@ -254,10 +254,10 @@ def write_html(summ, tableA, top_by_class, sens_counts, stab45, stab55,
     for cls in ORDER:
         g = top_by_class[cls].copy()
         g["usage_%"] = (g["usg_pct"] * 100).round(1)
-        g["load"] = g["Lcos"].round(3)
-        show = g[["player", "season", "tri", "position", "usage_%", "load"]].rename(
+        g["influence"] = g["Lcos"].round(3)
+        show = g[["player", "season", "tri", "position", "usage_%", "influence"]].rename(
             columns={"tri": "team"})
-        tops += f"<h3 style='color:{CLASS_COLOR[cls]}'>{cls} — top {len(show)} by structural load</h3>\n{tbl(show)}\n"
+        tops += f"<h3 style='color:{CLASS_COLOR[cls]}'>{cls} — top {len(show)} by structural influence</h3>\n{tbl(show)}\n"
 
     sens_html = "<table><tr><th>threshold</th>" + "".join(
         f"<th>{c}</th>" for c in ORDER) + "</tr>"
@@ -282,21 +282,21 @@ img {{ max-width:100%; border:1px solid #ddd; }}
 <h1>Structural Role Classification in NBA Offensive Networks</h1>
 <p class="note"><b>Research question:</b> what types of offensive organizers exist beyond usage and
 position? Players are classified by <b>structural responsibility</b> in the co-initiation network, on
-two axes: <b>usage %</b> (possession consumption) and <b>structural load L(p)</b> (how much removing the
+two axes: <b>usage %</b> (possession consumption) and <b>structural influence L(p)</b> (how much removing the
 player re-wires the offense's play-type topology). Descriptive only — no wins, plus-minus, contracts,
 or outcomes. Rotation player-seasons (MPG&ge;{MIN_MPG:.0f}, GP&ge;{MIN_GP}); n={n_pool}.</p>
 
 <div class="key"><b>Key hypothesis (already confirmed in the orthogonality analysis):</b> usage
-captures possession consumption; structural load captures organizational responsibility, and they are
-<b>distinct dimensions</b>. Spearman(usage, load)={rho_ul:.2f} (related, not redundant); the
-usage-<i>residual</i> load is ~orthogonal to usage ({rho_resid:+.2f}), i.e. structural responsibility
+captures possession consumption; structural influence captures organizational responsibility, and they are
+<b>distinct dimensions</b>. Spearman(usage, influence)={rho_ul:.2f} (related, not redundant); the
+usage-<i>residual</i> influence is ~orthogonal to usage ({rho_resid:+.2f}), i.e. structural responsibility
 is not recoverable from how many possessions a player uses.</div>
 
-<h2>D. Structural role map (usage &times; structural load)</h2>
+<h2>D. Structural role map (usage &times; structural influence)</h2>
 <img src="data:image/png;base64,{b64}" alt="structural role map">
 
 <h2>B. Summary statistics per class (primary = median split)</h2>
-<p class="note">usage median={u_med*100:.1f}% · load median={l_med:.3f}. "canonical" = players in the
+<p class="note">usage median={u_med*100:.1f}% · influence median={l_med:.3f}. "canonical" = players in the
 &ge;75th/&le;25th corner on both axes (strongest exemplars).</p>
 {tbl(summ)}
 
@@ -306,13 +306,13 @@ vs the primary median split: <b>p45 {stab45:.0%}</b>, <b>p55 {stab55:.0%}</b> of
 class — the taxonomy is not an artifact of the exact cut.</p>
 {sens_html}
 
-<h2>C. Representative examples — top 20 by structural load in each class</h2>
+<h2>C. Representative examples — top 20 by structural influence in each class</h2>
 {tops}
 
 <h2>A. Full classification table</h2>
-<p class="note">Sorted by class, then structural load. Full CSV:
+<p class="note">Sorted by class, then structural influence. Full CSV:
 structural_role_classification.csv.</p>
-{tbl(tableA.round({{'usage':3,'structural_load':3,'load_residual':3,'usage_percentile':0,'load_percentile':0,'load_cv':2}}) if False else tableA.round(3))}
+{tbl(tableA.round({{'usage':3,'structural_influence':3,'influence_residual':3,'usage_percentile':0,'influence_percentile':0,'influence_cv':2}}) if False else tableA.round(3))}
 </body></html>"""
     (OUT_DIR / "structural_role_taxonomy.html").write_text(html, encoding="utf-8")
 

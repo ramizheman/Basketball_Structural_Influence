@@ -9,10 +9,10 @@ Only run AFTER the feasibility gate (fragility_gate.py) has passed. It has:
 output/fragility_gate_result.txt (G1/G2/G3 all PASS).
 
 Confirmatory claims (§2):
-  F1a decoupling : structural load is NOT reducible to usage.
+  F1a decoupling : structural influence is NOT reducible to usage.
        confirmed iff pooled R²(L ~ [1,u,u²]) < 0.90 AND the residual share (1-R²)
        has a franchise cluster-bootstrap 95% CI lower bound > 0.10.
-  F1b stability  : the usage-residual load is a reproducible player property.
+  F1b stability  : the usage-residual influence is a reproducible player property.
        CO-PRIMARY (Amendment 1) — BOTH must clear, else F1b NOT confirmed:
          (A) pooled-residual split-half Spearman(r_odd, r_even) > 0
          (B) usage-partial split-half Spearman (control u_odd,u_even) > 0
@@ -25,7 +25,7 @@ Non-independence (§6): unit = franchise (= tricode); franchise-clustered permut
 and franchise cluster-bootstrap. Players nest in team-seasons nest in franchises.
 
 Reused with NO drift: invariant/null/distances (wiring_gate), all-teams edge pull +
-split (wiring_full_study), leave-one-out loads (fragility_gate).
+split (wiring_full_study), leave-one-out influences (fragility_gate).
 
 Run:
     python fragility_full_study.py                 # full run
@@ -94,7 +94,7 @@ def partial_spearman(L1, L2, u1, u2):
 
 # --------------------------------------------------------- build all loads
 def build_loads(df, rng, n_null, max_teams=None):
-    """Per-player leave-one-out loads for every included team-season.
+    """Per-player leave-one-out influences for every included team-season.
     Returns (full_df, half_df). full: season-level (init>=50). half: per-half (init>=20)."""
     combos = (df.groupby(["team", "season_yy"])["n"].sum()
                 .reset_index().sort_values(["season_yy", "team"]))
@@ -230,7 +230,7 @@ def main():
     rng = np.random.default_rng(SEED)
     df = pull_edges()
 
-    print("\n--- building leave-one-out loads (all team-seasons, inclusion §6) ---")
+    print("\n--- building leave-one-out influences (all team-seasons, inclusion §6) ---")
     full, half = build_loads(df, rng, args.n_null, max_teams=args.max_teams)
     n_ts = full["key"].nunique()
     n_fr = full["tri"].nunique()

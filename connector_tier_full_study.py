@@ -3,7 +3,7 @@ CONFIRMATORY-DISCIPLINE — Hub / Marginal-Big / Marginal-Wing tier split vs Tal
 ==================================================================================
 Same exact machinery as coverage_full_study.py / hasconn_full_study.py, applied to
 the three-way split of the Connector/Hub class (Eq. 6 taxonomy, split at the
-within-class median residual load, marginal half further split by position).
+within-class median residual influence, marginal half further split by position).
 
 Primary model M1 (no play-type FE):
   PPP_i = b1*HasHub + b2*HasMargBig + b3*HasMargWing

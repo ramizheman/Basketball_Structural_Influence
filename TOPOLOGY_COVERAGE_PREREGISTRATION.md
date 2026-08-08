@@ -1,6 +1,6 @@
 # Pre-registration — Structural Role Coverage vs. Talent Accumulation
 
-Registered **before** running the confirmatory. Same discipline as the Structural Load / Fragility /
+Registered **before** running the confirmatory. Same discipline as the Structural Influence / Fragility /
 Concentration / Portability pre-registrations: ONE primary hypothesis, ONE primary outcome, ONE frozen
 talent control, a feasibility gate, franchise/team-season non-independence handling, and a binding
 no-fallback clause.
@@ -69,7 +69,7 @@ the result.
 
 Possession-level, regular season, **2022-23 / 2023-24 / 2024-25 only** (ON_COURT absent for 2025-26).
 Exactly-5 on-court offensive lineups (`ON_COURT {side:'offense'}`, 99.7% of possessions). Role classes
-from `structural_role_taxonomy.py` (median-split of usage% × structural load L(p), computed on the
+from `structural_role_taxonomy.py` (median-split of usage% × structural influence L(p), computed on the
 rotation pool; thresholds frozen there). Outcome `PPP_i = Possession.points_scored`. Play type,
 `initiator_player_name`, `defensive_team_tricode`, `period`, `score_margin` are existing possession
 properties. Cache: `role_composition_possessions.parquet`.
@@ -148,7 +148,7 @@ Frozen settings: `SEED=17`, `N_BOOT=2000`, `CONF_P=0.01`, score-margin buckets
 
 ### 8.1 Feasibility gate (`coverage_gate.py`, run 2026-07-13) — **PASSED**
 Sample: 651,784 possessions pulled; **420,993** with all 5 on-court classified + pts present
-(frozen inclusion). Role thresholds: usage median 0.181, load median 0.009. 90 team-seasons, 30 opponents.
+(frozen inclusion). Role thresholds: usage median 0.181, influence median 0.009. 90 team-seasons, 30 opponents.
 
 - **G1 coverage varies — PASS.** Overall COVERED rate = 30.0%. Team-seasons with ≥200 possessions in
   BOTH covered and not-covered = **72** (need ≥20).

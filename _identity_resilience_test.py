@@ -116,8 +116,8 @@ def compute_panel(rot: pd.DataFrame, df: pd.DataFrame) -> pd.DataFrame:
             team_season=f"{team} {r['season']}",
             role=r["role_classification"],
             usage=float(r["usage"]),
-            structural_load=float(r["structural_load"]),
-            load_residual=float(r["load_residual"]),
+            structural_influence=float(r["structural_influence"]),
+            influence_residual=float(r["influence_residual"]),
             graph_u=float(r["u"]) if np.isfinite(r.get("u", np.nan)) else np.nan,
             n_on=n_on,
             n_off=n_off,
@@ -150,9 +150,9 @@ def usage_match(treat: pd.DataFrame, control: pd.DataFrame, caliper=USAGE_CALIPE
         best = pool.nsmallest(1, "du").iloc[0]
         pairs.append(dict(
             t_id=t.player_id, t_name=t.full_name, t_ts=t.team_season,
-            t_usage=t.usage, t_L=t.structural_load, t_DA=t.D_A, t_Dpi=t.D_pi,
+            t_usage=t.usage, t_L=t.structural_influence, t_DA=t.D_A, t_Dpi=t.D_pi,
             c_id=best.player_id, c_name=best.full_name, c_ts=best.team_season,
-            c_usage=best.usage, c_L=best.structural_load, c_DA=best.D_A, c_Dpi=best.D_pi,
+            c_usage=best.usage, c_L=best.structural_influence, c_DA=best.D_A, c_Dpi=best.D_pi,
             c_role=best.role, du=float(best.du),
             same_ts=int(best.team_season == t.team_season),
             d_DA=float(t.D_A - best.D_A) if np.isfinite(t.D_A) and np.isfinite(best.D_A) else np.nan,
@@ -170,7 +170,7 @@ def class_summary(panel: pd.DataFrame) -> pd.DataFrame:
             role=role, n=len(g), n_A=len(gA),
             mean_DA=gA.D_A.mean(), median_DA=gA.D_A.median(),
             mean_Dpi=g.D_pi.mean(), median_Dpi=g.D_pi.median(),
-            mean_L=g.structural_load.mean(),
+            mean_L=g.structural_influence.mean(),
             mean_usage=g.usage.mean(),
             mean_min_half=g.min_half.mean(),
         ))
@@ -185,19 +185,19 @@ def regress_DA_on_L(panel: pd.DataFrame) -> dict:
         np.log(d.min_half.to_numpy(float)),
         d.usage.to_numpy(float),
     ])
-    for col in ["D_A", "structural_load"]:
+    for col in ["D_A", "structural_influence"]:
         y = d[col].to_numpy(float)
         b, *_ = np.linalg.lstsq(X, y, rcond=None)
         d[col + "_r"] = y - X @ b
-    r, p = stats.pearsonr(d["structural_load_r"], d["D_A_r"])
-    r_raw, p_raw = stats.pearsonr(d["structural_load"], d["D_A"])
+    r, p = stats.pearsonr(d["structural_influence_r"], d["D_A_r"])
+    r_raw, p_raw = stats.pearsonr(d["structural_influence"], d["D_A"])
     # partial: within role
     out = dict(r_raw=r_raw, p_raw=p_raw, r_adj=r, p_adj=p, n=len(d))
     # connectors only
     c = d[d.role == "CONNECTOR / HUB"]
     if len(c) >= 20:
-        out["r_adj_conn"] = stats.pearsonr(c["structural_load_r"], c["D_A_r"])[0]
-        out["p_adj_conn"] = stats.pearsonr(c["structural_load_r"], c["D_A_r"])[1]
+        out["r_adj_conn"] = stats.pearsonr(c["structural_influence_r"], c["D_A_r"])[0]
+        out["p_adj_conn"] = stats.pearsonr(c["structural_influence_r"], c["D_A_r"])[1]
     return out
 
 
@@ -251,7 +251,7 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
 
     lines += [
         "",
-        "PRIMARY ORGANIZER is a positive-control reference (high usage + high residual load).",
+        "PRIMARY ORGANIZER is a positive-control reference (high usage + high residual influence).",
         "The licensed comparison for the claim excludes organizers.",
         "",
         "## 2. Unmatched contrasts (connectors vs others)",
@@ -345,7 +345,7 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
     for _, r in conn.iterrows():
         lines.append(
             f"- {r.full_name} ({r.team_season}): D_A={r.D_A:.3f}, D_π={r.D_pi:.3f}, "
-            f"L={r.structural_load:.3f}, usg={r.usage:.3f}"
+            f"L={r.structural_influence:.3f}, usg={r.usage:.3f}"
         )
     lines.append("")
     return "\n".join(lines)
