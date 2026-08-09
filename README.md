@@ -27,12 +27,14 @@ python make_figures.py
 ```
 
 Manuscript: `paper.tex`.  
-Traceability sheet (written by the audit): `PAPER_NUMBERS_SHEET.md`.
+Traceability sheet (written by the audit): `PAPER_NUMBERS_SHEET.md`.  
+Possession vs initiation edge sources: `DATA_SOURCE_AUDIT.md`.
 
 ## Claim → code map
 
 | Paper claim | Script | Artifact |
 |-------------|--------|----------|
+| §4.2 CUT–SPOT_UP worked example (MIN 2023–24) | `section4_worked_example.py` | `section4_cut_spotup_example.csv` |
 | Taxonomy (n=924) | `structural_role_taxonomy.py` | `structural_role_*.csv` |
 | Orthogonality | `fragility_orthogonality.py` | `fragility_orthogonality.csv` |
 | Play-mix / route entropy | `role_composition_playmix.py`, `role_route_graph.py` | `role_composition_playmix.csv`, `role_route_graph.csv` |

@@ -47,7 +47,7 @@
 \title{\textbf{Structural Influence: Measuring the Hidden Wiring of an NBA Offense}}
 
 \author{Rami Zheman \\ Independent Researcher, Alexandria, VA}
-\date{July 2026}
+\date{August 2026}
 
 \begin{document}
 \maketitle
@@ -76,9 +76,10 @@ a new team's offense too. High-usage organizational talent affects scoring effic
 a shaper's structural influence does not. What an offense reorganizes around structurally is
 not the same as what makes it score.
 
-With this framework, researchers can ask questions like which offenses would reorganize most
-if a key player were hurt, and how much trades can affect a team's offensive identity.
-Offensive organization is no longer just coaching intuition. It can be measured.
+With this framework, researchers can study how an offense reorganizes when key players are
+unavailable, coaches can prepare for in-game offensive pivots when players go out, and front
+offices can see how much a trade or absence changes team identity. Offensive organization
+becomes measurable, not just coaching intuition.
 \end{abstract}
 %=============================================================================
 \section{Introduction}
@@ -296,6 +297,9 @@ drive, post-up, spot-up, off-ball cut, putback, off-the-dribble/pull-up, and
 transition). Play type encodes \emph{how a possession is initiated}, the semantic level at
 which offensive organization operates; it is deliberately coarser than a full action taxonomy
 so that the resulting association matrices are stably estimable at the team-season level.
+Appendix~H documents how the description-based inferrer constructs these labels from public
+NBA Stats play-by-play fields (action subtype, description text, assist flags, and shot
+distance/zone), including foul treatment.
 
 \paragraph{PNR under-detection and player-level calibration.}
 The public play-by-play feed parsed here does not tag ball-screen actions directly (no
@@ -1471,12 +1475,10 @@ timing rule and reinforces the efficiency boundary (Sec.~\ref{sec:efficiency}).
 Everything above is an \emph{offensive} wiring diagram. The graph also carries defensive
 on-court lineups, which opens a symmetric question this paper does not answer: which defenders reshape
 the \emph{opponent's} offensive wiring the most. That requires its own construct-validity work
-before it can be evaluated with the same discipline applied to portability. A related, more
-immediate extension does not require new defender-attribution work: because shaper absence
-is already associated with a specific, measured shift in offensive play selection
-(Sec.~\ref{sec:behavior}), a defense could in principle use that known pattern to anticipate
-not just which player to pressure, but which actions the offense is likely to pivot toward
-once that player is removed.
+before it can be evaluated with the same discipline applied to portability. Preparing a defense
+for the offense's measured post-removal play-mix pivot---the practical use of the shift already
+documented in Sec.~\ref{sec:behavior}---is treated as an application in
+Sec.~\ref{sec:applications}, not as an open measurement problem.
 
 %=============================================================================
 \section{Practical Applications}
@@ -1516,6 +1518,18 @@ Structural influence surfaces players who carry organizer-level influence withou
 Locating organizational function is step one; any within-class travel screen is secondary
 and exploratory. The same instrument supports the research questions listed in
 Sec.~\ref{sec:discussion}.
+
+\subsection{Coaching: in-game pivots after a removal}
+Shaper absence is already associated with a specific, measured shift in offensive play
+selection (Sec.~\ref{sec:behavior}): more cuts and pick-and-rolls, fewer spot-ups and drives,
+in the disclosed composition tests. That is usable in real time. Once a high-influence player
+is out---foul trouble, injury, or a deliberate defensive focus that takes him off the ball---the
+offense does not merely lose a body; it pivots toward a known menu. A defense that has mapped
+those pivots can change coverage, help responsibilities, and matchup priorities to the structure
+the offense is about to become, not only to the player who left. This does not require a new
+defender-attribution model; it uses the offensive reorganization the instrument already
+measures. The harder inverse question---which defenders most \emph{cause} that rewiring---remains
+future work (Sec.~\ref{sec:discussion}).
 
 %=============================================================================
 \section{Limitations}
@@ -1701,6 +1715,66 @@ J. Poeltl & TOR & 0.150 & 0.037 & 25.0 & 10.7 \\
 \end{longtable}
 % <<<SHAPER_APPENDIX_END>>>
 
+\paragraph{H. Play-type inferrer from public play-by-play.}
+\label{sec:appendix-inferrer}
+No Synergy, Second Spectrum, or tracking feed is used. Possession labels are inferred from
+NBA Stats play-by-play V3 fields available via the public API---principally
+\texttt{actionType}/\texttt{subType}, event description text, assist tokens on made shots,
+shot distance, and court coordinates---after events are normalized into a possession chain.
+A rule-based classifier maps those signals onto nine labels
+(\texttt{TRANSITION}, \texttt{PNR}, \texttt{DRIVE}, \texttt{POST\_UP}, \texttt{SPOT\_UP},
+\texttt{CUT}, \texttt{PUTBACK}, \texttt{PULL\_UP}, \texttt{OTHER}); association and
+structural-influence calculations use the eight initiating types listed in
+Sec.~\ref{sec:data}, with residual \texttt{OTHER} possessions excluded from the canonical
+set after labeling (and after the foul- and PNR-calibration passes below).
+
+Rules fire in fixed priority (highest first). Table~\ref{tab:inferrer-signals} summarizes the
+main PBP$\to$label mappings; confidence scores accompany each rule so downstream gates can
+prefer high-signal labels when needed.
+\begin{table}[h]
+\centering
+\caption{Possession classifier: public PBP signals to initiating play type.
+PNR rows use assist flags that appear only on made shots unless noted.}
+\label{tab:inferrer-signals}
+\small
+\begin{tabular}{@{}p{0.52\linewidth}p{0.40\linewidth}@{}}
+\toprule
+PBP signal (\texttt{subType} / text / assist) & Label \\
+\midrule
+Putback / tip subtypes & \texttt{PUTBACK} \\
+Cutting / alley-oop subtypes & \texttt{CUT} \\
+Fadeaway, hook, turnaround (or post text) & \texttt{POST\_UP} \\
+Running / fast-break subtypes or text & \texttt{TRANSITION} \\
+Assisted pull-up or floater (made) & \texttt{PNR} (ball handler) \\
+Assisted rim finish $\le 6$ ft, not cut/running (made) & \texttt{PNR} (roll man) \\
+Missed unassisted pull-up outside the paint & \texttt{PNR} (low confidence) \\
+Driving subtype, no PNR cue & \texttt{DRIVE} \\
+Unassisted pull-up / step-back & \texttt{PULL\_UP} \\
+Assisted 3PT with no stronger creation cue & \texttt{SPOT\_UP} \\
+Foul-ending possession left as \texttt{OTHER} & player-tendency relabel \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent
+The strings ``pick'' and ``screen'' never appear in V3 descriptions, so PNR is never read
+off a ball-screen token. It is inferred from assist-plus-subtype/distance rules on makes,
+a low-confidence missed-pull-up correction, and the player-level calibration pass already
+described in Sec.~\ref{sec:data} (shot-event proxy targets; promotion from
+\texttt{PULL\_UP}/\texttt{OTHER}).
+
+\paragraph*{Foul treatment.}
+Possessions that end in free throws without a classified shot action often fall through to
+\texttt{OTHER} at low confidence. A foul-tendency pass then relabels those
+\texttt{OTHER}+foul-ending possessions using the fouled initiator's season primary action
+type (drive, post-up, PNR, cut, spot-up, pull-up, or transition), stamped at mid confidence
+and marked \texttt{foul\_tendency\_relabeled}. Free-throw-only trips that are not attributable
+to a half-court initiation are excluded from half-court efficiency tallies where PPP is
+computed. A backward attribution audit recovered $98.6\%$ of remaining foul-ending
+\texttt{OTHER} possessions by linking them to the initiating offensive action; correcting
+misclassified foul endings shifted play-type PPP by at most $0.007$ points and produced no
+play-type ranking changes, so the association-matrix corpus inherits the same labels without
+a material sensitivity to that residual.
 
 %=============================================================================
 % Bibliography. Replace this thebibliography stub with a .bib + \bibliography

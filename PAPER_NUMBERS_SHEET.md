@@ -7,7 +7,13 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 
 | Status | Section | Claim | Paper | Actual | Tol | Script | Artifact | Note |
 |---|---|---|---|---|---|---|---|---|
-| PASS | §Data | corpus possessions (~6.5e5) | 650000 | 651784 | 20000.0 | `role_composition_playmix.py` | `role_composition_possessions.parquet` | exact n=651784 |
+| PASS | §4.2 | Gobert MIN 2023-24 CUT initiations | 277 | 277 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | from `full_edges.parquet` (INITIATED); not ON_COURT cache |
+| PASS | §4.2 | Gobert MIN 2023-24 SPOT_UP initiations | 6 | 6 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` |  |
+| PASS | §4.2 | Gobert min(CUT,SPOT_UP) | 6 | 6 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | Eq. overlap player term |
+| PASS | §4.2 | Towns MIN 2023-24 CUT / SPOT_UP | 30 / 240 | 30 / 240 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | min=30 |
+| PASS | §4.2 | Reid MIN 2023-24 CUT / SPOT_UP | 31 / 339 | 31 / 339 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | spot-up specialist contrast; min=31 |
+| PASS | §4.2 | Gobert share of MIN CUT | 0.6225 | 0.622472 | 0.0005 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | 277/445; paper ≈62% |
+| PASS | §Data | corpus possessions (~6.5e5) | 650000 | 651784 | 20000.0 | `role_composition_playmix.py` | `role_composition_possessions.parquet` | exact n=651784; ON_COURT-5 cache (see DATA_SOURCE_AUDIT.md) |
 | PASS | §Data / §Efficiency | coverage primary N possessions | 420993 | 420993 | 0.0 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.1 | rotation pool n | 924 | 924 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER n | 96 | 96 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
