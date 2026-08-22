@@ -27,6 +27,14 @@
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning}
+\captionsetup{
+  labelfont=bf,
+  labelsep=period,
+  justification=raggedright,
+  singlelinecheck=false
+}
+\captionsetup[table]{position=top}
+\captionsetup[figure]{position=bottom}
 
 % ---- notation macros (single source of truth; do not redefine inline) -------
 \newcommand{\Bmat}{\ensuremath{\bm{B}}} % player x play-type initiation matrix
@@ -86,95 +94,97 @@ becomes measurable, not just coaching intuition.
 \label{sec:intro}
 
 \paragraph{A motivating problem.}
-NBA teams spend enormous resources evaluating players, yet some of the hardest to assess
-are those whose contribution is organizational. Coaches, teammates, and front offices
-consistently describe ``glue guys'' who connect an offense, create opportunities for
-others, or hold a system together, even when the box score grades them as rotation pieces
-rather than difference-makers. At the February 2024 trade deadline, Dallas sent a
-first-round pick to Washington for Daniel Gafford, a backup center averaging roughly
-eleven points and eight rebounds, and reached the Finals with him starting at center. The
-anecdote poses a clean question: \emph{what might a front office be buying that production,
-efficiency, and usage metrics do not measure?}
+NBA teams spend a lot of resources evaluating players, but some of the hardest guys to
+evaluate are the ones whose value is mostly organizational. Coaches, teammates, and front
+offices talk all the time about ``glue guys'' who connect an offense or hold a system
+together, even when their box score numbers look like a rotation player, not a
+difference-maker. At the February 2024 trade deadline, Dallas gave up a first-round pick for
+Daniel Gafford, a backup center averaging around eleven points and eight rebounds, and made
+the Finals with him starting at center. That trade is a clean way to ask the question this
+paper is actually about: \emph{what was Dallas buying that production, efficiency, and usage
+numbers don't capture?}
 
-Existing analytics answer how much a player contributes to winning
-\citep{rosenbaum2004apm, sill2010winval} and what type of player he is
-\citep{lutz2012cluster, alagappan2012positions}. They do not directly measure how an
-offense is organized, or how dependent that organization is on any individual. This paper
-is not about proving that glue guys are secretly stars, and it is not primarily about
-whether organizational completeness raises points per possession. It asks a prior
-question: whether \emph{offensive organization itself} can be measured.
+There's already plenty of analytics work on how much a player contributes to winning
+\citep{rosenbaum2004apm, sill2010winval}, and on what type of player he is
+\citep{lutz2012cluster, alagappan2012positions}. None of it really gets at how an offense is
+organized, or how dependent that organization is on one specific player. This paper doesn't
+prove that glue guys are secretly stars, and despite a lot of testing, it doesn't find that
+they add offensive efficiency at the team level either. What it does instead is ask whether
+offensive organization can be measured at all, whether some types of players affect that
+organization more than others, and whether teams adapt when that organization changes.
 
-\paragraph{Why measuring organization matters.}
-Basketball analytics has become increasingly good at measuring outcomes. Offensive
-organization remains one of the last major aspects of team performance that is still
-largely qualitative, at both the player and the team level. A reproducible measure of
-offensive wiring enables questions that outcome models leave unasked: how offenses
-reorganize after injuries; which offenses are structurally \emph{brittle}, concentrating
-their wiring in one or two players, versus distributed and resilient to any single
-absence; how organizational responsibility changes as rookies develop; whether trades
-preserve or rewire offensive identity; and, symmetrically, which defenders most disrupt an
-opponent's wiring. None of these route through proving that any player is worth a fixed
-number of extra points; they are decision-relevant questions about structure.
-As shown below, that structure is largely independent of scoring efficiency itself
-(Sec.~\ref{sec:efficiency}): what a front office would be buying is organizational
-continuity, not points. Treating
-organizational function as a measurable property rather than an anecdotal one expands the
-scientific questions basketball analytics (and, more generally, the study of collaborative
-systems) can ask. The contribution is the instrument. The empirical results below are what
-that instrument reveals in a first confirmatory pass, not the only reason it matters.
-
-\paragraph{Contribution A: a measurement framework.}
-This paper first introduces a reproducible graph-based framework for measuring offensive
-organization. An offense is represented as a bipartite player--play-type initiation graph.
-Its \emph{wiring} is the team-level map of which players jointly hold which offensive
-responsibilities. Each player's \emph{structural influence} is the change in that map when he is
-removed: organizational dependence operationalized as network perturbation. Crossing influence
-with usage isolates \textsc{Shaper} players (low usage, high residual influence), the
-offensive face of the glue-guy folklore, not a census of defense, rebounding, or
-intangibles. Gafford will return only as an illustration of that class, not as its
-definition.
-
-This is a graph problem because the scientific object is relational dependence, not a
-player effect or an outcome. Existing statistical approaches primarily estimate how much a
-player contributes to points or wins. The objective is different: quantify how the
-\emph{relational organization} of an offense changes when a participant disappears. Graph
-representations encode interactions among players and offensive actions explicitly, so
-dependence can be measured by removing a node and observing reorganization, rather than
-inferred indirectly from outcomes. This paper does not claim graphs are the only conceivable tool;
-it argues they are the natural tool for this question, in the same sense that removing a
-gene, an airport, or a power station is naturally a network-perturbation question.
-
-\paragraph{Contribution B: what the framework reveals.}
-This paper then uses the framework to study organizational function across three NBA seasons
-(2022--23 through 2024--25). The remainder of the paper demonstrates what the measurement
-reveals, in a fixed confirmatory order:
+\paragraph{Why this is worth measuring.}
+Offensive organization is one of the last parts of team performance that's still mostly
+qualitative, both for individual players and for teams as a whole. A reproducible measure of
+that organization, what this paper calls ``wiring,'' opens up questions existing value metrics
+don't touch:
 \begin{enumerate}[leftmargin=1.6em,itemsep=0.1em]
- \item \textbf{Does the measure reveal something new?} Low-usage players can carry
- organizer-level structural influence (Sec.~\ref{sec:emerge}).
- \item \textbf{Is it just another value metric?} Residual influence is essentially orthogonal
- to net rating (Sec.~\ref{sec:orthogonality}).
- \item \textbf{Does it correspond to observable basketball?} Shaper presence is
- associated with recognizable play-mix shifts (Sec.~\ref{sec:behavior}).
- \item \textbf{Where does the construct stop?} Completeness / shaper presence do not
- independently raise PPP beyond talent, a boundary finding: structural dependence is
- measurable, but not equivalent to offensive efficiency (Sec.~\ref{sec:efficiency}).
- \item \textbf{Does identity move when efficiency does not?} A disclosed post-hoc on/off
- test: shaper absence displaces the observed association fingerprint more than
- usage-matched role-occupant absence (Sec.~\ref{sec:identity-resilience}).
- \item \textbf{Is it partly player-specific?} A player-level component of organizational
- function persists across team changes on average, imperfectly, as a distribution
- (Sec.~\ref{sec:portability}).
- \item \textbf{Can transfer be predicted?} Destination vacancy is null under the
- measures tested; within shapers, origin cut vs.\ drive diet is a directional but
- exploratory, non-confirmed candidate (Sec.~\ref{sec:travelfit}).
+ \item how offenses reorganize after an injury or absence, and how well they adapt;
+ \item which offenses are structurally \emph{brittle}, leaning on one or two players, versus
+ distributed and resilient;
+ \item how organizational responsibility shifts as young players develop;
+ \item whether a trade preserves a team's offensive identity or rewires it;
+ \item which defenders disrupt an opponent's organization the most.
 \end{enumerate}
+None of these questions prove a player is worth some fixed number of extra points. They're
+questions about structure, and depending on what you're asking, they can surface real strengths
+or weaknesses in how a team is put together.
+As it turns out, that structure is largely independent of scoring efficiency
+(Sec.~\ref{sec:efficiency}). What a front office is actually buying, in cases like Gafford,
+looks more like organizational continuity than points. Treating organization as something
+measurable and testable, instead of something you have to take a coach's word for, opens up a
+set of questions basketball analytics hasn't had a way to ask. The contribution of this paper
+is the framework itself and the measure it produces. What follows is a first pass at testing
+both, focused on one category of player in particular, not a broad survey.
 
-\paragraph{Same menu, different wiring.}
-Figure~\ref{fig:wiring} makes the measurement target concrete. Minnesota and Houston in
-2023--24 ran nearly identical offensive menus (menu cosine $0.99$) yet assigned
-responsibilities differently (wiring cosine $0.54$). A possession table sees identical
-menus; the graph sees different organization. This paper models shared initiators across play types
-over a season, not within-possession sequence. The figure is only that demonstration.
+\paragraph{Contribution A: the measurement framework.}
+This paper introduces a reproducible, graph-based way to measure offensive organization, and
+how it reorganizes when a player is removed. A team's offense is mapped as a graph connecting
+players to the play types they initiate. ``Wiring'' is the team-level map of which players
+jointly hold which offensive jobs. The test is what happens when a player is removed from that
+graph: his \emph{structural influence} is how much the map changes without him. Crossing
+structural influence with usage isolates a group this paper calls \textsc{Shapers}: low-usage
+players with outsized residual influence on how the offense is organized. This is the
+offensive version of the glue guy.
+
+\paragraph{Why a graph, specifically?}
+It isn't the easiest or most explainable tool available for this kind of problem, but it's a
+natural fit for organizational relationships, which is a different goal than measuring
+outcomes. The question here isn't how good an offense is, it's how an offense's organization
+changes when a player is taken out of it. A graph lets you remove one node and watch how the
+rest of it reorganizes, which is exactly the mechanism this paper needs.
+
+\paragraph{Contribution B: what the framework shows.}
+Applying the framework to three NBA seasons (2022--23 through 2024--25) surfaces a few things.
+There's a real category of low-usage players who carry as much organizational weight as star
+playmakers (Sec.~\ref{sec:emerge}). That influence isn't just value in disguise, it's
+statistically separate from net rating and other value measures
+(Sec.~\ref{sec:orthogonality}). It shows up on the floor, not just in the math, shifting a
+team's play-type mix when these players are in the game (Sec.~\ref{sec:behavior}). It doesn't,
+however, translate into more points: having a \textsc{Shaper} alongside a scorer and an
+organizer doesn't raise efficiency beyond what talent already explains
+(Sec.~\ref{sec:efficiency}). It does still change team identity even when scoring stays flat,
+removing a \textsc{Shaper} reorganizes a team's offense about as much as removing a star
+organizer does, more than removing anyone else (Sec.~\ref{sec:identity-resilience}). Part of
+this influence travels with the player when he changes teams (Sec.~\ref{sec:portability}),
+though predicting how well it'll travel in advance doesn't really work, aside from a weak and
+unconfirmed signal around cutting versus driving (Sec.~\ref{sec:travelfit}).
+
+\paragraph{Same play-type menu, different wiring.}
+Figure~\ref{fig:wiring} shows two teams, Minnesota and Houston in 2023--24, that ran nearly
+identical distributions of play types (menu cosine $0.99$) but assigned responsibility for
+those play types very differently (wiring cosine $0.54$). Minnesota leans on players who
+combine post-ups and spot-ups, or post-ups and pick-and-roll, more of an inside-out offense
+built around interior gravity. Houston leans on players who combine cuts, drives, and
+spot-ups, a more movement-based attack that uses cutting and driving to create the openings
+it then attacks. The team-wide totals for each play type end up nearly the same either way,
+because a player who mostly does one thing still adds to that play type's total count, he just
+doesn't contribute much to the overlap between play types. Two teams can look identical on a
+simple count of what they run and still be organized in completely different ways underneath.
+What this framework actually measures is how much that pattern of overlapping responsibility
+shifts when a given player is removed. \textsc{Shapers} are the focus of this paper because
+their structural influence is large relative to how much they touch the ball or show up in a
+box score.
 
 \begin{figure}[H]
   \centering
@@ -210,73 +220,67 @@ over a season, not within-possession sequence. The figure is only that demonstra
  \draw[arr] (s3) -- (s3b);
  \draw[arr] (s3b) -- (s4);
  \end{tikzpicture}
- \caption{\textbf{Paper spine.} Contribution~A builds the instrument. Contribution~B asks
- what it reveals: distinctness from value, behavioral correspondence, an efficiency
- boundary, a disclosed post-hoc identity follow-up, and imperfect portability
+ \caption{\textbf{Paper spine.} Contribution~A builds the framework. Contribution~B tests
+ the framework and asks what it shows: distinctness from value, behavioral correspondence,
+ an efficiency boundary, a disclosed post-hoc identity follow-up, and imperfect portability
  (Secs.~\ref{sec:framework}--\ref{sec:travelfit}). Shapers are the visible stress-test
  subclass, not the paper's sole object.}
  \label{fig:spine}
 \end{figure}
 
-\paragraph{Central claim.}
-Organizational function can be measured from initiation structure; it is not player value;
-and it travels imperfectly. Players possess a measurable organizational function that is
-distinct from talent, manifests in offensive behavior, and is partially player-associated
-rather than entirely determined by team context. Shapers make hidden structural
-dependence visible; they are not the paper's
-sole object. Named movers (Gafford upper-tail, Delon Wright lower-tail) illustrate a
-distribution; they do not define it.
+\paragraph{Central claims.}
+\begin{enumerate}[leftmargin=1.6em,itemsep=0.1em]
+ \item Structural influence can be measured from initiation structure alone.
+ \item It isn't the same thing as player value.
+ \item It travels with a player imperfectly when he changes teams.
+ \item Players carry organizational roles distinct from talent that show up in how an offense
+ is shaped.
+ \item Different players can hold different combinations of responsibility even on teams with
+ similar overall play-type distributions.
+ \item That influence is partly tied to the player himself, not entirely dictated by team
+ context.
+ \item \textsc{Shapers} make this otherwise-hidden influence visible.
+\end{enumerate}
 
 %=============================================================================
 \section{Related Work}
 \label{sec:related}
 
 \paragraph{Positions and archetypes.}
-Efforts to modernize the five positions re-cluster players by box-score and shot-location
-profiles into data-driven ``archetypes'' \citep{lutz2012cluster,alagappan2012positions}. These
-describe \emph{what a player does with the ball} but remain player-marginal: they never model
-how a player's actions relate to teammates' actions, and they do not ask whether a description
-transfers between teams. Organizational function is defined by \emph{relational displacement}
-(Sec.~\ref{sec:framework}); portability is exactly the transfer question archetypes leave open.
+There have been various efforts to re-organize the five positions using box-score statistics
+and shot locations into data-driven ``archetypes''
+\citep{lutz2012cluster,alagappan2012positions}. These describe what a player does, but not
+how that player's actions relate to the actions of other players on the team. They also do
+not ask whether that role follows the player when he changes teams. In this paper,
+organizational function is defined by relational displacement (Sec.~\ref{sec:framework}),
+and player portability is tested by looking at what happens when players move to a new team.
 
 \paragraph{Player similarity and embeddings.}
-A large literature embeds players for similarity search \citep{sill2010winval}. Such embeddings
-answer ``who resembles this player?'' in feature space; they do not distinguish a transportable
-property from a shared environment. That distinction (trait vs.\ artifact) is the pivot of
-Contribution~B.
+Player embeddings can be used to find players who are similar based on their data
+\citep{sill2010winval}. This is useful for describing similarity between players, but it does
+not address whether a player's organizational role carries over to another team.
 
 \paragraph{Lineup and value models.}
-Plus/minus and its regularized descendants and five-man lineup net-rating analyses estimate
-\emph{value} and identify \emph{which groups perform well} \citep{rosenbaum2004apm,
-sill2010winval}. They are, by construction, silent on organizational function and on whether a
-player's contribution is his to carry elsewhere. This paper positions organizational function
-\emph{alongside} these models: it measures a different axis, and Sec.~\ref{sec:orthogonality}
-and Sec.~\ref{sec:efficiency} confirm it does not add scoring beyond the talent they already
-price.
+Plus/minus models and net rating measure player and lineup performance and identify which
+groups perform well \citep{rosenbaum2004apm, sill2010winval}. They are designed to measure
+value, not how an offense is organized or whether a player's organizational role can carry
+to another team. This paper measures something different. Sec.~\ref{sec:orthogonality} and
+Sec.~\ref{sec:efficiency} show that structural influence does not add scoring efficiency
+beyond what existing measures of talent already explain.
 
 \paragraph{Network analysis in basketball.}
-Prior network work models passing as a graph and computes possession-level flow statistics,
-notably ``the price of anarchy'' and centrality of ball movement \citep{fewell2012basketball,
-skinner2010anarchy}. This establishes that graph representations are meaningful in basketball,
-but the object is \emph{within-possession ball movement} and the target is \emph{team-level}
-flow efficiency. This paper differs in object and question: play-type co-initiation graphs at the
-\emph{team-season} level, a \emph{player-level} measure of organizational dependence via
-node-removal perturbation, and a test of whether that function contains a portable
-player-level component.
+Graphs have been used to model basketball possessions and calculate flow statistics,
+including work on the ``price of anarchy'' \citep{fewell2012basketball, skinner2010anarchy}.
+Previous network studies show that graphs can be useful for studying basketball, but this
+work focuses on possession-level flow and team efficiency rather than measuring how
+individual players affect the structure of an offense.
 
 \paragraph{The gap.}
-Across positions, archetypes, embeddings, lineup models, and passing networks, the field
-has tools for \emph{value}, \emph{activity}, and \emph{flow}, but none that measures an
-offense's wiring as a team-level responsibility map, identifies players on whom that
-wiring depends through network perturbation, or tests whether a player's ability to wire
-an offense together persists across team changes. That gap is what this paper addresses.
-
-% RECOMMENDED TABLE (Table 1, end of Related Work):
-%   A "capability matrix": rows = {positions, archetypes, embeddings,
-%   lineup/value models, passing networks, OURS}; columns = {measures value?,
-%   measures activity?, measures relational structure?, player-level?,
-%   tests portability?}. Checkmarks make the gap visually obvious :  only OURS
-%   checks "relational structure" AND "tests portability".
+Existing work can tell us about player types, player similarity, player value, and how the
+ball moves through a possession. It does not directly examine an offense as a map of player
+responsibilities: which players combine different play types, which players have an outsized
+effect on that structure, and whether that effect follows the player when he changes teams.
+That is what this paper tests.
 
 %=============================================================================
 \section{Data}
@@ -284,102 +288,79 @@ an offense together persists across team changes. That gap is what this paper ad
 
 \paragraph{Source and unit.}
 The data are possession-level records for three NBA regular seasons
-(2022--23, 2023--24, 2024--25). The atomic unit is a \emph{possession}, annotated with the
-offensive and defensive team, the initiating player, the possession's \emph{play type}, the
-points scored, and contextual fields (period, score margin, and, for the subset of seasons
-with on-court tracking, the five offensive players on the floor). After restricting to
-possessions with a resolved initiator and a play type in the canonical set, the corpus
-contains approximately $6.5\times 10^{5}$ possessions across $90$ team-seasons.
+(2022--23, 2023--24, 2024--25). The atomic unit is a \emph{possession}, with additional
+context like the initiating player, the play type, players on the court, the points scored,
+and other contextual fields like period, clock time, and score margin. After restricting to
+possessions with a clear initiator and a play type, the full dataset includes approximately
+$6.5\times 10^{5}$ possessions across $90$ team-seasons.
 
 \paragraph{Play types.}
-Each possession is labeled with one of $K=8$ canonical initiating play types (pick-and-roll,
-drive, post-up, spot-up, off-ball cut, putback, off-the-dribble/pull-up, and
-transition). Play type encodes \emph{how a possession is initiated}, the semantic level at
-which offensive organization operates; it is deliberately coarser than a full action taxonomy
-so that the resulting association matrices are stably estimable at the team-season level.
-Appendix~H documents how the description-based inferrer constructs these labels from public
-NBA Stats play-by-play fields (action subtype, description text, assist flags, and shot
-distance/zone), including foul treatment.
+Each possession is labeled with one of $K=8$ initiating play types (pick-and-roll, drive,
+post-up, spot-up, cut, putback, pull-up, and transition). The play type describes how a
+possession is initiated, reflecting the level at which offensive organization operates.
+Appendix~H documents how the description-based inferrer derives labels from public NBA Stats
+play-by-play fields (actions, descriptions, assist flags, and shot distance/zone), including
+foul treatment.
 
-\paragraph{PNR under-detection and player-level calibration.}
-The public play-by-play feed parsed here does not tag ball-screen actions directly (no
-pick/screen text token, and assist flags are populated only on made shots), so a
-description-based inferrer alone recovers pick-and-roll (PNR) initiations at roughly a
-quarter of their true rate (raw inferrer output $\approx\!4\%$ of possessions vs.\ an
-expected $\approx\!20$--$25\%$ from play-type tracking proxies). Left uncorrected, this would
-mislabel a large share of true PNR possessions as generic pull-up jumpers or an
-unclassified residual category, both directly relevant here since pick-and-roll is one of
-the $K=8$ initiating play types and enters every association-matrix and structural-influence
-computation. This paper corrects it with a calibration pass that promotes a scored subset of
-pull-up/unclassified possessions to PNR up to a target rate, run once per team-season and
-applied identically across seasons 2022--23 through 2025--26 (the fourth season is used only
-for exploratory addenda such as Appendix~G, not for confirmatory tests). The shot-event
-proxy is used only to set season-level promotion \emph{targets}; it does not enter the
-association matrix or structural influence directly. Those objects use the final calibrated
-possession labels, inferrer-native PNR plus promoted PULL\_UP/OTHER possessions. Promotion
-targets come from a season-level PNR-rate proxy built from NBA play-by-play shot events (shot
-subtype, distance, and assist flags on makes), scaled by a fixed factor of $2.5$ from
-shot-level to possession-level rates and capped at $33\%$ of a team's half-court
-possessions. Each candidate's promotion score is that player's own historical
-inferrer-only PNR rate (team rate if under $10$ tagged possessions) times a fixed prior by
-current label and confidence
-(PULL\_UP: $0.55$/$0.35$/$0.15$ for conf $<0.45$/$0.45$--$0.65$/$\!>\!0.65$; OTHER at conf
-$0.30$: $0.25$), so promotion is player-level rather than a flat team-wide adjustment, and a
-player who legitimately never runs pick-and-roll is not promoted just because his team does.
-A further per-game cap limits drain of any one team's PULL\_UP bucket to at most half of that
-bucket; remaining promotions come from OTHER, and the pass stops rather than overshoot if
-both are exhausted. Every promoted possession retains its pre-calibration label and
-confidence (enabling exact rollback) and is stamped at confidence $0.22$, below any
-inferrer-native PNR label. Applied this way, seasons land within a point of each other on
-PNR share ($18.3$--$20.0\%$), consistent with the shot-event proxy targets.
+\paragraph{PNR under-detection and calibration.}
+The NBA public play-by-play data does not directly identify pick-and-roll (PNR) actions, so
+the description-based inferrer detected far fewer PNR possessions than expected. This matters
+because PNR is one of the play types used in the association and structural-influence
+calculations.
+To correct this, the PNR labels were calibrated to bring each team-season into a consistent
+PNR range of roughly $18$--$20\%$. The calibration promotes selected pull-up and unclassified
+possessions to PNR using player-level information (e.g.\ shot distance), rather than applying
+the same adjustment to every player. The calibrated labels, not the underlying proxy, are
+used in all association and structural-influence calculations. Applied consistently, the
+resulting PNR rates were $18.3$--$20.0\%$ across seasons.
 
 \paragraph{Initiators.}
 The \emph{initiator} is the first offensive player credited with a shot, turnover, foul,
 or free throw on the possession. For most play types this coincides with the player who
 begins the action (the driver on a drive, the shooter on a spot-up, the post player on a
 post-up, the cutter on a cut). On an assisted pick-and-roll, however, the initiator is the
-player who finishes the possession---the ball-handler on a pull-up or floater, or the roll
-man on an assisted rim finish---rather than exclusively the ball-handler who set up the
+player who finishes the possession (the ball-handler on a pull-up or floater, or the roll
+man on an assisted rim finish) rather than exclusively the ball-handler who set up the
 action. This paper graphs this terminal-actor relation, rather than passing or assist credit,
-because it is the act that determines \emph{which player sets each possession's structural
-context}.
+because it is the act that determines which player sets each possession's structural context.
 
 \paragraph{Seasons, filtering, and pools.}
-For role assignment this paper defines a \emph{rotation pool} of players with at least $15$ minutes per
-game over at least $30$ games in a team-season, ensuring each player's initiation distribution
-is estimable; players outside the pool are still classified but are excluded when computing
-distributional thresholds (Section~\ref{sec:taxonomy}). On-court composition analyses
-(Section~\ref{sec:behavior}) use only the seasons carrying on-court tracking and retain
-possessions with exactly five identified offensive players ($99.7\%$ of eligible possessions).
-The shaper-tier subgroup split in Sec.~\ref{sec:shaper-tiers} was motivated by an
-exploratory review of 2025--26 data (on-court coverage gap since corrected; Appendix~G lists
-that season's shaper roster). The check itself runs on the pre-registered three-season
-sample only.
-
-% RECOMMENDED TABLE (Table 2): data summary :  per season: #games, #possessions,
-%   #team-seasons, #rotation players, coverage of initiator & on-court fields.
+For role assignment this paper defines a \emph{rotation pool} of players with at least $15$
+minutes per game over at least $30$ games in a team-season, ensuring each player's initiation
+distribution is estimable. Players outside the pool are still classified but are excluded when
+computing distributional thresholds (Section~\ref{sec:taxonomy}). On-court composition analyses
+(Section~\ref{sec:behavior}) retain possessions with exactly five identified offensive players
+($99.7\%$ of eligible possessions). The shaper-tier subgroup split in
+Sec.~\ref{sec:shaper-tiers-main} was motivated by a review of 2025--26 data. After initial
+analysis, 2025--26 was identified as lacking full on-court coverage, which was subsequently
+corrected (Appendix~G lists that season's shaper roster). The check itself runs on the
+pre-registered three-season sample only.
 
 %=============================================================================
 \section{Measuring Offensive Wiring}
 \label{sec:framework}
 
-This section builds the instrument (Contribution~A). Wiring is the team-level responsibility
-map; structural influence measures how much the map changes when a player is removed: organizational
-dependence as network perturbation. This paper defines the offensive interaction graph, its play-type
-\emph{association matrix}, and per-player \emph{structural influence}. The role taxonomy is a
-convenient discretization that makes shapers visible; the \emph{displacement signature} is
-the object the portability test acts on. Notation is summarized in Table~\ref{tab:notation}.
+This section builds the framework (Contribution~A): the offensive interaction graph, its
+play-type association matrix, and per-player structural influence, calculated as a network
+perturbation. From these calculations, role categorizations emerge, and shapers become
+visible through outsized displacement relative to usage. Notation is summarized in
+Table~\ref{tab:notation}.
 
 \subsection{Nodes, edges, and the initiation matrix}
 \label{sec:nodes}
 
-For a fixed team-season, let $\mathcal{P}=\{1,\dots,n\}$ index rotation players and
-$\mathcal{K}=\{1,\dots,K\}$ index play types ($K=8$). The offense is a weighted bipartite
-graph $G=(\mathcal{P}\cup\mathcal{K},\,E)$ whose edge weights record how often each player
-initiates each play type, collected in the \emph{initiation matrix}
-$\Bmat\in\mathbb{R}_{\ge 0}^{n\times K}$, with $\Bmat[p,k]$ the number of type-$k$
-possessions initiated by player $p$. Because the object is \emph{who initiates what}, the construction
-column-normalizes so each play type is a distribution over players:
+For one team in one season, let $\mathcal{P}=\{1,\dots,n\}$ be the group of rotation players
+and let $\mathcal{K}=\{1,\dots,K\}$ be the group of the $K=8$ play types. The offense is
+represented as a graph with two kinds of nodes, players and play types, where the only
+connections that exist are between a player and a play type, never player-to-player. Each
+connection has a weight: how many times that player initiated that play type. Collecting all
+of these weights gives an \emph{initiation matrix}
+$\Bmat\in\mathbb{R}_{\ge 0}^{n\times K}$, with one row per player and one column per play
+type, where each cell $\Bmat[p,k]$ is simply the count of type-$k$ possessions that player
+$p$ initiated.
+Each play type's column is then converted into a percentage breakdown across players, so
+instead of raw counts, each column shows what share of that play type's initiations belongs
+to each player, and those shares for a given play type add up to $100\%$:
 \begin{equation}
 \label{eq:bnorm}
 \tilde{\Bmat}[p,k] \;=\; \frac{\Bmat[p,k]}{\sum_{q\in\mathcal{P}}\Bmat[q,k]},
@@ -389,69 +370,134 @@ column-normalizes so each play type is a distribution over players:
 \subsection{The association matrix (min-overlap co-initiation)}
 \label{sec:assoc}
 
-The structural invariant of an offense is not \emph{how often} each action is run (a marginal,
-recoverable from a possession table), but \emph{which players initiate which combinations of
-actions}, a joint roster map a table discards. Concretely: suppose over a season Player~A
-initiates $50$ cuts and $45$ spot-ups, while Player~B initiates $10$ cuts and $5$ spot-ups.
-Player~C initiates $0$ cuts and $80$ spot-ups. The CUT--SPOT UP link is strong because A (and
-to a lesser extent B) holds both jobs. If instead all $50$ cuts come from slashers who never
-spot up and all spot-ups come from stationary shooters, the menu can be identical but the
-CUT--SPOT UP link is weak. The measure formalizes this overlap across the full rotation.
+This measure isn't about how often each play type happens on its own, that's a simple count
+anyone could pull from a possession table. What matters is whether the same players are
+behind two different play types, or whether separate specialists handle each one, since a
+possession table alone can't tell you that.
 
-This paper captures the roster map with a symmetric play-type \emph{association matrix} via the
-histogram-intersection (min-overlap) measure, computed on the \emph{raw} initiation counts
-$\Bmat$ (as in the worked example above), not the column-normalized $\tilde{\Bmat}$:
+The distinction matters because of what initiation represents: whoever initiates a play type
+is the player the offense currently depends on to produce that action. When two play types are
+held by the same players, high overlap, those actions function as a linked system. The offense
+can move between them without changing personnel, and a defender guarding that player has to
+respect both threats at once, since either could come from him. When two play types are held
+by entirely separate specialists, low overlap, the offense has divided those responsibilities
+into distinct jobs. No single defender has to guard for both, because no single player
+represents both threats.
+Across all $28$ pairs, this pattern shows how responsibility is organized across a roster:
+which actions are combined in the same players, harder to defend and harder to remove without
+consequence, and which are divided across specialists, more easily replaceable. That's what
+this paper means by an offense's \emph{wiring}. It's also why removing a player and watching
+which pairs collapse reveals something a raw initiation count can't: not just what a player
+does, but which combinations of team responsibility existed only because he personally held
+both halves. See Appendix~\ref{sec:appendix-pair-glossary} for what the play-type pairs
+represent for basketball strategy and tactics.
+
+Why certain pairs cluster in the same player is itself a basketball mechanism, not an
+arbitrary artifact of the data. Some play types share an underlying defensive exploit. A drive
+collapses help defenders inward, which is exactly what creates space for a pull-up once the
+defender recovers, or a spot-up once a helper strays too far from his own man. Cutting works
+the same way from the off-ball side: pulling defensive attention toward the ball opens driving
+and cutting lanes elsewhere. A player who is genuinely live in both halves of a pair like this
+is attacking the same defensive vulnerability two different ways, and a defender guarding him
+has to respect both threats at once. That's what makes certain combinations, drive and
+pull-up, cut and drive, show up as real, above-chance links in the association matrix, rather
+than arbitrary pairs like putback and pull-up. See
+Appendix~\ref{sec:appendix-pair-glossary} for a full accounting of what each pair represents
+on the floor.
+
+The overlap between two play types is the sum, across players, of the smaller of that player's
+two initiation counts (computed on the \emph{raw} initiation counts $\Bmat$, not the
+column-normalized $\tilde{\Bmat}$):
 \begin{equation}
 \label{eq:overlap}
 O[i,j] \;=\; \sum_{p\in\mathcal{P}} \min\!\big(\Bmat[p,i],\,\Bmat[p,j]\big),
 \qquad i,j\in\mathcal{K}.
 \end{equation}
-$O[i,j]\ge 0$ is large when the same players initiate both play types $i$ and $j$, when
-those two jobs \emph{share personnel}. It is \emph{not} a within-possession transition
-probability. The min-overlap form measures shared initiation mass: a player's contribution
-to the pair is capped at the smaller of his two play-type counts, so the association
-reflects overlapping responsibility rather than co-occurrence generated by total volume
-alone. It is a standard co-occurrence measure over initiators, fixed \emph{a priori} to
-avoid an implementation-time degree of freedom. This paper deliberately does not normalize $O$ for
-volume; raw overlaps conflate genuine co-initiation with the fact that some players simply
-initiate more, so the design instead standardizes against a \emph{fixed-margin null}: both player
-margins (row sums of $\Bmat$) and play-type margins (column sums) are preserved, while
-internal player--play-type assignments are randomized by shuffling play-type labels across
-initiations ($1{,}000$ draws). This paper takes the mean and SD of the resulting $O$ entries. That
-standardization, not a pre-normalization of $\Bmat$, is what removes the volume advantage.
-With $\mathbb{E}_0[\cdot]$ and
-$\mathrm{sd}_0[\cdot]$ the null mean and standard deviation,
+The minimum matters because a player only contributes strongly to the link if he does
+meaningful volume in both play types. A player with $100$ cuts and $5$ spot-ups contributes
+only $5$. A player with $60$ cuts and $55$ spot-ups contributes $55$. The measure therefore
+rewards players who genuinely hold two jobs together rather than specialists who dominate only
+one. This is not a sequence measure within a possession. It asks whether the same players show
+up doing both jobs across the season.
+
+That team-level number still has a problem: a star player who initiates a lot of every play
+type, a Nikola Joki\'c or LeBron James, will show up in a lot of these overlap totals just
+because he touches the ball more, not because any two of his play types are meaningfully
+linked. To correct for that, each pair's raw overlap number gets compared against a random
+baseline built from shuffled versions of the same team.
+To separate real overlap from what would occur simply because some players initiate more
+possessions than others, each team's initiation matrix is compared with $1{,}000$ randomized
+versions. The randomization preserves every player's total initiation volume and each play
+type's total team frequency, while randomly reallocating play-type labels across the team. The
+observed overlap for each play-type pair is then standardized against its own shuffled
+distribution. That standardized distance, rather than the raw overlap count, is what is
+recorded for each pair. With $\mathbb{E}_0[\cdot]$ and $\mathrm{sd}_0[\cdot]$ the null mean
+and standard deviation,
 \begin{equation}
 \label{eq:assoc}
 \Amat[i,j] \;=\; \frac{O[i,j]-\mathbb{E}_0\big[O[i,j]\big]}{\mathrm{sd}_0\big[O[i,j]\big]} .
 \end{equation}
-$\Amat$ is symmetric with an uninformative diagonal, so its content is the
-$\binom{K}{2}=28$ off-diagonal entries $\operatorname{vec}(\Amat)\in\mathbb{R}^{28}$: the
-team-season's \emph{structural fingerprint}. That a team resembles \emph{itself} across split
-halves far more than it resembles other teams, and that this persists after removing play-type
-frequencies, is the premise established in prior work and assumed here.
+Those $28$ standardized values together are what this paper calls a team's \emph{structural
+fingerprint}, a team-level object throughout. Players only enter the calculation as building
+blocks summed into $O[i,j]$, never as a separate fingerprint of their own. A team looks more
+like itself, comparing one half of its season to the other, than it looks like any other team,
+and that stays true even after removing how often each play type is simply run. That's the
+basis for treating this fingerprint as a real, stable property of a team's offense, not just a
+snapshot of one season's noise.
 
 \subsection{Structural influence: how much the offense's wiring changes when a player is removed}
 \label{sec:load}
 
-Organizational function is defined by the change induced when a participant is removed from
-the relational structure. Let $\Afull$ be the association matrix of the full rotation and
-$\Aminus{p}$ the matrix recomputed after deleting player $p$'s row from $\Bmat$ and
-renormalizing. \emph{Structural influence} is the cosine displacement between the two fingerprints:
+This paper defines a player's structural influence by asking a simple question: what happens
+to a team's fingerprint if he's removed entirely?
+Take the full fingerprint for a team, built from every rotation player as described above,
+and call it $\Afull$. Now delete one player completely, remove every one of his initiations
+from $\Bmat$, redo all of the shuffle and calculation processes for each play-type pair, and
+get a new fingerprint, $\Aminus{p}$. Comparing those two fingerprints, before and after, is
+the idea.
+The difference between the full and leave-one-out fingerprints is measured with cosine
+similarity, which compares their pattern rather than their overall magnitude. Structural
+influence, $\load(p)$, is defined as:
 \begin{equation}
 \label{eq:load}
 \load(p) \;=\; 1-\cossim\!\big(\operatorname{vec}(\Afull),\,\operatorname{vec}(\Aminus{p})\big)
 \;=\; 1-\frac{\langle \operatorname{vec}(\Afull),\,\operatorname{vec}(\Aminus{p})\rangle}
 {\lVert\operatorname{vec}(\Afull)\rVert\,\lVert\operatorname{vec}(\Aminus{p})\rVert}.
 \end{equation}
-$\load(p)$ is near zero when the offense reorganizes into the same shape without $p$ (he is
-structurally \emph{redundant}), and large when his removal rotates the fingerprint (he is
-structurally \emph{load-bearing}). Cosine rather than Frobenius distance is deliberate: it
-measures a change in the \emph{shape} of the association pattern, not its magnitude, so $\load$
-does not simply reward players who generate more possessions. Named exemplars appear in
-Table~\ref{tab:exemplars}; the construct is the reorganization, not any one biography.
-Figure~\ref{fig:loo-displacement} makes $\load(p)$ visible directly, before any of the
-downstream residualization or taxonomy machinery is introduced.
+A player therefore has high structural influence when removing him changes the pattern of
+play-type relationships, not simply when removing him reduces the number of possessions. A
+high-volume player whose absence shrinks the same pattern should not automatically receive
+high structural influence.
+
+Figure~\ref{fig:loo-displacement} shows this using two Minnesota players from the same
+2023--24 team, before any further adjustment of the measure. The heatmap shows the full,
+cell-by-cell change in the fingerprint, not just the single summary number $\load(p)$. This
+color differentiation is defined later as the displacement signature
+(Section~\ref{sec:signature}) but provides context for the following discussion.
+
+For Rudy Gobert (usage $0.09$, $\load=0.60$): removing him from the fingerprint collapses
+several cut-related links. CUT--PNR moves, consistent with his own game, rim runs and roll
+starts off ball screens, a real dual threat that forces a defense to guard both the roll and
+the backdoor cut. CUT--DRIVE, CUT--SPOT\_UP, and CUT--PULL\_UP move even more sharply, and
+those aren't Gobert's own combinations, they belong to other Minnesota players.
+Karl-Anthony Towns (usage $0.15$, $\load=0.00$), on the same roster: removing him leaves the
+fingerprint almost completely unchanged, because other players were already covering the same
+combinations he touched.
+
+A simple count shows cutting gets rarer without Gobert, Minnesota's cut rate falls from
+$7.5\%$ to $3.1\%$ of possessions. But a count alone can't say whether the cuts that remain
+are still paired with a drive, pull-up, or spot-up from the same player, or have become
+isolated actions nothing else backs up. That's what the collapsing CUT--DRIVE,
+CUT--SPOT\_UP, and CUT--PULL\_UP pairs actually capture: fewer players cutting and driving or
+shooting at real volume, meaning fewer two-way threats a defense has to respect. A cutter who
+never drives or shoots off that same threat is easy to sag off. Stated as a hypothesis and not
+tested here, a defense can start treating a cut as a one-off help rotation instead of a real
+coverage responsibility once fewer players are running it as one half of a live threat.
+
+That contrast, deep and structured for Gobert, shallow and sparse for Towns, is what
+structural influence is built to capture, something a raw count of cuts can't show. This is a
+hypothetical, leave-one-out calculation based on removing a player from the season's data, not
+something observed from an actual injury or game.
 
 \begin{figure}[H]
 \centering
@@ -460,7 +506,8 @@ downstream residualization or taxonomy machinery is introduced.
 association fingerprint.} Two players from the same team-season (Minnesota, 2023--24), same
 $8\times 8$ play-type ordering, same diverging scale, diagonal blank. Each heatmap is
 $\Afull-\Aminus{p}$, the signed change in the standardized play-type association matrix when
-player $p$'s initiation row is removed; the bar strip above each panel is $p$'s own play-type
+player $p$'s initiation row is removed (the displacement signature of
+Sec.~\ref{sec:signature}); the bar strip above each panel is $p$'s own play-type
 profile $\pt_p$, shown only for context. \emph{Left:} Rudy Gobert (\textsc{Shaper},
 $u=0.09$, $\load=0.60$, $\resid=+0.60$): removing him collapses several \textsc{Cut}-linked
 associations, a concentrated, deep displacement. \emph{Right:} Karl-Anthony Towns
@@ -475,33 +522,40 @@ perturbation of the measured fingerprint, not an observed injury or causal adapt
 \subsection{Usage-residual structural influence}
 \label{sec:resid}
 
-To guard against structural influence being a relabeling of usage, this paper regresses it on a quadratic in
-usage $u$ across all classified players and retain the residual:
+Structural influence, $\load(p)$, still has one problem: it partly just reflects how much a
+player plays. Someone who touches the ball more will mechanically show up in more of these
+overlap calculations, even without any real connective role. To separate structural influence
+from volume, this paper compares each player's $\load(p)$ against what you would expect
+purely from his usage rate, and keeps only the leftover.
+This paper fits a curve (allowing for some curvature, not just a straight line) predicting
+$\load(p)$ from usage across every classified player. Whatever a player's actual $\load(p)$
+is above or below what that curve predicts, given his usage, is called his residual
+influence, $\resid(p)$:
 \begin{equation}
 \label{eq:resid}
 \load(p) \;=\; \beta_0+\beta_1 u_p+\beta_2 u_p^{2}+\resid(p),
 \qquad
 \resid(p) \;=\; \load(p)-\big(\hat\beta_0+\hat\beta_1 u_p+\hat\beta_2 u_p^{2}\big).
 \end{equation}
-Residual influence $\resid(p)$ is that same construct after removing the component predicted by
-usage: structural influence that exceeds the level predicted by usage alone. Equivalently,
-$\resid(p)$ is the organizational footprint that survives after accounting for involvement; this paper
-shows it is stable within players and orthogonal to value. Here $u$ is the \emph{graph-native}
-initiation share (a player's share of his team's initiations); the box-score
-\emph{usage rate} reported in Table~\ref{tab:ortho} and used for the taxonomy median split is a
-distinct, standard NBA measure. This paper residualizes on the graph quantity and reports correlations
-against the box-score one, so the weak residual--usage correlations in Table~\ref{tab:ortho}
-are not mechanical.
+A positive $\resid(p)$ means a player's structural influence is higher than his usage alone
+would explain. A negative $\resid(p)$ means it is about what you would expect, or lower.
+One distinction worth being precise about: the usage used in this residual calculation is a
+graph-native measure, a player's share of his team's total initiations, calculated directly
+from the same data as everything else in this paper. That is different from the standard
+box-score usage rate reported elsewhere (like Table~\ref{tab:ortho}) and used later to build
+the taxonomy below. The two usually track each other closely, but they are not the same
+number, and keeping them separate means the residual is not just mechanically guaranteed to
+look clean against the box-score version.
 
-\subsection{The role taxonomy: making shapers visible}
+\subsection{Role categorizations: making shapers visible}
 \label{sec:taxonomy}
 
-Crossing usage (consumption) with \emph{usage-residual} structural influence at a principled
-cut discretizes the measurement into four labels. The vertical cut is the usage median
-$u_{\text{med}}$ over the rotation pool (high vs.\ low volume). The horizontal cut is
-$\resid(p)=0$: whether the player carries more structural influence than usage alone predicts
-(Eq.~\ref{eq:resid}). Unequal class sizes are expected, most players sit at or below
-expected influence, and are not a defect of the taxonomy.
+With both usage and residual influence, players can be categorized into four groups by
+crossing the two values. The first cut is usage: is a player above or below the median usage
+of the rotation pool, meaning does he play a high-volume or low-volume role. The second cut is
+residual influence: is $\resid(p)$ positive or not, meaning does he carry more structural
+influence than his usage alone would predict.
+Four groups fall out of that:
 \begin{equation}
 \label{eq:taxonomy}
 \text{role}(p)=
@@ -512,46 +566,66 @@ expected influence, and are not a defect of the taxonomy.
 \textsc{Role Occupant / Specialist} & u_p< u_{\text{med}} \ \wedge\ \resid(p)\le 0.
 \end{cases}
 \end{equation}
-Raw-influence median splits would force roughly equal quadrants and mislabel high-usage players
-whose influence is only mechanically elevated by volume (negative residual). The residual cut
-answers the question the construct asks: who displaces the wiring \emph{beyond} what usage
-predicts? In basketball terms the two high-usage classes therefore split hubs through whom
-initiation pathways are concentrically organized (\textsc{Primary Organizer}) from
-high-volume creators/finishers whose influence is only what usage already predicts
-(\textsc{Terminal Scorer}): including cases where both sit on the same roster
-(Sec.~\ref{sec:emerge}). The taxonomy is a device for isolating the most visible
-illustration of that construct (\textsc{Shaper}), not a four-class research
-program. The other three labels are contrast strata. Scope for ``glue'' language is as in
-Sec.~\ref{sec:intro}: offensive connective function in the initiation graph only. Robustness
-to the usage threshold (45th/55th-percentile splits; residual cut fixed at zero) is in the
-appendix.
+\begin{itemize}[leftmargin=1.4em,itemsep=0.15em]
+ \item \textbf{High usage, $\resid(p)>0$:} \textsc{Primary Organizer}. A high-volume player
+ whose structural influence exceeds even what his heavy usage predicts, someone whose
+ presence organizes initiation pathways beyond just taking a lot of shots. These are usually
+ playmakers.
+ \item \textbf{Low usage, $\resid(p)>0$:} \textsc{Shaper}. This is the group this paper is
+ built around: players who barely touch the ball but whose absence reorganizes the offense
+ more than their usage would suggest.
+ \item \textbf{High usage, $\resid(p)\le 0$:} \textsc{Terminal Scorer}. A high-volume player
+ whose structural influence is basically just what you would expect from that volume, nothing
+ extra.
+ \item \textbf{Low usage, $\resid(p)\le 0$:} \textsc{Role Occupant / Specialist}. A low-volume
+ player whose structural influence is also about what you would expect, nothing extra.
+\end{itemize}
+Most players land in the \textsc{Terminal Scorer} and \textsc{Role Occupant / Specialist}
+groups. That is expected because most players simply are not unusually structurally important
+relative to how much they play, and only a small number clear that bar in either usage
+bracket.
+Splitting the two high-usage groups apart matters, because it separates the organizers
+(players whose usage comes with real organizing responsibility) from simply high-volume
+scorers and finishers whose influence is just what their volume already explains. It is
+possible for both types to exist on the same roster at once, and this paper covers a real
+example of that later (Sec.~\ref{sec:emerge}).
+These four categories exist mainly to make \textsc{Shapers} visible as a clear category. The
+other three groups are not a separate research focus but could be. In this paper, they are
+documented for contrast against \textsc{Shapers}.
 
-% RECOMMENDED FIGURE (Figure 2): the 2D organizational-function map :  scatter of
-%   every rotation player-season with x = usage, y = structural influence, quadrants
-%   shaded, medians as crosshairs, ~12 labeled exemplars (Jokic/SGA organizers,
-%   Gafford/Gobert hidden hubs, high-volume scorers as terminals).
-
-\subsection{Displacement signature: the object of the portability test}
+\subsection{Displacement signature: measuring the portability of a player}
 \label{sec:signature}
 
-Structural influence is a scalar; portability requires the \emph{direction} of a player's footprint.
-The \emph{adjacency-displacement signature} is the signed change in the fingerprint on removing
-$p$:
+Figure~\ref{fig:loo-displacement} already showed a cell-by-cell view for Gobert and Towns,
+rather than collapsing each player down to a single $\load(p)$ number. That full picture,
+exactly which play-type pairs moved and in which direction when a player is removed, is what
+this paper calls the \emph{displacement signature}, $\dA_p$:
 \begin{equation}
 \label{eq:signature}
 \dA_p \;=\; \operatorname{vec}(\Afull)-\operatorname{vec}(\Aminus{p}) \;\in\;\mathbb{R}^{28}.
 \end{equation}
-$\dA_p$ records \emph{which} associations a player holds together. His \emph{play-type profile}
-$\pt_p\in\Delta^{K-1}$ (his own normalized initiation distribution) is the \emph{table-visible}
-description; $\dA_p$ is the \emph{graph-native} one. The portability test
-(Section~\ref{sec:portability}) compares a player's cross-team $\dA_p$ similarity against that
-of \emph{profile-matched decoys} (players with nearly identical $\pt$), so that any excess
-similarity cannot be attributed to running the same plays.
+Where $\load(p)$ says how much the fingerprint moved overall, $\dA_p$ says which specific
+pairs moved, and which direction. It records exactly which combinations of play types a given
+player is holding together.
+There is another way to describe a player that might sound similar but is not the same thing:
+his own play-type profile, meaning simply what percentage of his own initiations fall into
+each play type. That is something you could read directly off a normal stat sheet; it just
+describes what a player does. $\dA_p$ is different: it is not about what he does, it is about
+what changes on the rest of the team when he is gone. Two players could have very similar
+play-type profiles and still have very different displacement signatures, because a profile
+describes the player, while the signature describes his structural influence on everyone else.
+This distinction matters later, in the portability test (Section~\ref{sec:portability}), which
+asks whether a player's own displacement signature carries over to a new team after a trade.
+To make sure that any apparent carryover is not just because he plays similarly wherever he
+goes, the test compares his signature against decoy players on the new team who share a
+similar play-type profile, so any leftover similarity in signature specifically, beyond just
+similar play style, can be credited to something more player-specific than just running the
+same plays.
 
 % ---- notation table --------------------------------------------------------
 \begin{table}[t]
 \centering\small
-\caption{Notation.}
+\caption{\textbf{Notation.}}
 \label{tab:notation}
 \begin{tabular}{ll}
 \toprule
@@ -571,28 +645,18 @@ $u_p$ & usage rate \\
 \end{table}
 
 %=============================================================================
-\section{A Confirmatory Program}
+\section{Pre-registration}
 \label{sec:pipeline}
 
-Contribution~A builds the instrument (Sec.~\ref{sec:framework}). Contribution~B asks what
-it reveals, in the confirmatory order of Sec.~\ref{sec:intro} (restated as subsection
-headers in Sec.~\ref{sec:results}). The analyses below are governed by the following
-discipline.
-
-\paragraph{Confirmatory discipline.}
-The portability and efficiency analyses are \emph{pre-registered}. For each analysis the methods were fixed, before
-touching outcome data: a single primary hypothesis and metric; a null model and inference
-procedure; a \emph{feasibility gate} (a pre-committed check that the test is estimable, which
-never inspects the primary effect); and binding \emph{stop conditions}, including a
-\emph{no-fallback} clause forbidding post-hoc swaps of metric, outcome, or definition. Because
-units are non-independent (players within team-seasons within franchises), inference uses
-franchise- or team-season--clustered permutation and bootstrap procedures. This discipline is
-what lets the efficiency null be read as an informative boundary rather than a failure to
-re-run.
-
-% RECOMMENDED FIGURE (Figure 3): vertical pipeline schematic :  Recoverability ->
-%   Distinctness -> Behavior -> Efficiency boundary -> PORTABILITY (highlighted) ->
-%   What predicts reproduction; annotate each with its one-line question.
+The portability and efficiency analyses are \emph{pre-registered}. For each analysis, the
+methods were fixed before looking at results: a single hypothesis and outcome metric, a null
+model, a feasibility check confirming the test could actually be run, and stop conditions
+that locked the question and the data in advance, so nothing could be swapped out after
+seeing how the results looked. Because players are not independent of each other, players on
+the same team or in the same franchise tend to have correlated results, the statistical tests
+account for that clustering rather than treating every player-season as separate,
+uncorrelated data points. This is what makes each null trustworthy, not just a test that
+happened to come back empty because it was not run carefully.
 
 %=============================================================================
 \section{Results}
@@ -609,32 +673,26 @@ observable basketball (Sec.~\ref{sec:behavior}); where does it stop
 \label{sec:emerge}
 
 Applying Eq.~\eqref{eq:taxonomy} to the rotation pool ($924$ player-seasons; the
-pre-registered three-season sample, 2022--23 through 2024--25) yields four classes with
-unequal size, as expected
-under a residual cut (Table~\ref{tab:taxonomy}). The measurement separates players usage
-cannot: \textsc{Shaper} players have structural influence ($0.078$) comparable to
-\textsc{Primary Organizers} ($0.094$) while consuming far fewer possessions (usage $0.145$
-vs.\ $0.244$), and scoring less than half as much ($9.0$ vs.\ $18.4$ ppg); their usage-residual
-influence ($+0.062$) is the highest of any class. \textsc{Terminal Scorers} are the mirror
-image, high usage ($0.233$), real scoring ($16.6$ ppg), near-zero residual influence ($-0.019$).
-Most of the pool sits in the two non-excess-influence classes (terminal $40\%$, specialist $39\%$):
-volume without excess structure, or neither.
+pre-registered three-season sample, 2022--23 through 2024--25) produces four disparate,
+differently sized categories as expected under a residual cut (Table~\ref{tab:taxonomy}).
+\textsc{Shaper} players have structural influence ($0.078$) comparable to
+\textsc{Primary Organizers} ($0.094$) while initiating far fewer possessions (usage $0.145$
+vs.\ $0.244$), and scoring less than half as much ($9.0$ vs.\ $18.4$ ppg). Their residual
+influence ($+0.062$) is the highest of any category. \textsc{Terminal Scorers} are the
+mirror image: high usage ($0.233$), real scoring ($16.6$ ppg), near-zero residual influence
+($-0.019$), which means they score about as expected from usage. Most of the pool sits in
+the two other categories (terminal $40\%$, specialist $39\%$). The graph identifies a type of
+structural importance that other offensive measures do not see: organizer-level influence on
+a team's offensive wiring at about half the scoring volume.
 
-The graph therefore identifies a type of
-structural importance that conventional offensive volume measures do not see, organizer-level
-displacement of the wiring at roughly half the scoring volume. This paper omits raw on-court net rating
-from Table~\ref{tab:taxonomy}; whether that column would invite a value-premium reading is
-tested in Sec.~\ref{sec:orthogonality}.
-
-\begin{table}[t]
+\begin{table}[H]
 \centering\small
-\caption{Organizational-function classes over the rotation pool ($n=924$ player-seasons,
-2022-23 through 2024-25). Usage is box-score usage rate (distinct from the graph-native
-initiation share $u$ in Eq.~\ref{eq:resid}). Influence is $\load(p)$ (Eq.~\ref{eq:load}); residual influence is $\resid(p)$ (Eq.~\ref{eq:resid}). Classes use usage median $\times$ $\resid>0$
-(Eq.~\ref{eq:taxonomy}), not equal-mass raw-influence medians. Raw on-court net rating is omitted
-from this table and examined as a falsification test in Sec.~\ref{sec:orthogonality}. The
-\textsc{Shaper} row is the most visible illustration of the construct; other rows are
-contrast.}
+\caption{\textbf{Organizational-function classes.} Rotation pool ($n=924$ player-seasons,
+2022--23 through 2024--25). Usage is box-score usage rate (separate from the graph-native
+initiation share $u$ in Eq.~\ref{eq:resid}). Influence is $\load(p)$ (Eq.~\ref{eq:load});
+residual influence is $\resid(p)$ (Eq.~\ref{eq:resid}). Categories use usage median
+$\times$ $\resid>0$ (Eq.~\ref{eq:taxonomy}). On-court net rating is omitted from this table
+and examined in Sec.~\ref{sec:orthogonality}.}
 \label{tab:taxonomy}
 \begin{tabular}{lrrrrrrr}
 \toprule
@@ -648,94 +706,23 @@ Class & $n$ & \% pool & Usage & Influence & Resid.\ influence & PPG & MPG \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:exemplars} and Figure~\ref{fig:taxonomy-map} put the same names on that
-axis. The Organizer/Terminal split is not ``who creates'' versus ``who scores'', both
-classes take high usage and initiate a lot. It asks a more specific on-court question:
-\emph{when this player leaves the floor, does the team's map of who starts which play
-types reorganize beyond what losing that much volume would imply?}
+Table~\ref{tab:exemplars} and Figure~\ref{fig:taxonomy-map} examine actual players against
+the structural influence and usage measures. The Organizer/Terminal split is not ``who
+creates'' versus ``who scores,'' because both classes take high usage and initiate a lot. It
+asks a more specific on-court question: when this player leaves the floor, does the team's
+map of who starts which play types reorganize beyond what losing that much volume would
+imply?
 
-\paragraph{How structural classes differ in offensive initiation.}
-The graph does not track assists, within-possession passing chains, screens set without
-initiation credit, gravity, or communication. An \emph{initiator} is as defined in
-Sec.~\ref{sec:data}. Class-average initiation diets make the
-roles concrete.
-\textsc{Primary Organizers} start half-court offense on the ball: pick-and-roll
-($\approx\!24\%$), drives ($\approx\!19\%$), and post-ups ($\approx\!16\%$) lead their mix.
-\textsc{Terminal Scorers} look similar at first glance, drives and pick-and-rolls also
-dominate, but carry more spot-up volume and, critically, less unique overlap across those
-jobs: other players already start the same combinations, so removing the star mostly
-subtracts possessions rather than rewriting who-holds-which-jobs.
-\textsc{Shaper} players are not primary handlers. Their diet is cut-and-roll
-interior work: pick-and-roll ($\approx\!25\%$) and cuts ($\approx\!23\%$) together nearly
-half their initiations, rim runs, dive cuts, and roll starts that occupy initiation roles
-overlapping across ball-screen and off-ball actions. \textsc{Role Occupants} are mostly
-spot-up specialists ($\approx\!33\%$ spot-ups). High $\resid$ means the player's initiation
-jobs are \emph{shared across play types} in a way the rest of the rotation does not
-duplicate; it is organizational dependence, not a second box-score of ``hustle.''
-
-\paragraph{Named contrast.}
-Same seasons bolded in Table~\ref{tab:exemplars} and labeled in
-Figure~\ref{fig:taxonomy-map}. On 2023--24 Oklahoma City, SGA is the on-ball hub: drives
-$\approx\!34\%$, pull-ups $\approx\!24\%$, pick-and-rolls $\approx\!18\%$ of his
-initiations, and he alone starts roughly a third of Thunder drives and pull-ups and nearly
-half their post-ups ($\resid=+0.22$). Denver 2024--25 is the same shape with Joki\'c as the
-half-court hub (pick-and-roll and post-up lead his diet; he starts over half of Denver's
-post-ups; $\resid=+0.067$). By contrast, 2023--24 Los Angeles has \emph{two} high-usage
-stars in opposite classes: the dotted link in Figure~\ref{fig:taxonomy-map}. LeBron
-(drives and pick-and-rolls at star volume; $\resid=-0.054$) is a Terminal Scorer: the
-coaching ``point forward'' label fits what he does with the ball, but those initiation jobs
-are ones the roster can redistribute. Anthony Davis (pick-and-roll, post-up, and cuts;
-$\approx\!42\%$ of Lakers post-up starts and $\approx\!31\%$ of their cuts;
-$\resid=+0.105$) is the Organizer: the interior/ball-screen hub next to LeBron's volume.
-Boston 2022--23 is the wing version of the same split, Tatum's drive/pick-and-roll/spot-up
-volume with $\resid\le 0$, while the motion offense keeps those starts shared.
-
-So ``point forward'' and ``primary creator'' name on-ball skill. $\resid$ asks whether the
-offense's starting jobs are concentrically organized through that player. SGA's Thunder and
-Joki\'c's Nuggets are; that Lakers season is organized through Davis's post/cut/pick-and-roll
-overlap even while LeBron dominates usage; Tatum's Celtics are organized through the system.
-
-The sharpest illustration is the low-usage half of the same split. Gobert and Gafford are
-not traditionally described as offensive organizers: they do not create for teammates in
-the box-score sense. Yet they carry organizer-level structural dependence without the
-volume. Gobert alone started $\approx\!62\%$ of Minnesota's cuts in 2023--24 (cut and
-pick-and-roll $\approx\!74\%$ of his own initiations), not a creator, but a node the
-offense's geometry depends on. That is what usage cannot see, and why shapers are the
-class the instrument was built to make visible. Hart is a Role Occupant: mixed
-spot-up / pick-and-roll / drive volume that others cover. Secondary table rows are
-additional in-class examples not labeled on the figure.
-
-\begin{figure}[H]
- \centering
- \includegraphics[width=0.92\textwidth]{fig_taxonomy_map.png}
- \caption{\textbf{Organizer vs.\ Terminal on one map.} Both axes are percentile ranks of
- the rotation pool ($n=924$). Vertical dashed line: usage median. Horizontal dashed line:
- $\resid=0$ (Eq.~\ref{eq:taxonomy}), at the $\approx\!78$th residual percentile, only
- $\approx\!22\%$ of the pool clears it. Bold rows in Table~\ref{tab:exemplars} are the
- labeled points. In basketball terms: SGA/Joki\'c/AD are high-usage half-court initiation
- hubs (pick-and-roll / post / drive overlap, $\resid>0$); Gobert/Gafford are low-usage
- cut-and-roll hubs; LeBron/Tatum take star creation volume with $\resid\le 0$; Hart is a
- replaceable Role Occupant. The dotted link is the within-roster illustration: on the
- 2023--24 Lakers, Davis holds the post/cut/pick-and-roll overlap while LeBron holds
- high-usage volume. Hexbin shading is pool density only (dark bin near Tatum $=$ many
- Terminals, not one player).}
- \label{fig:taxonomy-map}
-\end{figure}
-
-\begin{table}[t]
-\centering\small
-\caption{Named exemplars of the taxonomy (one player-season each). Usage is box-score usage
-rate and influence is $\load(p)$, as in Table~\ref{tab:taxonomy}; residual influence is usage-adjusted
-$\resid(p)$. Bold-season rows are the points labeled in Fig.~\ref{fig:taxonomy-map} (the
-Organizer/Terminal/Shaper story in the text). Remaining rows are additional in-class
-examples. All organizers and shapers have $\resid>0$; terminals and specialists have
-$\resid\le 0$. The Lakers 2023--24 pair (Davis Organizer, James Terminal) is the
-within-roster contrast. Gafford's primary row is his full WAS 2022--23 season, not the
-partial pre-trade WAS 2023--24 stint in Table~\ref{tab:cases}. Illustrations, not a ranking.}
+\begin{table}[H]
+\centering
+\caption{\textbf{Named exemplars by category.} One player-season each. Usage is box-score
+usage rate; $L=\load(p)$; $r=\resid(p)$. Bold rows are labeled in
+Fig.~\ref{fig:taxonomy-map}. Illustrations, not a ranking.}
 \label{tab:exemplars}
-\begin{tabular}{lllcrrr}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}llllccc@{}}
 \toprule
-Class & Player & Team & Season & Usage & Influence & Resid.\ influence \\
+Category & Player & Tm & Season & Usage & Infl.\ $L$ & Resid.\ $r$ \\
 \midrule
 \textsc{Organizer}
  & \textbf{S.\ Gilgeous-Alexander} & \textbf{OKC} & \textbf{2023--24} & \textbf{0.317} & \textbf{0.308} & $\mathbf{+0.216}$ \\
@@ -760,41 +747,98 @@ Class & Player & Team & Season & Usage & Influence & Resid.\ influence \\
  & F.\ Wagner & ORL & 2023--24 & 0.250 & 0.011 & $-0.044$ \\
  & C.\ McCollum & NOP & 2022--23 & 0.260 & 0.035 & $-0.027$ \\
 \midrule
-\textsc{Role Occupant / Specialist}
+\textsc{Role Occ./Spec.}
  & \textbf{J.\ Hart} & \textbf{NYK} & \textbf{2023--24} & \textbf{0.133} & \textbf{0.003} & $\mathbf{-0.022}$ \\
  & M.\ Smart & BOS & 2022--23 & 0.176 & 0.001 & $-0.020$ \\
  & D.\ Finney-Smith & BKN & 2022--23 & 0.129 & 0.005 & $-0.007$ \\
  & O.\ Anunoby & NYK & 2023--24 & 0.173 & 0.001 & $-0.011$ \\
  & J.\ Holiday & BOS & 2024--25 & 0.156 & 0.001 & $-0.017$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
+
+\paragraph{How structural categories differ in offensive initiation.}
+The graph does not track assists, within-possession passing chains, screens set without
+initiation credit, gravity, or communication. An initiator is as defined in
+Sec.~\ref{sec:data}. Category-average initiation play types make the roles more visible.
+\textsc{Primary Organizers} start half-court offense on the ball: pick-and-roll
+($\approx\!24\%$), drives ($\approx\!19\%$), and post-ups ($\approx\!16\%$) lead.
+\textsc{Terminal Scorers} look similar, where drives and pick-and-rolls also dominate, but
+they do more spot-up shooting and are less unique overlap across those jobs. Other players
+already start the same combinations, so removing the Terminal Scorer mostly just removes
+possessions rather than rewiring the offense. \textsc{Shaper} players are typically not
+primary handlers. They focus on pick-and-roll ($\approx\!25\%$) and cuts ($\approx\!23\%$).
+\textsc{Role Occupants / Specialists} are mostly spot-up shooters ($\approx\!33\%$
+spot-ups). High residual influence ($\resid$) means the player's initiation jobs are shared
+across play types in a way the rest of the players on the team do not mirror. This is the
+structural influence.
+
+\paragraph{Player comparisons.}
+The same seasons are bolded in Table~\ref{tab:exemplars} and labeled in
+Figure~\ref{fig:taxonomy-map}. On 2023--24 Oklahoma City, SGA is the on-ball organizer:
+drives $\approx\!34\%$, pull-ups $\approx\!24\%$, pick-and-rolls $\approx\!18\%$ of his
+initiations, and he alone starts roughly a third of Thunder drives and pull-ups and nearly
+half their post-ups ($\resid=+0.22$). Denver 2024--25 is the same shape with Joki\'c as the
+half-court hub (pick-and-roll and post-up lead). He starts over half of Denver's post-ups;
+$\resid=+0.067$.
+
+By contrast, 2023--24 Los Angeles has two high-usage stars in opposite categories: the
+dotted link in Figure~\ref{fig:taxonomy-map}. LeBron (drives and PNRs at star volume;
+$\resid=-0.054$) is a \textsc{Terminal Scorer} for this Lakers roster: the coaching ``point
+forward'' label fits what he does with the ball, but with Davis already holding the
+post/cut/PNR overlap, those initiation jobs are ones the Lakers roster can actually
+redistribute. Anthony Davis (pick-and-roll, post-up, and cuts; $\approx\!42\%$ of Lakers
+post-up starts and $\approx\!31\%$ of their cuts; $\resid=+0.105$) is the labeled Organizer.
+He serves as the interior/ball-screen hub next to LeBron's volume. Boston 2022--23 is the
+wing version of the same split: Tatum's drive/PNR/spot-up volume with $\resid\le 0$, while
+the motion offense keeps those play initiations shared.
+
+The sharpest illustration is the low-usage half of the same split. Gobert and Gafford are
+not traditionally described as offensive organizers. They are not creators for teammates in
+the box-score sense. Yet they carry organizer-level structural dependence without the
+volume. Gobert alone started $\approx\!62\%$ of Minnesota's cuts in 2023--24 (cut and
+pick-and-roll $\approx\!74\%$ of his own initiations), as shown in Section~\ref{sec:load},
+not as a creator, but as a node the offense's geometry depends on. That is what usage cannot
+see, and why shapers are the category of focus in this paper. Hart is a Role Occupant: mixed
+spot-up/PNR/drive volume that others also cover. The secondary table rows are additional
+in-class examples not labeled on the figure.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.92\textwidth]{fig_taxonomy_map.png}
+ \caption{\textbf{Organizer vs.\ Terminal on one map.} Both axes are percentile ranks of
+ the player pool ($n=924$). Vertical dashed line: usage median. Horizontal dashed line:
+ $\resid=0$ (Eq.~\ref{eq:taxonomy}), at the $\approx\!78$th residual percentile; only
+ $\approx\!22\%$ of the pool clears it. Bold rows in Table~\ref{tab:exemplars} are the
+ labeled points. In basketball terms: SGA/Joki\'c/AD are high-usage half-court initiation
+ hubs (PNR/post/drive overlap, $\resid>0$). Gobert/Gafford are low-usage cut-and-roll hubs.
+ LeBron/Tatum take star creation volume with $\resid\le 0$. Hart is a replaceable Role
+ Occupant. The dotted link is the within-roster illustration: on the 2023--24 Lakers, Davis
+ holds the post/cut/pick-and-roll overlap while LeBron holds high-usage volume. Hexbin
+ shading is pool density only (dark bin near Tatum $=$ many Terminals, not one player).}
+ \label{fig:taxonomy-map}
+\end{figure}
 
 \subsection{Is it just another value metric?}
 \label{sec:orthogonality}
 
-If structural influence merely relabeled usage, scoring, or net rating, the measurement would be
-uninteresting. This paper treats on-court net rating as a falsification test of that hidden-premium
-hypothesis (Sec.~\ref{sec:intro}): either an apparent shaper edge that team quality
-explains away, or no apparent edge at all, would falsify a hidden shaper value premium.
-
-Under the residual cut, organizers already lead shapers on raw on-court net rating
-($+1.45$ vs.\ $+0.80$), so there is no apparent ``shaper premium'' to begin with. Once net
-rating is residualized within team-season, the organizer median remains above the shaper
-median ($+1.22$ vs.\ $+0.50$) but the gap does not clear conventional significance
-(Mann--Whitney $p=0.10$, two-sided). Spearman correlations over $n=1{,}283$ player-seasons
-(Table~\ref{tab:ortho}) confirm the separation: usage-residual influence is essentially
-\emph{uncorrelated with net rating}, $\rho(\resid,\text{net rating})=-0.018$. Raw influence
-correlates only modestly with volume (points $\rho=0.44$, touches $\rho=0.38$); residual
-ties to volume are weak and negative ($|\rho|\le0.26$). As shown here, organizational
-function is a separable axis from conventional value.
+One worry is that structural influence might not be measuring anything new at all, that it
+could just be another way of re-detecting usage, scoring, or how good a player's team already
+is. To check this, this paper looks at whether \textsc{Shapers} tend to have unusually strong
+on-court net rating, once team quality is accounted for. If \textsc{Shapers} turned out to
+have a real, hidden edge in net rating, that would suggest structural influence is secretly
+just picking up on player value under a different name. If there's no such edge, that rules
+out that explanation, and supports the idea that structural influence is measuring something
+distinct from value.
 
 \begin{table}[t]
 \centering\small
-\caption{Distinctness of organizational function from traditional metrics (Spearman $\rho$,
-$n=1{,}283$ player-seasons with complete box-score coverage, broader than the $924$-season
-rotation pool in Table~\ref{tab:taxonomy}). The key cell is
-$\rho(\resid,\text{net rating})=-0.018$: organizational function is orthogonal to value.}
+\caption{\textbf{Structural influence vs.\ traditional metrics.} Spearman
+$\rho$, $n=1{,}283$ player-seasons with complete box-score coverage, broader than the
+$924$-season player pool in Table~\ref{tab:taxonomy}. The key cell is
+$\rho(\resid,\text{net rating})=-0.018$: residual structural influence has essentially no
+relationship with on-court net rating in this sample.}
 \label{tab:ortho}
 \begin{tabular}{lrr}
 \toprule
@@ -811,73 +855,92 @@ Frontcourt touches & $+0.424$ & $-0.238$ \\
 \end{tabular}
 \end{table}
 
-\subsection{Does it correspond to observable basketball?}
+Comparing organizers and shapers as categorized above, before adjusting for team quality,
+organizers already beat shapers on raw net rating, $+1.45$ vs.\ $+0.80$. This leaves no
+hidden shaper premium to explain. Even after adjusting net rating for team quality,
+organizers still lead shapers, $+1.22$ vs.\ $+0.50$, but the gap does not clear a
+significance bar ($p=0.10$), so this does not prove the difference is real either.
+
+Raw influence does correlate modestly with net rating, points, and touches, which is
+consistent with high-volume players appearing more often in the underlying overlap
+calculations. Once usage is removed, those relationships largely disappear. The residual
+measure therefore does not appear to be simply re-measuring volume, scoring, or on-court
+net rating. In this sample, organizational function and the conventional measures examined
+here are capturing different things.
+
+\subsection{Can we actually see what these shapers do on the court?}
 \label{sec:behavior}
 
-Having measured who the wiring depends on, and shown that dependence is not a value premium
-(Sec.~\ref{sec:orthogonality}), this paper checks whether the class corresponds to recognizable
-offensive behavior: the class-level version of the rim-running, cut-and-roll interior role
-illustrated by shaper exemplars in Table~\ref{tab:exemplars}, not a biography of any one
-player. Using within-team-season comparisons on the on-court subset, this paper asks whether shaper
-presence is associated with changes in play-type mix. This corroborates that the structural
-class is visible on the floor.
+Having measured who the wiring depends on, and shown that structural influence is not just
+another way of measuring player value (Sec.~\ref{sec:orthogonality}), this paper checks
+whether the category corresponds to what we actually see on the court: the category-level
+version of the rim-running, cut-and-roll interior role shown in the Table~\ref{tab:exemplars}
+examples. Using within-team-season comparisons, this paper asks whether a shaper on the court
+changes the team's play-type mix. That would corroborate that the category is visible on the
+floor, not just in the math.
 
 \paragraph{Shaper presence and play mix.}
-Across $73$ team-seasons with both strata, shaper presence shifts the mix toward off-ball
-and ball-screen actions and away from spot-up and drive actions: cuts $+1.35$ pp,
-pick-and-roll $+0.98$ pp; spot-ups $-1.25$ pp, drives $-0.54$ pp
-(percentage points of share, within-team). The low-usage character of the class makes the
-interpretation especially clean: a mix shift when shapers are on the floor is less
-mechanically attributable to the shaper simply taking more of his own shots, and more
-readily read as reorganization among other players. Primary organizers reshape the mix even
-more sharply (post-ups $+2.33$ pp, pick-and-roll $+0.96$ pp; $58$ team-seasons), useful
-contrast, not a second subject. The team-season count differs between strata ($73$ vs.\
-$58$) because a team-season only enters this comparison if it has at least one on-court
-possession with the stratum present and at least one without; which team-seasons clear that bar
-depends on the class, since organizer and shaper presence are not perfectly co-located across
-rosters. The observed play-type mix shifts with shaper presence.
+Across $73$ team-seasons, a shaper on the floor shifts the mix toward off-ball and
+ball-screen actions and away from spot-up and drive actions: cuts $+1.35$\,pp, pick-and-roll
+$+0.98$\,pp; spot-ups $-1.25$\,pp, drives $-0.54$\,pp (percentage points of share,
+within-team). The category's low usage is what makes this meaningful: shapers are low usage,
+so they are not taking many shots. The shift is better explained as reorganization among the
+other four players.
 
-Two caveats bound these as \emph{associations}, not causal estimates: high-usage classes
-mechanically run more of their own play types when present (which is why the shaper
-contrast is especially informative), and a class being off the floor overlaps with bench and
-garbage-time lineups, within-team-season differencing removes team identity but not game
-state.
+For comparison, primary organizers reshape the mix even more sharply (post-ups $+2.33$\,pp,
+pick-and-roll $+0.96$\,pp; $58$ team-seasons). The team-season count differs between the two
+groups ($73$ vs.\ $58$) because a team-season only enters this comparison if it has at least
+one on-court possession with that category present and at least one without. Which
+team-seasons clear that bar depends on the category, since organizer and shaper presence are
+not totally common across rosters.
 
-\paragraph{A refinement: re-channeling, not expanding, the repertoire.}
-Shaper presence appears to re-channel an offense's existing repertoire rather than expand
-it: it redistributes which initiating-role-to-play-type routes occur without increasing route
-entropy or reducing route concentration. Modeling each possession's initiating-role$\to$
-play-type route, this paper finds no increase in route entropy or reduction in concentration for other
-roles under shaper presence. The intuitive alternative, that more shapers create
-\emph{more} distinct pathways, is not supported. Shaper presence is associated with
-\emph{which} actions the offense runs within a repertoire bounded by the personnel on the
-floor, not with a wider menu.
+These are associations, not causal estimates, for two reasons. First, high-usage categories
+mechanically run more of their own play types simply by being on the floor and taking those
+shots themselves; some of their mix shift reflects that, not real reorganization. This is
+part of why the shaper contrast is more informative: shapers barely touch the ball, so a mix
+shift when they are on the floor cannot be explained the same mechanical way. Second, the
+minutes when a shaper is off the floor often overlap with bench lineups and garbage time,
+situations where the competitive intensity and personnel are already different for reasons
+that have nothing to do with the shaper. Comparing a team to itself removes differences in
+overall team identity, but it does not remove the fact that ``shaper on'' and ``shaper off''
+minutes can come from genuinely different game situations, not just the same lineup with one
+player swapped out.
 
-% RECOMMENDED FIGURE (Figure 6): (a) diverging bar chart of shaper within-team
-%   play-mix deltas; (b) route-entropy shaper-present vs absent (near-zero delta),
-%   captioned "reshapes, does not broaden."
+\paragraph{A refinement: rebalancing the offense, not expanding it.}
+There are two ways a shaper's presence could change the offense. He could be adding something
+genuinely new, more distinct kinds of actions that did not exist without him. Or he could
+simply be shifting how often the offense's existing actions get used, without adding anything
+new at all.
 
-\subsection{Where does the construct stop?}
+The data supports the second explanation. Shaper presence does not make the offense's
+play-type mix more varied or unlock actions that were not already part of the team's play
+mix. Instead, the effect is narrower: with a shaper on the floor, the offense changes how
+often it uses actions it already has, leaning more toward cuts and PNR and less toward
+spot-ups and drives.
+
+\subsection{Where do we stop?}
 \label{sec:efficiency}
 
-The instrument measures organization, not scoring. A natural first question about any new
-construct is whether it independently predicts the outcome everyone already optimizes: here,
-offensive points per possession. This paper pre-registers the tempting claim that a structurally
-\emph{complete} offense (creation, connection, and conversion all present) scores more
-efficiently, with a frozen talent control and a binding no-fallback clause. It does not
-hold. A measurement of organizational structure need not reproduce the outcomes used to
-evaluate players. The null therefore defines the construct's boundary: structural
-dependence is measurable, but it is not equivalent to offensive efficiency.
+The framework so far measures organization, not scoring. A natural next question is whether
+it also predicts what matters most in practice: points per possession.
 
-\paragraph{Design.}
-On the on-court subset (all five players classified; $N=4.2\times10^{5}$, $90$ team-seasons),
-define coverage
+It didn't hold. A measurement of how an offense is organized doesn't have to predict how
+well it scores, and this one doesn't. The result puts a useful boundary around the measure:
+structural organization is not a hidden efficiency metric.
+
+\paragraph{How this was tested.}
+Using every possession where all five players on the floor were classified into a role
+($N=4.2\times10^{5}$ possessions across $90$ team-seasons), coverage is defined as an
+indicator that at least one organizer, one shaper, and one terminal scorer are all on the
+floor at once:
 \begin{equation}
 \label{eq:covered}
 \textsc{Covered}_i \;=\; \mathbb{1}\big[\,n^{\text{org}}_i\ge 1 \ \wedge\
 n^{\text{shap}}_i\ge 1 \ \wedge\ n^{\text{term}}_i\ge 1\,\big],
 \end{equation}
-and estimate
+Points per $100$ possessions were then estimated as a function of $\textsc{Covered}$, the
+count of each role on the floor, controlled for talent, and fixed for team-season,
+opponent, game period, and score margin:
 \begin{equation}
 \label{eq:coverage}
 \PPP_i = \beta\,\textsc{Covered}_i
@@ -886,37 +949,36 @@ and estimate
  + \phi_{\text{ts}(i)} + \psi_{\text{opp}(i)} + \chi_{\text{per}(i)} + \omega_{\text{sb}(i)}
  + \varepsilon_i .
 \end{equation}
-The linear role counts are included, so, because $\textsc{Covered}$ is a nonlinear threshold of
-them, $\beta$ isolates \emph{completeness} beyond having more of each role. $\text{Talent}_i$
-is a frozen control (mean over the five of each player's leave-current-game-out
-points-per-initiation); fixed effects absorb team-season, opponent, period, and score-margin;
-inference clusters by team-season.
-
+Including the category counts alongside $\textsc{Covered}$ matters, because
+$\textsc{Covered}$ is a nonlinear threshold built from those same counts: this lets $\beta$
+isolate the effect of completeness itself, beyond just having more of each role
+individually. The pre-registered hypothesis was $\beta>0$, with a strict significance bar
+(team-season cluster-robust $p<0.01$) and a bootstrap confidence interval excluding zero.
 \begin{hypothesis}[Coverage $>$ accumulation, T$_{\text{cov}}$]
 \label{hyp:cov}
 $\beta>0$ with team-season cluster-robust $p<0.01$ and a cluster-bootstrap $95\%$ CI excluding
 $0$.
 \end{hypothesis}
 
-\paragraph{Result: the boundary.}
-The gate passed cleanly, coverage varies within teams and remains near-orthogonal to the talent
-index by construction, so the test had genuine room to detect an effect. It did not:
-$\hat\beta=+0.42$ points per $100$ possessions ($t=0.53$, $p=0.60$), team-season
-cluster-bootstrap $95\%$ CI $[-1.15,+1.90]$ straddling zero, with the play-type-FE and
-talent-removed specifications agreeing closely (Table~\ref{tab:coverage}). The one robust
-driver is accumulation of \emph{organizers} ($+2.35$ per $100$, $t=4.62$). \emph{Structural
-completeness does not improve efficiency beyond talent at any detectable level.} Precision
-here is set by the $90$ team-season clusters, not the $4.2\times10^{5}$ possessions: the
-cluster-robust standard error is $\approx0.78$ points per $100$, giving a minimum detectable
-effect at $80\%$ power of $\approx2.2$ points per $100$. This paper can therefore rule out a
-\emph{large} completeness bonus but not a modest one, the CI's upper bound ($+1.90$) is not
-zero. Because coverage is provably separable from talent (so the test had room to detect an
-effect), and the estimate is small and stable across specifications, this paper reads this as a
-credible \emph{boundary at the pre-registered bar}, not proof of an exact null.
+\paragraph{Result.}
+Coverage does not predict scoring efficiency.
+$\hat\beta=+0.42$ points per $100$ possessions, small and not statistically different from
+zero ($t=0.53$, $p=0.60$), with a confidence interval of $[-1.15,+1.90]$ across $0$. This
+held up across several versions of the test (Table~\ref{tab:coverage}): removing the talent
+control, adding play-type controls, requiring stricter role classification, the estimate
+barely moved. The one term that reliably did predict more points was simply having more
+organizers on the floor, $+2.35$ points per $100$ ($t=4.62$), a real effect, but a separate
+and unsurprising one: more high-usage playmakers means more scoring. It has nothing to do
+with completeness.
+
+The sample gives enough precision to rule out a large scoring bonus from completeness, but
+not a small one, the confidence interval's upper bound ($+1.90$) is not quite zero. Because
+coverage was designed to be separate from talent, and the estimate stayed small and stable
+across every version of the test, this is a limit, not a failed test.
 
 \begin{table}[t]
 \centering\small
-\caption{Efficiency boundary (possession-level PPP, $N\!=\!4.2\times10^{5}$, $90$ team-seasons).
+\caption{\textbf{Efficiency boundary.} Possession-level PPP, $N\!=\!4.2\times10^{5}$, $90$ team-seasons.
 Coefficients in points per $100$; CIs team-season cluster-bootstrap. $\textsc{Covered}$ is never
 distinguishable from zero; organizer accumulation is the robust driver.}
 \label{tab:coverage}
@@ -934,139 +996,86 @@ $n_{\text{organizer}}$ (accumulation) & $+2.35$ & $4.62$ & -- \\
 \end{tabular}
 \end{table}
 
-\paragraph{Reading the boundary.}
-Organizational function describes how an offense is \emph{wired}; whether the resulting
-actions become points is governed by the talent executing them
-(Sec.~\ref{sec:orthogonality}). One registered caveat: the talent control under-measures
-shapers by construction, but the talent-removed specification gives a materially identical
-estimate ($+0.43$ vs.\ $+0.42$), so measured talent is not masking a completeness effect. The
-licensed reading is the boundary itself: conditional on measured talent, structural
-completeness is not an independent PPP premium. That is a finding about what the construct
-is \emph{not}, and it leaves intact what the instrument enables: studying organization as
-its own object.
-
 \paragraph{Isolating shaper presence alone.}
-\textsc{Covered} tests whether having the three structural functions on the floor
-(organizer, shaper, and terminal; Eq.~\ref{eq:covered}) buys points. The fourth taxonomy
-class, \textsc{Role Occupant / Specialist}, is not required for completeness: low usage and
-low influence means it does not fill a creation, connection, or conversion job. A narrower, more
-direct version of the practitioner's question is whether merely having a
-shaper present, regardless of completeness, changes scoring. This paper reran the identical
-team-season-demeaned design with $\textsc{Covered}$ replaced by
-$\text{HasShaper}_i=\mathbb{1}[n^{\text{shap}}_i\ge1]$, retaining the linear role counts so the
-coefficient is shaper presence net of accumulation. On the same $N=4.2\times10^{5}$
-possessions, the raw within-team-season gap (shaper on floor minus off, no other controls)
-is $+0.25$ points per $100$; with the full control set,
-$\widehat{\text{HasShaper}}=+0.00$ points per $100$ ($t=0.00$, $p=1.00$), team-season
-cluster-bootstrap $95\%$ CI $[-1.37,+1.48]$. The linear $n_{\text{shaper}}$ accumulation
-term is nominally different from zero at conventional significance ($+1.17$ per $100$,
-$t=2.25$, $p\approx0.02$) but does not clear the pre-registered $p<0.01$ confirmatory bar, so this paper
-does not treat it as a confirmed accumulation effect; it is smaller and less robust than organizer
-accumulation, which is robust in every specification in this section, and this paper does not re-estimate
-it here and refer to Table~\ref{tab:coverage}'s single frozen figure ($+2.35$, $t=4.62$).
-Whether the question is completeness or shaper presence
-alone, the answer is the same null: shapers reorganize what an offense runs
-(Sec.~\ref{sec:behavior}) without moving offensive points per possession.
-These tests are \emph{offensive} PPP (points scored while the shaper is on the floor for
-his team's possessions). A two-way on-court net rating (offense plus defense with the same
-five) is a separate diagnostic; the possession graph does carry defensive on-court lineups,
-but that test is not part of the pre-registered efficiency boundary reported here. Across
-$90$ team-seasons with team-season fixed effects and an offense-only design, shaper
-presence, whether measured as completeness or in isolation, is not distinguishable from a
-null effect on offensive PPP.
+A narrower version of this question was also tested: does simply having a shaper on the
+floor, regardless of whether the offense is otherwise ``complete,'' change scoring at all?
+$\textsc{Covered}$ was replaced with a simple indicator,
+$\text{HasShaper}_i=\mathbb{1}[n^{\text{shap}}_i\ge1]$, keeping the linear role counts so
+the coefficient reflects shaper presence net of raw accumulation. The answer is the same:
+no. $\widehat{\text{HasShaper}}=+0.00$ points per $100$ possessions ($t=0.00$, $p=1.00$)
+once everything else is controlled for. A related test, whether having more shapers on the
+floor at once helps, comes back marginal ($+1.17$ per $100$, $p\approx0.02$) but does not
+clear the pre-registered significance bar, so it is not treated as confirmed. Shapers change
+what an offense runs (Sec.~\ref{sec:behavior}), but not how many points it scores doing it.
 
-\subsubsection{Exploratory: does the HasShaper null hide tier heterogeneity?}
-\label{sec:shaper-tiers}
-As a post-hoc check (motivated by an out-of-sample 2025--26 review; Sec.~\ref{sec:data}),
-this paper splits \textsc{Shaper} at within-class median residual influence into hub vs.\
-marginal, then split marginal by position (big vs.\ wing). Replacing $\textsc{Covered}$
-with three presence indicators on the same pre-registered three-season sample yields
-Table~\ref{tab:shaper-tiers}: \emph{none} of the three tiers clears the paper's $0.01$
-confirmatory bar. The check is exploratory relative to the pre-registered efficiency
-tests and does not revise Table~\ref{tab:coverage} or the \textsc{HasShaper} null above.
+\paragraph{What this leaves.}
+Structural organization is measurable, and it is a real property of how an offense is
+wired, but it is not another way of predicting who scores efficiently. That is not a
+failure of the measure, it is what the measure actually is: a description of organization,
+not a hidden efficiency stat.
 
-\begin{table}[h!]
-\centering\small
-\caption{Exploratory shaper-tier PPP effects ($N\!=\!420{,}993$, $90$ team-seasons).
-Coefficients in points per $100$; confirmatory bar $p<0.01$ as reporting benchmark only.}
-\label{tab:shaper-tiers}
-\begin{tabular}{lrrl}
-\toprule
-Tier & pts/100 & $p$ & Confirmatory bar ($p<0.01$) \\
-\midrule
-HasHub & $+1.10$ & $0.077$ & not met \\
-HasMargBig & $+1.70$ & $0.025$ & not met \\
-HasMargWing & $+1.29$ & $0.122$ & not met \\
-\bottomrule
-\end{tabular}
-\end{table}
+\subsubsection{Exploratory shaper-tier heterogeneity}
+\label{sec:shaper-tiers-main}
+As a post-hoc check motivated by an out-of-sample 2025--26 review (Sec.~\ref{sec:data}),
+this paper splits \textsc{Shapers} at within-class median residual influence into hub vs.\
+marginal, then splits marginal by position (big vs.\ wing). Replacing $\textsc{Covered}$ with
+three presence indicators on the same pre-registered three-season sample yields no tier that
+clears the paper's $0.01$ confirmatory bar (Table~\ref{tab:shaper-tiers}; detail in the
+appendix). The check does not revise Table~\ref{tab:coverage} or the $\text{HasShaper}$ null
+above.
 
-\subsubsection{Exploratory: identity moves when efficiency does not}
+\subsubsection{Does the offense's identity still change, even when scoring doesn't?}
 \label{sec:identity-resilience}
 
-The efficiency boundary answers what structural dependence is \emph{not}: it is not an
-independent PPP premium. The natural construct-native follow-up is whether dependence is
-still visible in \emph{offensive identity} under real substitution: the association
-fingerprint of who jointly holds which play-type jobs, even when points per possession do
-not move. That is the question this subsection answers. It was \emph{not}
-pre-registered. Like the tier split above, it is a disclosed post-hoc test motivated by
-the boundary finding itself: if organization is measurable but not equivalent to scoring,
-the licensed ``so what'' must be organizational. This paper therefore tests identity displacement,
-not a second scoring screen, and does not treat the result as part of the original
-confirmatory protocol.
+Structural influence, $\load(p)$, is a hypothetical measure. It answers a question that
+never actually happens on a basketball court: if a player's initiations were erased from
+the entire season, how different would the offense's fingerprint be? That is a clean
+mathematical experiment, but it leaves open a real question: does that hypothetical number
+correspond to anything that actually happens in real basketball, or is it a product of
+deleting rows from a dataset? If Gobert actually sits out real possessions, does
+Minnesota's real, observed offense actually shift the way the hypothetical calculation
+predicted it would? This section answers that directly, using real on/off data instead of a
+simulated removal. This provides an important check on the leave-one-out measure. If players
+with high hypothetical structural influence did not also show larger real on/off changes, it
+would raise a serious question about whether the leave-one-out calculation corresponds to
+anything observable on the court.
 
-\paragraph{Not the same quantity as $\load(p)$.}
-Structural influence (Eq.~\ref{eq:load}) is a \emph{season-level leave-one-out counterfactual}:
-delete player $p$'s initiation row from $\Bmat$, recompute $\Amat$, and measure cosine
-displacement of the full-season fingerprint. The taxonomy that labels
-\textsc{Shaper} versus \textsc{Role Occupant / Specialist} is built from
-usage-residual $\resid(p)$ of that same leave-one-out $\load(p)$. Comparing class means
-on $\load(p)$ itself would largely re-derive the classification. The outcome here is
-different. For each rotation player-season with adequate sample ($\ge 400$ possessions on
-and $\ge 400$ off), this paper splits the team's actual possessions by whether $p$ was
-\emph{on the floor}, build standardized association matrices $\Amat_{\mathrm{on}}$ and
-$\Amat_{\mathrm{off}}$ from those observed subsets, and define the on/off identity
-displacement
+\paragraph{How this differs from the earlier calculation.}
+Structural influence, $\load(p)$, was calculated earlier as a hypothetical: delete a
+player's stats entirely from the season and rebuild the fingerprint from scratch
+(Eq.~\ref{eq:load}). This test uses real data instead. For each player-season with adequate
+sample (at least $400$ possessions both on and off the floor), the team's actual
+possessions are split by whether that player was on the court, two separate standardized
+fingerprints are built, $\Amat_{\mathrm{on}}$ and $\Amat_{\mathrm{off}}$, from those real
+subsets, and the difference between them is measured:
 \begin{equation}
 \label{eq:DA}
 D_A(p) \;=\; 1-\cossim\!\big(\operatorname{vec}(\Amat_{\mathrm{on}}),\,
 \operatorname{vec}(\Amat_{\mathrm{off}})\big).
 \end{equation}
-$D_A$ is ecological: it uses real benchings and rest patterns, not a hypothetical
-full-season removal. A secondary mix measure $D_\pi$ is the total-variation distance
-between on-court and off-court play-type share vectors. Theory predicts that leave-one-out
-$\load(p)$ and on/off $D_A(p)$ should be related: both ask how much the fingerprint moves
-when $p$ is absent, but they are not algebraically the same object. The test's force is
-whether the season-level counterfactual shows up under observed substitution.
-
-\paragraph{Design.}
-Among $908$ rotation player-seasons meeting the on/off sample gate, this paper compares class means
-of $D_A$, then (as the licensed contrast) match each \textsc{Shaper} to a
-\textsc{Role Occupant / Specialist} nearest neighbor on usage (caliper $0.03$ usage
-points; prefer same team-season; no replacement). \textsc{Primary Organizer} is reported
-only as a high-usage positive-control reference and is not part of the matched claim.
-Terminal scorers are a secondary matched contrast (fewer pairs within caliper). This paper also
-reports $\operatorname{corr}(\load,D_A)$ after residualizing both sides on $\log\min(n_{\mathrm{on}},n_{\mathrm{off}})$
-and usage, as a continuous construct check.
+Unlike $\load(p)$, which is a hypothetical full-season removal, $D_A$ is built entirely
+from real minutes the player actually sat out, real benchings and rest patterns, not a
+counterfactual.
 
 \paragraph{Result.}
-Unmatched means already separate the taxonomy along identity, not only along the
-leave-one-out influence used to build it (Table~\ref{tab:identity-resilience}): organizers and
-shapers show roughly twice the on/off fingerprint displacement of terminals and role
-occupants. The primary matched test is decisive: among $96$ shaper--role-occupant pairs
-(mean usage gap $0.008$; $81$ within the same team-season), mean paired
-$\Delta D_A=+0.115$ ($t=6.35$, $p\approx 7\times 10^{-9}$), with the shaper larger in
-$81\%$ of pairs. Play-type mix also shifts more under shaper absence
-(paired $\Delta D_\pi=+0.011$, $t=4.06$, $p\approx 10^{-4}$). The thinner
-shaper--terminal match ($n=25$) agrees in sign for $D_A$
-($\Delta=+0.078$, $p\approx 0.026$). Continuously, leave-one-out $\load(p)$ predicts
-on/off $D_A$ after minute and usage controls ($r=+0.60$, $n=908$), including within
-shapers alone ($r=+0.79$), ecological validity for the season-level construct, not a
-restatement of Eq.~\ref{eq:load}.
+Shapers show meaningfully more identity change between on-floor and off-floor minutes than
+similar low-usage players who are not shapers. $96$ shaper/non-shaper pairs were matched on
+nearly identical usage rates (average usage gap of just $0.008$), and shapers showed a
+larger shift in $81\%$ of those pairs, with a mean paired difference of
+$\Delta D_A=+0.115$ ($t=6.35$, $p\approx 7\times10^{-9}$). The play-type mix itself also
+shifted more when a shaper sat, not just the fingerprint
+($\Delta D_\pi=+0.011$, $p\approx10^{-4}$).
+
+More directly answering the question this section opened with: the hypothetical leave-one-out
+$\load(p)$ correlates strongly with real $D_A$ ($r=+0.60$ overall, $r=+0.79$ within
+shapers specifically). That's important because the hypothetical measure and the real on/off
+measure are calculated in completely different ways. One asks what happens to the team's
+fingerprint if you remove the player from the full-season data. The other looks at what
+actually happens when he is on and off the court. They line up.
 
 \begin{table}[h!]
 \centering\small
-\caption{On/off offensive-identity displacement $D_A$ (Eq.~\ref{eq:DA}) by structural class.
+\caption{\textbf{On/off identity displacement $D_A$.} Eq.~\ref{eq:DA} by structural class.
 Not pre-registered. $N=908$ rotation player-seasons with $\ge 400$ possessions on and off.
 Organizers are a reference class; the licensed claim is the usage-matched
 shaper vs.\ role-occupant contrast in the text ($\Delta D_A=+0.115$, $n=96$ pairs).}
@@ -1076,117 +1085,123 @@ shaper vs.\ role-occupant contrast in the text ($\Delta D_A=+0.115$, $n=96$ pair
 Class & $n$ & mean $D_A$ & median $D_A$ & mean usage \\
 \midrule
 Primary Organizer & 96 & $0.214$ & $0.170$ & $0.244$ \\
-Shaper & 102 & $0.202$ & $0.151$ & $0.144$ \\
+\textsc{Shaper} & 102 & $0.202$ & $0.151$ & $0.144$ \\
 Terminal Scorer & 361 & $0.112$ & $0.094$ & $0.233$ \\
 Role Occupant / Specialist & 349 & $0.102$ & $0.085$ & $0.148$ \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Licensed reading.}
-Efficiency does not move with shaper presence (Sec.~\ref{sec:efficiency}); offensive
-\emph{identity} does, under real substitution, relative to usage-matched non-organizers.
-The construct-native value of the shaper class, on this evidence, is contribution to
-maintaining the team's measured association fingerprint when that player is on the floor, not
-a PPP or dollar premium. Because the test is post-hoc, this paper reports it as a disclosed
-follow-up that answers the boundary, not as a pre-registered confirmation. A prospective
-replication on a held-out season remains the gold-standard check.
+\paragraph{What this means.}
+The leave-one-out framework from Section~\ref{sec:framework} is validated against real
+basketball, not just internally consistent math. Separately, even though a shaper's presence
+does not move the scoreboard (Sec.~\ref{sec:efficiency}), it does change what the offense
+actually looks like while he is on the floor, confirmed here with real, observed data
+rather than a hypothetical. The value of a shaper, based on this evidence, is not in
+points, it is in helping hold together the team's actual identity and structure. Because
+this test was not pre-registered, it is reported as a disclosed follow-up finding, not a
+confirmed result, and a clean replication on a new season would be the right next step to
+confirm it.
+
+One open question this paper cannot answer: whether any opposing defenses actually detected
+and exploited this reorganization in real time. The defensive-attention hypothesis raised
+earlier (Sec.~\ref{sec:load}), that a defense can start treating a cut as a one-off rotation
+rather than a real threat once fewer players are running it, assumes defenses adjust to the
+new shape of the offense. That assumption is untested here. It is possible that opposing
+defenses, across these three seasons, did not specifically scout or exploit the exact
+reorganization a shaper's absence produces, in which case the offense's structure changed
+without any defense actually adjusting to it, which would be consistent with the null PPP
+result in Section~\ref{sec:efficiency}. Whether NBA defenses identify and adjust enough to
+adapt to this kind of structural reorganization is an open question this paper's data cannot
+answer, since it would require studying defensive coverage (which requires other data), not
+just offensive initiation patterns. This gap is a natural direction for the defense-side
+question raised in Section~\ref{sec:discussion}.
 
 \subsection{Is organizational function partly player-specific?}
 \label{sec:portability}
 
-The portability analysis is a supporting construct-validity check (does a player-associated
-component of measured organizational function reappear after a team change?), not the paper's
-primary claim. Having established that the construct is visible on the floor
-(Secs.~\ref{sec:behavior}--\ref{sec:efficiency}) and bounded for efficiency, this paper turns to that
-transfer question. If a player's high structural influence reflects something about the player
-rather than only the old team around him, his measured wiring footprint should
-reappear after he changes teams. This paper answers with a pre-registered portability test on all
-movers, then examine the shaper subclass as a measurement stress test: the class where
-low usage most clearly hides structural dependence.
+The portability analysis is a supporting check on whether the measure is real, not the
+paper's primary claim. If a player's high structural influence reflects something about the
+player himself, not just the old team around him, then his measured footprint should
+reappear after he changes teams. This section tests that directly across all movers, then
+examines the shaper category as a stress test, since it is the category where low usage
+most clearly hides structural dependence.
 
 \paragraph{Design.}
-For a player $p$ with two chronologically adjacent franchise stints, let
-$\dA_p^{\text{orig}},\dA_p^{\text{dest}}$ be his displacement signatures
-(Eq.~\ref{eq:signature}) and
-$\text{self\_sim}(p)=\cossim(\dA_p^{\text{orig}},\dA_p^{\text{dest}})$. Movers are pairs of
-the player's own consecutive included stints, ordered by first-game date (\texttt{anchor}), with the
-earlier stint labeled origin and the later destination. The threat to identification is that a
-portable signature could merely reflect a portable \emph{play-type profile} (``he runs the same
-plays everywhere''). This paper neutralizes it with \emph{profile-matched decoys}: for each mover the procedure takes
-$K=5$ destination-team players whose profile $\pt$ is closest to $p$'s and compute
-$\text{decoy\_sim}(p)$, the similarity of $p$'s origin signature to those decoys' destination
-signatures. The portability statistic is the per-player excess
+Each mover in this test actually played for two teams. His origin signature captures what
+his removal would disrupt on his old team, calculated from real data before the trade. His
+destination signature captures what his removal would disrupt on his new team, calculated
+from real data after the trade, once he had actually joined it
+(Eq.~\ref{eq:signature}). The question is whether those two disruption patterns look
+alike: does the same player create a similar structural gap on two completely different
+rosters? These two signatures are compared using cosine similarity, called self-similarity
+($\text{self\_sim}(p)=\cossim(\dA_p^{\text{orig}},\dA_p^{\text{dest}})$).
+
+The obvious worry is that any apparent match could just be coincidence, maybe both teams
+happen to look similar for reasons that have nothing to do with him specifically. That is
+what the decoy comparison rules out. For each mover, the test also checks whether his
+origin signature predicts the destination team's fingerprint better than a decoy would, a
+different player already on the new team whose own play-type profile is closest to his
+($K=5$ profile-matched decoys). If a random stylistic double would have predicted the new
+team's fingerprint just as well, there is nothing player-specific going on, it is just
+``anyone who plays like this would create this pattern here.'' Only when the real mover's
+own signature beats his decoy's does that count as evidence that something about him
+individually, not just his general style, is carrying over:
 \begin{equation}
 \label{eq:portability}
-\Delta(p) \;=\; \text{self\_sim}(p)-\text{decoy\_sim}(p),
+\Delta(p) \;=\; \text{self\_sim}(p)-\text{decoy\_sim}(p).
 \end{equation}
-so that a positive $\Delta$ means the player's own structural footprint predicts his
-destination footprint better than that of a teammate who runs the same plays.
-
+A positive $\Delta$ means the player's own structural footprint predicts his destination
+team's footprint better than a teammate who simply runs similar plays would. The
+pre-registered hypothesis was that the median $\Delta$ across all movers is greater than
+zero, tested with a strict permutation test and bootstrap confidence interval.
 \begin{hypothesis}[Portability, T1]
 \label{hyp:port}
 $\operatorname{median}_p \Delta(p)>0$, with a matched-set (within-pool) exchangeability
 permutation $p<0.01$ and a destination-franchise cluster-bootstrap $95\%$ CI excluding $0$.
 \end{hypothesis}
 
-\paragraph{Feasibility and identification.}
-The gate confirmed $294$ movers in the pre-registered three-season window
-(2022--23 through 2024--25)
-across $30$ destination franchises, each with $\ge3$
-profile-matched decoys, and, critically, that the signature is \emph{not} a restatement of
-the profile: the absolute Spearman correlation between profile cosine and signature cosine is
-only $0.007$. Displacement signatures are essentially uncorrelated with play-type profiles,
-so a positive $\Delta$ cannot be dismissed as ``he runs the same plays.'' Movers are
-identified by NBA person ID and required to be \emph{truly} chronologically adjacent, ordered
-by each stint's first game date rather than by season label alone: two different team-stints
-can carry the same season label after a mid-season trade, and ordering by label alone breaks
-that tie arbitrarily rather than chronologically, silently mis-pairing the wrong two stints
+\paragraph{Feasibility check.}
+$294$ movers were confirmed across $30$ destination franchises. Critically, a player's
+displacement signature and his play-type profile are essentially uncorrelated with each
+other (Spearman $\rho=0.007$), meaning a positive $\Delta$ cannot be waved away as ``well,
+he just runs the same plays everywhere.'' Movers were also carefully ordered by actual
+game date rather than season label, since a mid-season trade can leave two different
+stints carrying the same season label, which would otherwise risk mismatching stints
 across a season boundary.
 
-\paragraph{Result: a player-specific component persists on average.}
-On the same pre-registered mover sample ($n=294$), median
-self-similarity is $+0.129$ versus median decoy similarity
-$+0.049$, a median excess $\Delta=+0.056$. All three pre-registered criteria pass: $\Delta>0$;
-a matched-set exchangeability permutation (each mover's $\{\text{self}\}\cup\{\text{decoys}\}$
-pool relabeled) gives $p=0.0050$; and the dependence among movers who share a destination is
-carried by the destination-franchise cluster-bootstrap $95\%$ CI
-$[+0.019,+0.086]$, which excludes zero (origin-franchise CI $[+0.012,+0.104]$ and player-cluster
-CI $[+0.015,+0.096]$ agree). Equivalently, $\Delta(p)>0$ for $58.8\%$ of movers ($173/294$)
-versus $\approx50\%$ under the exchangeability null (two-sided sign test $p\approx0.0029$).
-\textbf{A player-specific component of organizational function persists across team changes
-on average}, but imperfectly: the effect is robust yet modest (median excess $\approx0.06$ in
-cosine units), partly player-bound and partly context-dependent. Players are not randomly
-assigned to teams, so the decoy design holds destination context fixed but cannot fully
-exclude origin-side selection; this paper makes no causal claim.
+\paragraph{Result: a player-specific component holds up, on average.}
+Across all $294$ movers, median self-similarity was $+0.129$ versus median
+decoy-similarity of $+0.049$, an excess of $+0.056$. All three pre-registered criteria
+passed. This held up under permutation testing ($p=0.005$) and bootstrap confidence
+intervals that exclude zero (destination-franchise cluster-bootstrap $95\%$ CI
+$[+0.019,+0.086]$). In plain terms: $58.8\%$ of movers showed positive portability, versus
+the roughly $50\%$ one would expect if nothing player-specific carried over at all. A
+real, player-associated piece of organizational function does persist across team changes,
+but imperfectly, the effect is real but modest, part player, part context. Because players
+are not randomly assigned to teams, this cannot be treated as proof of causation, just a
+real, robust association.
 
-\paragraph{Class distributions differ descriptively; not reliably at this sample size.}
-By class (Table~\ref{tab:portability-by-class}), the observed medians are: primary organizer
-$\Delta=+0.134$ ($70.0\%$ portable), shaper $+0.124$ ($58.3\%$), terminal scorer
-$+0.083$ ($60.7\%$), and role occupant/specialist $+0.018$ ($54.5\%$). On the
-pre-registered $n=294$ mover sample the omnibus test does not clear significance
-(Kruskal--Wallis $H=3.85$, $p=0.28$), so at $n=24$ shaper movers one cannot say organizer
-and shaper medians are statistically distinguishable from each other, from terminal, or in
-most pairwise cases from role occupant either -- only that role occupant's much lower
-\%-portable is the most visually salient gap in an otherwise non-significant omnibus test. This paper
-reports these four numbers as descriptive summary statistics of this sample, not as a confirmed
-class ranking, and does not claim organizers travel better than shapers, shapers
-travel better than terminals, or any other pairwise ordering among the four classes. The
-shaper stress test is therefore about measurement clarity (low usage with influence above
-usage expectation), not a claim that glue guys are the least (or most) portable class. The
-rest of this section and Sec.~\ref{sec:travelfit} stay inside shapers, where the
-within-class cut/drive screen (itself non-significant at conventional thresholds, see
-Sec.~\ref{sec:travelfit}) is examined on its own terms rather than relative to other classes.
+\paragraph{Differences by category exist, but aren't reliable at this sample size.}
+By category (Table~\ref{tab:portability-by-class}), median $\Delta$ was $+0.134$ for
+organizers, $+0.124$ for shapers, $+0.083$ for terminal scorers, and $+0.018$ for role
+occupants. But the overall test comparing all four groups does not clear significance
+(Kruskal--Wallis $H=3.85$, $p=0.28$), so with only $24$ shaper movers, this paper cannot
+confidently say organizers travel better than shapers, or shapers travel better than
+terminal scorers. These four numbers are reported as descriptive, not as a confirmed
+ranking. The rest of this section and Section~\ref{sec:travelfit} stay focused on shapers
+specifically, examining that category on its own terms rather than in comparison to the
+others.
 
 \begin{table}[t]
 \centering\small
-\caption{Portability by organizational-function class ($n=294$ movers; pre-registered
-three-season window, 2022--23 through 2024--25). Classes use the mover-sample usage median
-$\times$ $\resid>0$ cut matching Eq.~\ref{eq:taxonomy}. $\Delta$ is the profile-matched
-signature excess (Eq.~\ref{eq:portability}); ``portable'' is $\Delta>0$. Kruskal--Wallis
-across all four classes: $H=3.85$, $p=0.28$ -- medians and \%-portable are reported as
-descriptive statistics only; the omnibus test does not support treating this as a confirmed
-class ranking.}
+\caption{\textbf{Portability by class.} $n=294$ movers; pre-registered three-season window,
+2022--23 through 2024--25 (2025--26 excluded from confirmatory portability). Classes use the
+mover-sample usage median $\times$ $\resid>0$ cut matching Eq.~\ref{eq:taxonomy}. $\Delta$ is
+the profile-matched signature excess (Eq.~\ref{eq:portability}); ``portable'' is $\Delta>0$.
+Kruskal--Wallis across all four classes: $H=3.85$, $p=0.28$ -- medians and \%-portable are
+reported as descriptive statistics only; the omnibus test does not support treating this as a
+confirmed class ranking.}
 \label{tab:portability-by-class}
 \begin{tabular}{lrrr}
 \toprule
@@ -1200,50 +1215,45 @@ Role Occupant / Special. & 123 & $+0.018$ & $54.5\%$ \\
 \end{tabular}
 \end{table}
 
-\paragraph{Shaper portability is a distribution.}
+\paragraph{Shaper portability is a distribution, not one number.}
 \label{para:conn-dist}
-Figure~\ref{fig:shaper-dist} shows realized $\Delta$ among shaper movers ($n=24$), with
-upper-tail (Gafford), near-median (Jones Jr.), and lower-tail (Wright) cases marked.
-Figure~\ref{fig:portability} and Table~\ref{tab:cases} make those three points legible as
-shapes of structural concordance, not career grades.
+Among the $24$ shaper movers, three cases anchor the range: Daniel Gafford near the top,
+Herbert Jones Jr.\ near the median, and Delon Wright near the bottom
+(Fig.~\ref{fig:shaper-dist}; Table~\ref{tab:cases}). These are not career grades, they are
+illustrations of what a strong, typical, and weak case of structural portability actually
+looks like.
 
-The portability test asks whether a player's organizational role is associated with a
-repeatable pattern of structural disruption, not whether he reproduces the same raw
-play-type distribution on a new team. If the role is partly player-associated, then
-removing that player should perturb some of the same play-type relationships in the same
-direction across two different team contexts, even when the surrounding roster and overall
-team structure differ. For each mover the test therefore compares the direction and relative
-strength of the relationships displaced by his removal in origin and destination
-($\dA_p^{\text{orig}}$ vs.\ $\dA_p^{\text{dest}}$). Positive concordance means the same
-links tend to weaken or strengthen together across contexts; the matched-decoy baseline
-asks whether that agreement exceeds what is expected from a similar play-type profile
-alone. The test evaluates structural concordance, not exact reproduction of a raw
-signature.
+The portability test asks whether a player's removal disrupts the same relationships
+across two different teams, not whether he literally reproduces the same raw stat line on a
+new roster. A concordance map like Figure~\ref{fig:portability} shows, cell by cell,
+whether the origin and destination teams agree on the direction of change for each
+play-type pair when the player is removed: consistent weakening colored one way,
+consistent strengthening the other, and no agreement left uncolored.
 
-Read Figure~\ref{fig:portability} as a concordance map, not a raw signature. Each cell is a
-play-type \emph{pair}. A cell lights up only when origin and destination agree on the
-\emph{sign} of that player's displacement for that pair: both teams' fingerprints move the
-same way when he is removed. Navy means both sides agree that removing him
-\emph{weakens} that co-initiation link; coral/red means both agree that removing him
-\emph{strengthens} it; cream means no same-sign match (opposite signs, or near-zero on one
-side). Color intensity is the shared strength after unit-normalizing each signature, so
-panels are comparable even when raw displacement magnitudes differ. Self-sim (panel title)
-is the cosine of the full origin and destination signatures; $\Delta$ subtracts the
-profile-matched decoy baseline.
+Gafford's map is sparse but deep: two strong, consistent cells on cut-linked pairs dominate
+his footprint (self-similarity $+0.86$, $\Delta=+0.60$). In basketball terms, wherever
+Gafford goes, he creates the same specific structural gap when he sits, both in Washington
+and in Dallas, removing him weakens the same cut-linked pairs, in the same direction, on
+two rosters with entirely different personnel. That is a role he genuinely brings with him,
+not something his old team happened to be using him for.
 
-That reading is why Gafford sits at the top of the $\Delta$ distribution and Jones Jr.\ in
-the middle. Gafford's panel is sparse but deep: two strong navy cells on cut-linked pairs
-(drive--cut, spot-up--cut) dominate his footprint. Their significance is not that he merely
-runs those actions, but that removing him perturbs the same relationships between those
-actions in both Washington and Dallas (self-sim $+0.86$, $\Delta=+0.602$). Jones Jr.'s
-panel is more crowded and mixed: one deep navy cell, several lighter navy matches, and a
-few coral cells of opposite shared sign: partial structural concordance, less concentrated
-and less consistent (self-sim $+0.21$, $\Delta=+0.167$). Wright's panel is mostly cream or
-wrong-signed: the destination context does not match the origin pattern of relational
-disruption, consistent with a more context-dependent footprint under this measure
-(self-sim $-0.66$, $\Delta=-0.714$). The lesson is structural: strong concordance in a few
-load-bearing links can outweigh a larger number of weaker same-sign matches. These cases
-illustrate that distribution; they are not independent evidence.
+Jones Jr.'s map is more scattered, some agreement, some disagreement, a weaker overall
+signal (self-similarity $+0.21$, $\Delta=+0.17$). His removal shifts some of the same pairs
+in the same direction on both teams, real signal, but it is mixed in with pairs moving in
+opposite directions and others with no consistent pattern at all. His role partially
+travels, but a meaningful part of what he did structurally looks specific to what his
+original team needed from him.
+
+Wright's map shows almost no agreement at all between his two teams (self-similarity
+$-0.66$, $\Delta=-0.71$). Whatever structural gap his absence created in Washington does
+not match the gap his absence created in Miami. His structural role was not really his own,
+it was mostly shaped by what his original team specifically had him doing, and it did not
+reappear in a new context.
+
+The lesson: a small number of rock-solid, repeatable structural connections, like
+Gafford's cut-linked pairs, matter more than a larger number of loose, inconsistent ones.
+A few things a player reliably does everywhere predict his real structural value better
+than a broad footprint that only partially holds up once the roster around him changes.
 (Gafford's origin window here is his partial pre-trade WAS 2023--24 stint, not the full
 WAS 2022--23 season in Table~\ref{tab:exemplars}.)
 
@@ -1252,7 +1262,8 @@ WAS 2022--23 season in Table~\ref{tab:exemplars}.)
   \centering
  \includegraphics[width=0.92\textwidth]{fig_shaper_delta_dist.png}
  \caption{\textbf{Portability is a distribution, not an invariant.} Realized portability
- $\Delta$ among \textsc{Shaper} movers ($n=24$). Positive $\Delta$ means the player's
+ $\Delta$ among \textsc{Shaper} movers ($n=24$) in the confirmatory three-season sample
+ (2022--23 through 2024--25; 2025--26 excluded). Positive $\Delta$ means the player's
  origin structural footprint predicts his destination footprint better than a profile-matched
  decoy's. Endpoints illustrate the distribution; they are not the story.}
  \label{fig:shaper-dist}
@@ -1262,6 +1273,7 @@ WAS 2022--23 season in Table~\ref{tab:exemplars}.)
  \centering
  \includegraphics[width=\textwidth,height=0.42\textheight,keepaspectratio]{fig5b_signatures.png}
  \caption{\textbf{Depth of concordance, not a success/failure binary.}
+ Confirmatory three-season movers only (2022--23 through 2024--25).
  Each panel is a concordance of origin and destination displacement signatures
  (Eq.~\ref{eq:signature}), not two raw heatmaps side by side. A cell is colored only when
  both teams agree on the sign of that play-type-pair shift when the player is removed:
@@ -1275,174 +1287,108 @@ WAS 2022--23 season in Table~\ref{tab:exemplars}.)
 \end{figure}
 
 \begin{table}[t]
-\centering\small
-\caption{Shaper distribution endpoints and median contrast (confirmatory sample;
-illustrations, not independent evidence). All three rows are \textsc{Shaper}. Init.\
-share $u$ is the graph-native initiation share (Eq.~\ref{eq:resid}). Influence and $u$ are
-origin-side mover stints used in T1 (for Gafford: partial WAS 2023--24 pre-trade). $\Delta$ is
-the profile-matched signature excess (Eq.~\ref{eq:portability}).}
+\centering
+\caption{\textbf{Shaper portability endpoints.} Confirmatory sample (2022--23--2024--25 only;
+2025--26 excluded). Illustrations, not evidence. $u$~=~initiation share;
+$\load$~=~origin$\to$destination influence; $\Delta$~=~Eq.~\ref{eq:portability}.}
 \label{tab:cases}
-\begin{tabular}{llccccl}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}lccc@{}}
 \toprule
-Case & Player & Init.\ $u$ & Influence (o$\to$d) & self-sim & $\Delta$ & Portable \\
+ & Strong: Gafford & Median: Jones Jr. & Weak: Wright \\
 \midrule
-Strong shaper & D.\ Gafford & 0.036 & $0.335\to0.007$ & $+0.86$ & $+0.60$ & \textbf{Yes} \\
-Near shaper median & D.\ Jones Jr. & 0.030 & $0.025\to0.014$ & $+0.21$ & $+0.17$ & \textbf{Yes} \\
-Weak shaper & D.\ Wright & 0.016 & $0.030\to0.002$ & $-0.66$ & $-0.71$ & \textbf{No} \\
+Init.\ share $u$ & 0.036 & 0.030 & 0.016 \\
+$\load$ (origin) & 0.335 & 0.025 & 0.030 \\
+$\load$ (dest.) & 0.007 & 0.014 & 0.002 \\
+self-sim & $+0.86$ & $+0.21$ & $-0.66$ \\
+$\Delta$ & $+0.60$ & $+0.17$ & $-0.71$ \\
+Portable & Yes & Yes & No \\
 \bottomrule
-\end{tabular}
+\end{tabular}%
+}
 \end{table}
 
-\paragraph{Does destination context explain the variation?}
-Having established heterogeneity (Fig.~\ref{fig:shaper-dist}), the natural front-office
-hypothesis is that \emph{fit} decides: wiring ability reappears if the new roster has a hole
-for it, and fails if an incumbent already occupies that organizational slot. This paper tests that with
-$\text{fit\_score}(p)=-\text{decoy\_sim}(p)$ (Eq.~\ref{eq:fit}), the same profile-matched
-decoys as Eq.~\ref{eq:portability}, signed so that high fit means no destination incumbent
-already looks structurally like $p$. A minutes-weighted crowding variant checks whether
-unweighted decoys diluted a true blocker.
+\paragraph{Does landing on the right team explain the variation?}
+The obvious front-office explanation for why portability varies is fit, maybe a player's
+role reappears only if his new team has room for it, and fails if someone else already
+fills that role. This is tested using a fit score, essentially the inverse of how closely
+his new teammates already resemble him structurally:
 \begin{equation}
 \label{eq:fit}
 \text{fit\_score}(p) \;=\; -\text{decoy\_sim}(p).
 \end{equation}
 
-\emph{Result.} Among shaper movers ($n=24$), fit does not predict signature excess:
-$\operatorname{corr}(\text{fit\_score},\Delta)\approx -0.09$;
-$\operatorname{corr}(\text{fit\_score},\mathbb{1}[\Delta>0])\approx -0.39$. The
-high-travel/high-fit cell is not enriched ($33\%$ portable, $n=6$, vs.\ $58\%$ base rate).
-Crowding does not repair the null. Destination hole, as measured from initiation
-structure, is not what makes glue-guy roles travel. That is a precise null on
-Eq.~\ref{eq:fit}, not a claim that every notion of scheme fit is irrelevant. Checks against
-destination-team outcomes (on-court net rating, including origin-to-destination change) are
-underpowered and null once corrected for landing-spot quality; those are a different bet.
-Origin-side screens are Sec.~\ref{sec:travelfit}.
+\paragraph{Result: fit doesn't explain it.}
+Among shaper movers, fit score barely correlates with portability at all (roughly $-0.09$
+to $-0.39$ depending on the measure). Landing on a team that structurally has a hole for a
+shaper's role does not reliably predict whether that role actually travels. This is a
+precise null on this specific measure of fit, not a claim that scheme fit never matters at
+all in any sense.
 
 \subsection{Can organizational function transfer be predicted?}
 \label{sec:travelfit}
 
-Section~\ref{sec:portability} established the distribution and the destination-fit null. This
-subsection asks whether any origin-side signal separates the upper tail from the lower within
-shapers. Named endpoints belong to Fig.~\ref{fig:shaper-dist}; this paper does not re-litigate them.
+Section~\ref{sec:portability} established that portability is real but variable, and that
+destination fit does not explain the variation. This section asks a narrower question: is
+there anything about a shaper's own game, before the trade, that predicts whether his
+structural role will travel with him?
 
-\paragraph{What was evaluated.}
-The target is \emph{role reproduction} (signature excess $\Delta$ / self-similarity), not
-wins. Destination vacancy is already null in Sec.~\ref{sec:portability}; the battery asks
-what else might separate the upper tail from the lower:
-\begin{itemize}[leftmargin=1.6em,itemsep=0.15em]
- \item organizational crowding (minutes-weighted rewrite of Eq.~\ref{eq:fit});
- \item composite travel score (leave-one-out influence + stability + usage);
- \item origin structural influence, usage, and year-to-year signature stability;
- \item play style (cut vs.\ drive origin diet);
- \item position within shapers; origin$\to$destination role transition;
- \item multi-move $\Delta$ consistency;
- \item destination prior-season hub presence, signature shape, move timing, and related
- exploratory candidates (including a $63$-feature destination-side FDR search).
-\end{itemize}
-
-\paragraph{Most candidates are null.}
-The broader battery does not rescue destination vacancy. The composite travel score is weak
-at the population level ($\text{AUC}=0.61$, $\operatorname{corr}=+0.06$ vs.\ self-sim,
-$n=294$), and null within shapers as a continuous predictor of $\Delta$ ($r\approx 0$).
-Usage, stability, position, role transition, multi-move consistency, and prior-season
-destination hub presence do not rescue a within-class rule. Across $63$ destination-side
-features, no signal survives Benjamini--Hochberg FDR correction at $q<0.05$ (a small number
-of raw $p<0.05$ hits are consistent with chance). Origin cut-share is the only candidate that
-shows a consistent directional pattern within shapers, though, as detailed below, it does
-not clear conventional significance on its own at this sample size.
-
-\paragraph{The leading (non-significant) candidate: cut-based vs.\ drive-based glue.}
-Origin cut share is the most consistent pre-move signal that separates shaper
-reproduction among the candidates examined here, but it does not clear conventional
-significance as a confirmed within-class screen. On the pre-registered shaper-mover
-population ($n=24$), cut share predicts $\Delta$ continuously but not significantly
-($\rho=+0.32$, $p=0.13$; rank $\text{AUC}=0.71$, permutation $p=0.041$), and cut-minus-drive
-is similarly marginal ($\rho=+0.38$, $p=0.07$). Descriptively, high-cut shapers are
-$75\%$ portable (median $\Delta=+0.196$); low-cut shapers are $37.5\%$ portable (median
-$\Delta=-0.061$). The effect is still more shaper-specific than not: within-class
-$\operatorname{corr}(\text{cut},\Delta)$ is $+0.32$ for shapers vs.\ $+0.12$
-(organizers), $+0.06$ (terminals), $+0.10$ (role occupants), though the shaper estimate
-itself is not individually significant. Partial correlations controlling for signature
-concentration/norm, initiation share, and origin influence/usage jointly are consistent in sign
-and similar in magnitude to the raw estimate ($r=+0.34$ to $+0.39$, $p=0.06$--$0.11$), and a
-one-move-per-player bootstrap (removing duplicate-mover clustering) keeps $\rho>0$ in
-$100\%$ of $2{,}000$ resamples (median $\rho=+0.39$). Dropping the top-three $\Delta$ movers
-weakens the estimate further ($\rho=+0.22$, $p=0.33$, $\text{AUC}=0.70$), and only one of two
-temporal halves clears a minimum sample size. This paper reads cut-share as a directionally
-consistent but underpowered candidate rather than a confirmed screen: at $n=24$ the tercile
-contrast is descriptively large, but the continuous tests needed to report it as a confirmed
-within-shaper rule do not pass.
-
-Descriptive (not a second classifier): high-cut portable cells include Hayes ($37\%$ cut),
-Eubanks ($37\%$), Metu ($32\%$), and Mamukelashvili ($22\%$);
-drive-heavier non-portable contrasts include Delon Wright
-(Sec.~\ref{sec:portability} lower-tail endpoint) and Evan Fournier ($16\%$ drive,
-$\Delta=-0.16$). Cut diet is a screen, not a sufficient condition.
-
-\paragraph{What the search contributes.}
-Under these operationalizations, destination vacancy and ``buy the high-influence glue guy'' are the
-wrong places to start. Origin cut vs.\ drive diet is the leading directional candidate within
-shapers, but it is exploratory relative to the pre-registered portability test, modest
-($\sim\!10\%$ of within-shaper rank variation in $\Delta$), and not statistically confirmed
-at $n=24$. What the initiation graph cannot see is taken up in Section~\ref{sec:discussion}.
+The short answer is no, not reliably. A composite score built from $63$ different features
+of the origin and destination context was tested, and none of it survives correction for
+testing that many things at once (Appendix~C). The single most promising lead is a
+player's own cut share before the trade: shapers who ran a lot of cuts on their original
+team were more likely to be portable ($75\%$ portable among high-cut shapers, versus
+$37.5\%$ among low-cut shapers), but with only $24$ shaper movers, this does not reach
+statistical significance ($p=0.13$). It is reported as a directional and unconfirmed finding,
+not a prediction tool.
 
 %=============================================================================
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{The instrument, not the first finding.}
-Before this paper, offensive organization was largely coaching intuition. After it, it is
-measurable. That changes \emph{what questions can be asked}, not merely which answer the first
-efficiency question received. Contribution~A is a scientific instrument:
-organizational dependence as network perturbation. Contribution~B is a first confirmatory
-pass with that instrument. The lasting contribution is the former.
+\paragraph{The framework is the main contribution, not any one result.}
+This paper starts with a fairly simple idea: NBA teams clearly organize offensive
+responsibility in ways that don't show up in ordinary player statistics, but there has not
+been a straightforward way to measure that organization. The graph framework provides one way
+to do that. The results in Section~\ref{sec:results} are the first test of what the measure
+picks up, where it seems to correspond to real basketball, and where it does not.
 
-What the first pass reveals is already informative about player structure.
-Organizational
-function is not player value (Sec.~\ref{sec:orthogonality}); it is behaviorally real
-(Sec.~\ref{sec:behavior}); and it is partly player-associated, transferring imperfectly across
-teams (Sec.~\ref{sec:portability}). Players possess a measurable organizational function
-that is distinct from talent, manifests in offensive behavior, and is partially
-player-associated
-rather than entirely determined by team context. Shapers make that
-component visible where usage hides it; they are not the paper's sole object. Destination
-vacancy under a $63$-feature FDR battery does not explain who reproduces; origin cut vs.\
-drive is an exploratory, non-confirmed within-shaper candidate
-(Sec.~\ref{sec:travelfit}).
+The first set of results gives the measure some support, but also puts clear limits around it.
+Structural influence is not just another value metric: once usage is removed, it has
+essentially no relationship with net rating. \textsc{Shapers} also correspond to something
+observable on the court, shifting the team's play mix even though they themselves are
+low-usage players. And when players change teams, part of their structural footprint follows
+them, although imperfectly. At the same time, the framework does not predict an efficiency
+advantage. That distinction matters: this appears to be measuring how an offense is
+organized, not how good it is.
 
-The efficiency null (Sec.~\ref{sec:efficiency}) should be read as a boundary finding, not a
-failed test of the instrument. A measurement of organizational structure need not
-reproduce the outcomes used to evaluate players: structural dependence is measurable, but
-it is not equivalent to offensive efficiency. The disclosed on/off identity test
-(Sec.~\ref{sec:identity-resilience}) then supplies the construct-native follow-up:
-shaper absence displaces the observed association fingerprint more than
-usage-matched role-occupant absence. Efficiency does not move; identity does. That is the
-scoped ``so what'' for the shaper class in this paper: organizational continuity under
-substitution, not a PPP premium. Because the identity test is post-hoc, it answers the
-boundary rather than extending the original confirmatory protocol.
+The efficiency null (Sec.~\ref{sec:efficiency}) is a boundary, not a failed test. A
+measurement of organizational structure does not need to reproduce the outcomes used to
+evaluate players: structural influence is measurable, but it is not the same as offensive
+efficiency. The disclosed on/off identity test (Sec.~\ref{sec:identity-resilience}) then
+supplies the follow-up: shaper absence displaces the observed association fingerprint more
+than usage-matched role-occupant absence. Scoring efficiency does not move, but identity does.
+That is the scoped ``so what'' for the shaper class in this paper: organizational continuity
+under substitution, not a PPP effect.
 
-The efficiency boundary established in Section~\ref{sec:efficiency} sharpens into an
-asymmetry once organizer accumulation is placed alongside it. Losing a structurally
-load-bearing but low-usage player (a shaper) does not measurably harm offensive
-efficiency: this null holds under possession-level controls, lineup-level talent
-adjustment, and a held-four-fixed swap-in design that isolates the marginal contribution of
-the fifth player. Organizer accumulation, by contrast, is the one term in this analysis that
-moves points per possession robustly and consistently ($+2.35$ pts/$100$,
-Table~\ref{tab:coverage}). The contrast suggests that what makes a player offensively
-valuable in points is not organizational centrality, shapers are, by construction,
-the class this instrument identifies as load-bearing, but replaceability: NBA rosters and coaching
-staffs appear well-equipped to reallocate responsibility among shaper-type personnel
-without cost, while high-usage organizational talent is not similarly substitutable.
-Structural influence identifies who an offense's current wiring depends on; it does not identify
-who the offense cannot afford to lose.
+The null efficiency result is still useful because it tells us what structural influence is
+not. Losing a shaper changes the observed organization of the offense, but this paper does not
+find evidence that the change itself produces a measurable scoring penalty. Organizers are
+different in one important respect: having more of them on the floor is associated with higher
+scoring efficiency. But that is a separate result and is not evidence that organizational
+completeness itself improves efficiency. The simplest interpretation is that organizational
+dependence and offensive value are not the same thing.
 
 \paragraph{What becomes measurable now: from players to teams.}
-The framework is not only about individuals. Structural influence is a team-level distribution,
-not just a player-level score, and its \emph{concentration} across a roster remains a
-natural candidate for organizational resilience at the \emph{team} level: two offenses can
-score identically and still differ in how much they depend on one or two load-bearing
-players. The player-level on/off identity result (Sec.~\ref{sec:identity-resilience}) is
-evidence that such dependence is ecologically real under substitution; elevating roster
-influence concentration to a confirmatory team-brittleness claim is still future work.
+Structural influence identifies who an offense's current wiring depends on. It does not
+identify who the offense cannot afford to lose. The framework is not only about individuals.
+Structural influence is a team-level distribution, not just a player-level score, and its
+concentration across a roster remains a natural candidate for organizational resilience at the
+team level. Two offenses can score identically and still differ in how much they depend on one
+or two load-bearing players. The player-level on/off identity result
+(Sec.~\ref{sec:identity-resilience}) is evidence that this dependence is real under
+substitution. Elevating roster influence concentration to a confirmatory team-brittleness
+claim is still future work.
 
 With a reproducible measure of offensive wiring, researchers and practitioners can ask
 questions that previously had no quantitative handle, at both the player and team level:
@@ -1457,116 +1403,72 @@ questions that previously had no quantitative handle, at both the player and tea
  \item Which defenders most disrupt an opponent's wiring (the inverse perturbation
  question flagged below)?
 \end{itemize}
-These are decision-relevant questions that do not require showing that shapers are worth
-a fixed number of extra points. ``Does this help a team win'' need not route through PPP: a
-front office that can identify which absence its system can least afford is using the
-instrument for decision support without any claim that structural influence is itself a value
-metric. Those questions are the ``so what.'' The empirical findings above are a first map
-of the terrain the instrument opens, not the closed list of what it is for.
+These questions can still matter even if structural influence is not a value metric. A team
+does not need to know that a player is worth a fixed number of extra points to ask whether
+losing him will force a major change in how the offense operates. Identifying where that
+dependence exists could be useful for injuries, roster construction, trades, and player
+replacement. The results in this paper are a first test of the framework, not a complete list
+of what it can eventually be used for.
 
 \paragraph{What remains outside the possession graph.}
-Portability is largely unpredictable \emph{given what a possession-initiation graph can
-see}. Plausible residual channels include coaching deployment, spatial fit, defensive scheme,
-specific on-court partnerships, and signature noise from low initiation volume. An
-exploratory panel on ``when to acquire'' (brittleness / multiplier triggers) finds no such
-timing rule and reinforces the efficiency boundary (Sec.~\ref{sec:efficiency}).
+Portability is unpredictable given what a possession-initiation graph can see. Other channels
+include coaching deployment, spatial fit, defensive scheme, specific on-court partnerships,
+and signature noise from low initiation volume. An exploratory panel on ``when to acquire''
+(brittleness / multiplier triggers) does not find a timing rule and reinforces the efficiency
+boundary (Sec.~\ref{sec:efficiency}).
 
 \paragraph{Future work: the inverse question on defense.}
-Everything above is an \emph{offensive} wiring diagram. The graph also carries defensive
-on-court lineups, which opens a symmetric question this paper does not answer: which defenders reshape
-the \emph{opponent's} offensive wiring the most. That requires its own construct-validity work
-before it can be evaluated with the same discipline applied to portability. Preparing a defense
-for the offense's measured post-removal play-mix pivot---the practical use of the shift already
-documented in Sec.~\ref{sec:behavior}---is treated as an application in
-Sec.~\ref{sec:applications}, not as an open measurement problem.
-
-%=============================================================================
-\section{Practical Applications}
-\label{sec:applications}
-
-Brief implications of having the instrument: subordinate to the measurement claim.
-The uses below are \emph{illustrative decision contexts} the framework opens, not
-validated decision rules from this paper's confirmatory tests.
-
-\subsection{Front office: decision-relevant questions, not a value premium}
-Given a roster, structural influence ranks which player's removal most displaces the measured
-season-level structural fingerprint
-(Sec.~\ref{sec:emerge}), and the same vectors can compare trade targets or
-replacements by how much they preserve versus rewire existing measured identity. That is
-organizational identity, not a substitute for value
-(Secs.~\ref{sec:orthogonality},~\ref{sec:efficiency}). Destination vacancy is not a travel
-predictor under the measures tested here (Sec.~\ref{sec:portability}). Within shapers,
-origin cut vs.\ drive diet is a directional, exploratory hit-rate pattern at this sample
-size (top cut-share tercile $\approx 75\%$ portable vs.\ bottom $\approx 38\%$;
-Sec.~\ref{sec:travelfit}): a scouting prompt, not a confirmed rule.
-
-\subsection{Team construction: organizational resilience}
-Influence concentration across a roster is a natural candidate for distinguishing
-\emph{brittle} offenses from \emph{resilient} ones (Sec.~\ref{sec:discussion}). Two teams
-can score identically and still differ sharply on that axis.
-
-\subsection{Coaching: whose absence rewires the offense}
-Structural influence quantifies how much of an offense's identity rests on a player. The
-disclosed on/off identity test (Sec.~\ref{sec:identity-resilience}) finds that shaper
-absence displaces the measured association fingerprint more than absence of a
-usage-matched role occupant, even though shaper presence does not move PPP
-(Sec.~\ref{sec:efficiency}). A practical question before an absence: \emph{whose removal
-most rotates the team's fingerprint, and how does the wiring reorganize?}
-
-\subsection{Scouting and research: find the wiring first}
-Structural influence surfaces players who carry organizer-level influence without finishing volume.
-Locating organizational function is step one; any within-class travel screen is secondary
-and exploratory. The same instrument supports the research questions listed in
-Sec.~\ref{sec:discussion}.
-
-\subsection{Coaching: in-game pivots after a removal}
-Shaper absence is already associated with a specific, measured shift in offensive play
-selection (Sec.~\ref{sec:behavior}): more cuts and pick-and-rolls, fewer spot-ups and drives,
-in the disclosed composition tests. That is usable in real time. Once a high-influence player
-is out---foul trouble, injury, or a deliberate defensive focus that takes him off the ball---the
-offense does not merely lose a body; it pivots toward a known menu. A defense that has mapped
-those pivots can change coverage, help responsibilities, and matchup priorities to the structure
-the offense is about to become, not only to the player who left. This does not require a new
-defender-attribution model; it uses the offensive reorganization the instrument already
-measures. The harder inverse question---which defenders most \emph{cause} that rewiring---remains
-future work (Sec.~\ref{sec:discussion}).
+Everything above is an offensive wiring diagram. The graph also carries defensive on-court
+lineups, which opens a question this paper does not answer: which defenders reshape the
+opponent's offensive wiring the most. That requires its own construct-validity work before it
+can be evaluated with the same discipline applied to portability. Separately, a defense can
+already adjust coverage, help, and matchups in anticipation of the known post-removal
+play-mix pivot documented in Sec.~\ref{sec:behavior} (more cuts and pick-and-rolls, fewer
+spot-ups and drives). That use of the framework does not require a new defender-attribution
+model.
 
 %=============================================================================
 \section{Limitations}
 \label{sec:limitations}
 
 \begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
-  \item \textbf{Initiation, not within-possession flow.} Edges record who \emph{initiates} each
- play type, not the full pass/screen sequence; intra-possession chains are outside the data.
- \item \textbf{No player tracking.} No spatial data; organizational function is inferred from
- initiation alone: a strength for reproducibility, a limit on mechanism. As a concrete
- illustration of this boundary: Draymond Green, commonly cited as an archetypal offensive
- shaper, classifies as \textsc{Role Occupant / Specialist} (not
- \textsc{Shaper}) in all three sample seasons under Eq.~\eqref{eq:taxonomy}, since
- his organizational contribution is understood to operate primarily through passing and
- communication rather than initiation, both outside what this graph represents.
-  \item \textbf{Association, not causation.} Rosters are chosen, not randomized; portability is
- that wiring ability \emph{tends to reappear} (origin-side selection not fully excluded).
+ \item \textbf{Initiation only.} Edges record who initiates each play type, not the full
+ pass/screen sequence. Intra-possession chains are outside the data.
+ \item \textbf{No player tracking.} No spatial data. Organizational function is inferred from
+ initiation alone, which helps reproducibility but limits what can be said about mechanism. As
+ an illustration: Draymond Green, commonly cited as an archetypal offensive shaper,
+ categorizes as \textsc{Role Occupant / Specialist} under Eq.~\eqref{eq:taxonomy} in all three
+ sample seasons, since his organizational contribution is understood to operate primarily
+ through passing and communication, both outside what this graph represents.
+ \item \textbf{Association only.} Rosters are chosen, not randomized. Portability reflects
+ that wiring ability tends to reappear, and origin-side selection is not fully excluded.
  \item \textbf{Small-influence estimation noise.} Near $\resid=0$, taxonomy boundaries are
  approximate for very low-initiation players.
- \item \textbf{Efficiency is a boundary, not the purpose.} The coverage null is a boundary
- finding (Sec.~\ref{sec:efficiency}), not a failed test of the instrument.
- \item \textbf{On/off identity test is disclosed post-hoc.} Sec.~\ref{sec:identity-resilience}
- was not pre-registered; it is a follow-up to the efficiency boundary using a different
- outcome ($D_A$, observed on/off association displacement) from leave-one-out $\load(p)$.
- A prospective replication remains the gold-standard check.
+ \item \textbf{Efficiency as a boundary.} The coverage null (Sec.~\ref{sec:efficiency}) marks
+ a boundary of the instrument, not a failure of it.
+ \item \textbf{On/off identity test is post-hoc.} Sec.~\ref{sec:identity-resilience} was not
+ pre-registered. It is a follow-up to the efficiency boundary using a different outcome
+ ($D_A$, observed on/off association displacement) from leave-one-out $\load(p)$. A
+ prospective replication remains the gold-standard check.
+ \item \textbf{$\load(p)$ and $D_A$ use slightly different possession universes.} Primary
+ $\load(p)$ is computed on the full initiation-edge universe. Primary $D_A$ uses the on-court
+ five-player filtered pool (Sec.~\ref{sec:identity-resilience}). A sensitivity check aligning
+ both on the initiation-edge universe yields $r=+0.51$ ($n=908$;
+ \texttt{dA\_L\_common\_universe\_check.py},
+ \texttt{output/dA\_L\_common\_universe\_check.csv}).
  \item \textbf{Backward-looking by construction.} Origin-side screens extrapolate from what a
- player \emph{has been}, not developmental upside.
- \item \textbf{Cut/drive screen is exploratory and not statistically confirmed.} Directional
- at $n=24$ shaper movers; not part of the pre-registered portability protocol
- (Sec.~\ref{sec:travelfit}). A prospective blind battery on a new season remains the
- gold-standard confirmation; 2025--26 was deliberately excluded from confirmatory tests.
+ player has been, not developmental upside.
+ \item \textbf{Cut/drive screen is exploratory.} Directional at $n=24$ shaper movers, not part
+ of the pre-registered portability protocol (Sec.~\ref{sec:travelfit}). A prospective blind
+ battery on a new season remains the gold-standard confirmation. 2025--26 was deliberately
+ excluded from confirmatory tests.
  \item \textbf{Large residual outside the initiation graph.} Most within-shaper $\Delta$
- variation is unexplained after cut/drive; destination context is FDR-null.
+ variation is unexplained after cut/drive. Destination context is FDR-null.
  \item \textbf{Fit operationalization.} Destination fit is $-\text{decoy\_sim}$
- (Eq.~\ref{eq:fit}): structural vacancy, not scheme fit or coaching trust.
-  \item \textbf{Sample and era.} Three seasons; on-court analyses restricted to the tracking
- subset; median-split thresholds may shift across eras (appendix).
+ (Eq.~\ref{eq:fit}), which captures structural vacancy rather than scheme fit or coaching
+ trust.
+ \item \textbf{Sample and era.} Three seasons, on-court analyses restricted to the tracking
+ subset. Median-split thresholds may shift across eras (appendix).
 \end{itemize}
 
 %=============================================================================
@@ -1574,28 +1476,29 @@ future work (Sec.~\ref{sec:discussion}).
 \label{sec:conclusion}
 
 Most basketball analytics measure what players produce. This paper introduces a reproducible
-graph framework for measuring how they organize production. Offenses are wiring
-diagrams, team-level maps of who initiates which play types and whether the same players
-jointly hold multiple jobs. Structural influence quantifies each player's contribution to that
-organization via network perturbation.
+graph framework for measuring how they organize production. Offenses are wiring diagrams,
+team-level maps of who initiates which play types and whether the same players jointly hold
+multiple jobs. Structural influence quantifies each player's contribution to that organization
+via network perturbation.
 
-What the instrument reveals in a first confirmatory pass is that organizational function
-is distinct from value, visible in play mix, bounded for efficiency, and partly
-player-associated (median $\Delta=+0.056$, $n=294$). Low-usage
-shaper-type players make that component visible where volume metrics hide it. A disclosed
-post-hoc on/off test then finds the construct-native follow-up to the efficiency boundary:
-shaper absence displaces offensive identity more than usage-matched role-occupant
-absence (Sec.~\ref{sec:identity-resilience}). Destination vacancy is null under the measures
-evaluated here; origin cut vs.\ drive diet is exploratory.
+The main contribution is not a new value metric for identifying hidden stars. It is a way to
+quantify one part of offensive organization that has mostly been discussed qualitatively. The
+first application here suggests that this structure is distinct from conventional value
+measures, visible in real changes to offensive organization, and partly portable across teams.
+The framework also leaves a number of questions open, particularly around team brittleness,
+injuries, roster replacement, and defensive disruption.
 
-The lasting contribution is not a verdict that glue guys raise points per possession, they
-do not, at the pre-registered bar. It is that organizational function itself can be
-measured, and that its observable stake under substitution is identity, not scoring. That
-makes possible a class of reproducible questions, about injuries, trades, development,
-coaching systems, resilience, and defensive disruption, that previously existed mostly as
-coaching intuition.
-Before this paper, offensive organization was hard to study quantitatively. After it, it is
-an object of analysis.
+\section*{Code Availability}
+
+Analysis code and paper materials are available at
+\url{https://github.com/ramizheman/Basketball_Structural_Influence}.
+
+\section*{AI Disclosure}
+
+Large language models (Claude, Anthropic; Grok, xAI) were used to help develop the
+mathematical formulation, write the analysis code, and draft this paper's text. The author
+directed the research question, supplied and validated the data, and reviewed and edited
+all results and text.
 
 %=============================================================================
 \appendix
@@ -1612,6 +1515,28 @@ check.
 \paragraph{C. Portability robustness.} Origin- vs.\ destination-clustered bootstraps, decoy
 count $K$ at its pre-registered value, and the permutation null construction
 (Sec.~\ref{sec:portability}).
+\label{sec:appendix-portability-robust}
+
+\paragraph*{Cut/drive travel-screen battery (detail for Sec.~\ref{sec:travelfit}).}
+Beyond the main-text headline, the origin-side screen was checked for robustness as follows.
+Within-class $\operatorname{corr}(\text{cut},\Delta)$ is $+0.32$ for shapers vs.\ $+0.12$
+(organizers), $+0.06$ (terminals), $+0.10$ (role occupants), though the shaper estimate
+itself is not individually significant. Partial correlations controlling for signature
+concentration/norm, initiation share, and origin influence/usage jointly are consistent in
+sign and similar in magnitude to the raw estimate ($r=+0.34$ to $+0.39$, $p=0.06$--$0.11$),
+and a one-move-per-player bootstrap (removing duplicate-mover clustering) keeps $\rho>0$ in
+$100\%$ of $2{,}000$ resamples (median $\rho=+0.39$). Dropping the top-three $\Delta$ movers
+weakens the estimate further ($\rho=+0.22$, $p=0.33$, $\text{AUC}=0.70$), and only one of two
+temporal halves clears a minimum sample size. Across $63$ destination-side features, no
+signal survives Benjamini--Hochberg FDR correction at $q<0.05$ (a small number of raw
+$p<0.05$ hits are consistent with chance). Descriptive (not a second classifier): high-cut
+portable cells include Hayes ($37\%$ cut), Eubanks ($37\%$), Metu ($32\%$), and
+Mamukelashvili ($22\%$); drive-heavier non-portable contrasts include Delon Wright
+(Sec.~\ref{sec:portability} lower-tail endpoint) and Evan Fournier ($16\%$ drive,
+$\Delta=-0.16$). Cut diet is a screen, not a sufficient condition. Relative to the
+pre-registered portability test, the cut/drive pattern is exploratory, modest
+($\sim\!10\%$ of within-shaper rank variation in $\Delta$), and not statistically confirmed
+at $n=24$.
 
 \paragraph{D. Behavioral analyses.} Full within-team play-mix deltas for all four classes and
 the route-entropy construction and null (Sec.~\ref{sec:behavior}).
@@ -1624,6 +1549,33 @@ fixed-effects specification, and binding no-fallback stop conditions.
 (absence-impact, structural replacement, concentration-vs-defense), each reported as a
 registered negative and each reinforcing the efficiency boundary of Section~\ref{sec:efficiency}.
 
+\paragraph*{Exploratory shaper-tier heterogeneity (detail for Sec.~\ref{sec:shaper-tiers-main}).}
+\label{sec:appendix-shaper-tiers}
+As a post-hoc check (motivated by an out-of-sample 2025--26 review; Sec.~\ref{sec:data}),
+this paper splits \textsc{Shaper} at within-class median residual influence into hub vs.\
+marginal, then splits marginal by position (big vs.\ wing). Replacing $\textsc{Covered}$
+with three presence indicators (\textsc{HasHub}, \textsc{HasMargBig}, \textsc{HasMargWing})
+on the same pre-registered three-season sample yields Table~\ref{tab:shaper-tiers}:
+\emph{none} of the three tiers clears the paper's $0.01$ confirmatory bar. The check is
+exploratory relative to the pre-registered efficiency tests and does not revise
+Table~\ref{tab:coverage} or the \textsc{HasShaper} null in Sec.~\ref{sec:efficiency}.
+
+\begin{table}[h!]
+\centering\small
+\caption{\textbf{Exploratory shaper-tier PPP effects.} $N\!=\!420{,}993$, $90$ team-seasons.
+Coefficients in points per $100$; confirmatory bar $p<0.01$ as reporting benchmark only.}
+\label{tab:shaper-tiers}
+\begin{tabular}{lrrl}
+\toprule
+Tier & pts/100 & $p$ & Confirmatory bar ($p<0.01$) \\
+\midrule
+HasHub & $+1.10$ & $0.077$ & not met \\
+HasMargBig & $+1.70$ & $0.025$ & not met \\
+HasMargWing & $+1.29$ & $0.122$ & not met \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{G. Shaper roster (2025--26).} Table~\ref{tab:shaper-appendix} lists every
 \textsc{Shaper} player-season in the 2025--26 rotation pool
 (Sec.~\ref{sec:emerge}), with the same usage, influence, MPG, and PPG fields reported in
@@ -1632,7 +1584,10 @@ inspection and replication, not as an endorsement of any individual player's val
 
 % <<<SHAPER_APPENDIX_BEGIN>>>
 \begin{longtable}{llrrrr}
-\caption{\textsc{Shaper} players in 2025--26 ($n=41$). Usage is box-score usage rate; influence is $\load(p)$ (Eq.~\ref{eq:load}); MPG and PPG are box-score minutes and points per game. Sorted by team, then influence (descending).}
+\caption{\textbf{2025--26 \textsc{Shaper} roster} ($n=41$). Exploratory addendum only; not
+part of the confirmatory three-season sample. Usage is box-score usage rate; influence is
+$\load(p)$ (Eq.~\ref{eq:load}); MPG and PPG are box-score minutes and points per game. Sorted
+by team, then influence (descending).}
 \label{tab:shaper-appendix}\\
 \toprule
 Player & Team & Usage & Influence & MPG & PPG \\
@@ -1718,9 +1673,9 @@ J. Poeltl & TOR & 0.150 & 0.037 & 25.0 & 10.7 \\
 \paragraph{H. Play-type inferrer from public play-by-play.}
 \label{sec:appendix-inferrer}
 No Synergy, Second Spectrum, or tracking feed is used. Possession labels are inferred from
-NBA Stats play-by-play V3 fields available via the public API---principally
+NBA Stats play-by-play V3 fields available via the public API, principally
 \texttt{actionType}/\texttt{subType}, event description text, assist tokens on made shots,
-shot distance, and court coordinates---after events are normalized into a possession chain.
+shot distance, and court coordinates, after events are normalized into a possession chain.
 A rule-based classifier maps those signals onto nine labels
 (\texttt{TRANSITION}, \texttt{PNR}, \texttt{DRIVE}, \texttt{POST\_UP}, \texttt{SPOT\_UP},
 \texttt{CUT}, \texttt{PUTBACK}, \texttt{PULL\_UP}, \texttt{OTHER}); association and
@@ -1733,7 +1688,7 @@ main PBP$\to$label mappings; confidence scores accompany each rule so downstream
 prefer high-signal labels when needed.
 \begin{table}[h]
 \centering
-\caption{Possession classifier: public PBP signals to initiating play type.
+\caption{\textbf{Possession classifier signals.} Public PBP signals to initiating play type.
 PNR rows use assist flags that appear only on made shots unless noted.}
 \label{tab:inferrer-signals}
 \small
@@ -1759,9 +1714,28 @@ Foul-ending possession left as \texttt{OTHER} & player-tendency relabel \\
 \noindent
 The strings ``pick'' and ``screen'' never appear in V3 descriptions, so PNR is never read
 off a ball-screen token. It is inferred from assist-plus-subtype/distance rules on makes,
-a low-confidence missed-pull-up correction, and the player-level calibration pass already
-described in Sec.~\ref{sec:data} (shot-event proxy targets; promotion from
-\texttt{PULL\_UP}/\texttt{OTHER}).
+a low-confidence missed-pull-up correction, and the player-level calibration pass summarized
+in Sec.~\ref{sec:data}. Without calibration, the description-based inferrer alone recovers
+PNR initiations at roughly a quarter of their true rate (raw inferrer output
+$\approx\!4\%$ of possessions vs.\ an expected $\approx\!20$--$25\%$ from play-type tracking
+proxies). The shot-event proxy is used only to set season-level promotion \emph{targets}; it
+does not enter the association matrix or structural influence directly. Those objects use the
+final calibrated possession labels (inferrer-native PNR plus promoted \texttt{PULL\_UP}/
+\texttt{OTHER} possessions). Promotion targets come from a season-level PNR-rate proxy built
+from NBA play-by-play shot events (shot subtype, distance, and assist flags on makes), scaled
+by a fixed factor of $2.5$ from shot-level to possession-level rates and capped at $33\%$ of
+a team's half-court possessions. Each candidate's promotion score is that player's own
+historical inferrer-only PNR rate (team rate if under $10$ tagged possessions) times a fixed
+prior by current label and confidence
+(\texttt{PULL\_UP}: $0.55$/$0.35$/$0.15$ for conf $<0.45$/$0.45$--$0.65$/$\!>\!0.65$;
+\texttt{OTHER} at conf $0.30$: $0.25$), so promotion is player-level rather than a flat
+team-wide adjustment. A further per-game cap limits drain of any one team's \texttt{PULL\_UP}
+bucket to at most half of that bucket; remaining promotions come from \texttt{OTHER}, and the
+pass stops rather than overshoot if both are exhausted. Every promoted possession retains its
+pre-calibration label and confidence (enabling exact rollback) and is stamped at confidence
+$0.22$, below any inferrer-native PNR label. Applied this way across seasons 2022--23 through
+2025--26 (the fourth season only for exploratory addenda), seasons land within a point of each
+other on PNR share ($18.3$--$20.0\%$).
 
 \paragraph*{Foul treatment.}
 Possessions that end in free throws without a classified shot action often fall through to
@@ -1775,6 +1749,97 @@ computed. A backward attribution audit recovered $98.6\%$ of remaining foul-endi
 misclassified foul endings shifted play-type PPP by at most $0.007$ points and produced no
 play-type ranking changes, so the association-matrix corpus inherits the same labels without
 a material sensitivity to that residual.
+
+
+\paragraph{I. Play-type pair glossary.}
+\label{sec:appendix-pair-glossary}
+Grouped by family, each with the on-court meaning and what a defense loses if that pairing
+disappears. Pairs with weak or no natural basketball reading are marked as such rather than
+forced into an explanation.
+
+\paragraph*{Ball-screen family.}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+ \item \textbf{PNR--DRIVE:} a ball handler who both runs pick-and-roll and drives without a
+ screen. High overlap means he is live in ball-screen and isolation actions alike: a
+ defender cannot relax off ball-screen coverage expecting he only operates off a pick.
+ \item \textbf{PNR--POST\_UP:} a big who both rolls/pops off ball screens and posts up. High
+ overlap signals an interior hub who can be fed straight or used in an action, forcing bigger
+ decisions from help defenders.
+ \item \textbf{PNR--SPOT\_UP:} a player who runs pick-and-roll and also spaces off it. Common
+ for a secondary ball handler who initiates the screen action then relocates to shoot.
+ \item \textbf{PNR--CUT:} covered in the main text (Gobert's own dual threat: rim runs and
+ roll starts).
+ \item \textbf{PNR--PUTBACK:} weak natural reading. Likely reflects a big who is live in ball
+ screens and also crashes the offensive glass, not a designed two-way action.
+ \item \textbf{PNR--PULL\_UP:} a ball handler who runs pick-and-roll and also creates his own
+ pull-up jumper off the dribble without one. High overlap describes a primary shot creator,
+ hard to funnel into one action.
+\end{itemize}
+
+\paragraph*{Drive-adjacent.}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+ \item \textbf{DRIVE--POST\_UP:} a player who both attacks off the dribble and posts up,
+ usually a wing or forward who can operate from the perimeter or the block. Removes a
+ defender's ability to guard him with one strategy.
+ \item \textbf{DRIVE--SPOT\_UP:} driver who is also live standing still. Sag off the drive
+ and he shoots; crowd the catch and he drives.
+ \item \textbf{DRIVE--CUT:} covered in the main text: driver who is also live cutting off the
+ ball when he is not initiating.
+ \item \textbf{DRIVE--PUTBACK:} weak natural reading, mostly reflects a player active around
+ the rim generally rather than one designed action.
+ \item \textbf{DRIVE--PULL\_UP:} a player live both attacking downhill and pulling up
+ mid-drive. Standard shot-creator combination, hard to defend with a single coverage.
+\end{itemize}
+
+\paragraph*{Post-adjacent.}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+ \item \textbf{POST\_UP--SPOT\_UP:} the inside-out combination described in the MIN/HOU
+ comparison, a player who posts up and also spaces to shoot. Forces a defense to choose
+ between fronting the post and closing out on the catch.
+ \item \textbf{POST\_UP--CUT:} a big who posts up and also cuts when not posting. Common
+ combination for a traditional low-post player who also moves without the ball.
+ \item \textbf{POST\_UP--PUTBACK:} natural pairing for a true post player who also crashes
+ the glass off his own or others' misses.
+ \item \textbf{POST\_UP--PULL\_UP:} weak natural reading. Rare for the same player to both
+ post up and create a perimeter pull-up at real volume.
+\end{itemize}
+
+\paragraph*{Cut-adjacent (beyond those above).}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+ \item \textbf{CUT--SPOT\_UP:} covered in the main text: cut-and-replace action (cut to the
+ rim, relocate if it is not there).
+ \item \textbf{CUT--PUTBACK:} a player live around the basket generally, cutting and crashing
+ for offensive boards. Common for a low-usage big.
+ \item \textbf{CUT--PULL\_UP:} covered in the main text: an unusual combination since cutters
+ and pull-up shooters are typically different player types; when it appears, it signals a
+ versatile wing.
+\end{itemize}
+
+\paragraph*{Spot-up-adjacent (beyond those above).}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+ \item \textbf{SPOT\_UP--PUTBACK:} weak natural reading, likely reflects a floor-spacing big
+ who also crashes the glass, not a linked action.
+ \item \textbf{SPOT\_UP--PULL\_UP:} a player live catching and shooting and also creating his
+ own look off the dribble. Standard high-value shooter combination.
+\end{itemize}
+
+\paragraph*{Transition-adjacent.}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+ \item \textbf{TRANSITION--PNR}, \textbf{TRANSITION--DRIVE}, \textbf{TRANSITION--POST\_UP},
+ \textbf{TRANSITION--SPOT\_UP}, \textbf{TRANSITION--CUT}, \textbf{TRANSITION--PUTBACK},
+ \textbf{TRANSITION--PULL\_UP:} transition largely reflects who is simply first up the floor
+ or gets the ball in early offense, and tends to correlate with general offensive involvement
+ rather than a specific tactical linkage. These pairs are included for completeness but
+ generally carry weaker basketball meaning than half-court combinations; treat elevated
+ values here cautiously and check whether they are being driven by a player's overall usage
+ rather than a genuine two-way half-court threat.
+\end{itemize}
+
+\paragraph*{Putback-adjacent (beyond those above).}
+\begin{itemize}[leftmargin=1.4em,itemsep=0.2em]
+ \item \textbf{PUTBACK--PULL\_UP:} weak natural reading, an unusual combination; a high joint
+ value here is more likely noise or a small-sample artifact than a real linked action.
+\end{itemize}
 
 %=============================================================================
 % Bibliography. Replace this thebibliography stub with a .bib + \bibliography

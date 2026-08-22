@@ -5,7 +5,6 @@ Part (b) of the role-composition analysis. Regress possession points on the
 on-court ROLE COMPOSITION, with rich fixed effects, at n~650k possessions.
 
   PPP_i = b0 + b_shap*n_SHAPER + b_org*n_ORGANIZER + b_term*n_TERMINAL
-             + b_orgconn*(n_ORG*n_CONN)            [fit / interaction]
              + n_classified
              + FE(team-season)  [absorbed]
              + dummies(opponent, period, score-margin bucket)
@@ -14,19 +13,18 @@ on-court ROLE COMPOSITION, with rich fixed effects, at n~650k possessions.
 OCCUPANT is the reference class, so each b is the PPP change from swapping one
 OCCUPANT for one player of that class, holding the rest fixed.
 
-Two models decompose the mediation the user described (config -> behavior -> points):
+Two models:
   M1  WITHOUT play_type  : total composition->PPP (includes the play-selection path)
-  M2  WITH play_type FE  : composition->PPP HOLDING the play fixed (within-play-type
-                           efficiency). (M1 - M2) ~ the part routed through changing
+  M2  WITH play_type FE  : composition->PPP holding the play fixed (within-play-type
+                           efficiency). (M1 - M2) is the part routed through changing
                            which plays get run.
 
 SE: cluster-robust by offensive team-season.
 
-*** THIS IS ASSOCIATION, NOT CAUSATION. *** Lineup composition is chosen, not
-assigned: a class being off-floor overlaps with bench-unit talent and game state,
-which team-season/opponent/period/score controls REDUCE but do not eliminate.
-"Adding a shaper changes scoring" is NOT licensed; the coefficients describe
-conditional associations only.
+This is association, not causation. Lineup composition is chosen, not assigned:
+a class being off-floor overlaps with bench-unit talent and game state, which
+team-season/opponent/period/score controls reduce but do not eliminate.
+Coefficients are conditional associations only.
 
 Run: python role_composition_ppp.py
 """

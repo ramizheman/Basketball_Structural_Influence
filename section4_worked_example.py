@@ -10,9 +10,9 @@ Source of truth: ``output/full_edges.parquet`` (L2 ``INITIATED`` edges from
 ``wiring_full_study.pull_edges``). This is the same B-matrix construction used
 for structural influence / association matrices.
 
-Do NOT use ``role_composition_possessions.parquet`` here: that cache requires
-exactly-5 ON_COURT offensive players and undercounts initiations relative to
-the L2 edge graph (e.g. Gobert CUT 245 vs 277).
+Uses ``full_edges.parquet``, not ``role_composition_possessions.parquet``.
+The ON_COURT-5 cache undercounts initiations relative to the L2 edge graph
+(e.g. Gobert CUT 245 vs 277).
 
 Rotation pool gate (matches the paper elsewhere): mpg >= 15, gp >= 30.
 

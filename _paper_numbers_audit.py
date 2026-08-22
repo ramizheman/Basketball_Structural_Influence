@@ -304,11 +304,11 @@ def claims_shaper_tiers():
         ("HasMargWing", 1.29, 0.122, "coef_HasMargWing_pts100", "p_HasMargWing"),
     ]
     for name, pts, p, c_pts, c_p in rows:
-        out.append(Claim("§6.4.1 tiers", f"{name} pts/100", pts,
+        out.append(Claim("Appendix F tiers", f"{name} pts/100", pts,
                          float(t[c_pts]), TOL["round2"],
                          "shaper_tier_full_study.py",
                          "shaper_tier_full_study.csv"))
-        out.append(Claim("§6.4.1 tiers", f"{name} p", p,
+        out.append(Claim("Appendix F tiers", f"{name} p", p,
                          float(t[c_p]), 0.005,
                          "shaper_tier_full_study.py",
                          "shaper_tier_full_study.csv"))

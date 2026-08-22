@@ -252,7 +252,7 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
     lines += [
         "",
         "PRIMARY ORGANIZER is a positive-control reference (high usage + high residual influence).",
-        "The licensed comparison for the claim excludes organizers.",
+        "The main contrast excludes organizers.",
         "",
         "## 2. Unmatched contrasts (shapers vs others)",
         "",
@@ -262,7 +262,7 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
         lines.append(
             f"- **{name} (D_A):** "
             f"Δ = {u['diff']:+.4f} "
-            f"(conn {u['mean_a']:.4f} vs other {u['mean_b']:.4f}; "
+            f"(shaper {u['mean_a']:.4f} vs other {u['mean_b']:.4f}; "
             f"n={u['n_a']}/{u['n_b']}; t={u['t']:.2f}, p={u['p']:.3g})"
         )
 
@@ -280,7 +280,7 @@ def build_report(panel, summary, pairs_ro, pairs_ts, Lfit, unc_ro, unc_ts) -> st
             f"### {label}",
             f"- Pairs: {len(pairs)} (same team-season: {int(pairs.same_ts.sum())})",
             f"- Mean usage gap: {pairs.du.mean():.4f}",
-            f"- **Paired Δ D_A (conn − control): {pA['mean_d']:+.4f}** "
+            f"- **Paired Δ D_A (shaper − control): {pA['mean_d']:+.4f}** "
             f"(median {pA.get('median_d', float('nan')):+.4f}; "
             f"P(conn>ctrl)={100*pA.get('pos_frac', float('nan')):.1f}%; "
             f"t={pA['t']:.2f}, p={pA['p']:.3g}, n={pA['n']})",
@@ -380,8 +380,8 @@ def main():
     unc_ro = welch(conn.D_A, ro.D_A)
     unc_ts = welch(conn.D_A, ts.D_A)
     unc_org = welch(org.D_A, conn.D_A)
-    print("unmatched conn vs RO", unc_ro, flush=True)
-    print("unmatched conn vs TS", unc_ts, flush=True)
+    print("unmatched shaper vs RO", unc_ro, flush=True)
+    print("unmatched shaper vs TS", unc_ts, flush=True)
     print("unmatched ORG vs conn", unc_org, flush=True)
 
     print("usage matching...", flush=True)
@@ -403,7 +403,7 @@ def main():
         f"\n### Reference: Organizer vs Shaper (unmatched D_A)\n"
         f"Organizers mean D_A={unc_org['mean_a']:.4f} vs shapers {unc_org['mean_b']:.4f} "
         f"(Δ={unc_org['diff']:+.4f}, p={unc_org['p']:.3g}). "
-        f"Organizers are high-usage positive controls, not part of the licensed claim.\n"
+        f"Organizers are high-usage positive controls, not part of the main contrast.\n"
     )
     (OUT_DIR / "identity_resilience_report.md").write_text(report, encoding="utf-8")
     print(report)

@@ -1,11 +1,11 @@
 """
-CONFIRMATORY — Structural Role Coverage vs Talent Accumulation  (one-shot)
-==========================================================================
+CONFIRMATORY — Structural Role Coverage vs Talent Accumulation
+==============================================================
 Registered spec: TOPOLOGY_COVERAGE_PREREGISTRATION.md, sections 2/5/7.2/9.
-Run ONLY after coverage_gate.py PASSED (it did; see pre-reg 8.1).
+Run after coverage_gate.py passes.
 
 Primary model M1 (no play-type FE):
-  PPP_i = b*COVERED + a1*n_ORG + a2*n_CONN + a3*n_TERM + g*TALENT
+  PPP_i = b*COVERED + a1*n_ORG + a2*n_SHAPER + a3*n_TERM + g*TALENT
           + FE(team-season, absorbed) + dummies(opp, period, score-bucket) + e
 
 COVERED = (>=1 ORGANIZER & >=1 SHAPER & >=1 TERMINAL). Because the linear role

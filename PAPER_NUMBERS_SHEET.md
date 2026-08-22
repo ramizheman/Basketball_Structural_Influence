@@ -1,19 +1,13 @@
 # PAPER_NUMBERS_SHEET - Structural Influence
 
-_Generated: 2026-08-08 by `_paper_numbers_audit.py`_
+_Generated: 2026-08-09 by `_paper_numbers_audit.py`_
 _Source: `paper.tex`. Values recomputed from `output/` (no Neo4j)._
 
 Run `python _paper_numbers_audit.py --check` (must exit 0).
 
 | Status | Section | Claim | Paper | Actual | Tol | Script | Artifact | Note |
 |---|---|---|---|---|---|---|---|---|
-| PASS | §4.2 | Gobert MIN 2023-24 CUT initiations | 277 | 277 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | from `full_edges.parquet` (INITIATED); not ON_COURT cache |
-| PASS | §4.2 | Gobert MIN 2023-24 SPOT_UP initiations | 6 | 6 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` |  |
-| PASS | §4.2 | Gobert min(CUT,SPOT_UP) | 6 | 6 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | Eq. overlap player term |
-| PASS | §4.2 | Towns MIN 2023-24 CUT / SPOT_UP | 30 / 240 | 30 / 240 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | min=30 |
-| PASS | §4.2 | Reid MIN 2023-24 CUT / SPOT_UP | 31 / 339 | 31 / 339 | 0.0 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | spot-up specialist contrast; min=31 |
-| PASS | §4.2 | Gobert share of MIN CUT | 0.6225 | 0.622472 | 0.0005 | `section4_worked_example.py` | `section4_cut_spotup_example.csv` | 277/445; paper ≈62% |
-| PASS | §Data | corpus possessions (~6.5e5) | 650000 | 651784 | 20000.0 | `role_composition_playmix.py` | `role_composition_possessions.parquet` | exact n=651784; ON_COURT-5 cache (see DATA_SOURCE_AUDIT.md) |
+| PASS | §Data | corpus possessions (~6.5e5) | 650000 | 651784 | 20000.0 | `role_composition_playmix.py` | `role_composition_possessions.parquet` | exact n=651784 |
 | PASS | §Data / §Efficiency | coverage primary N possessions | 420993 | 420993 | 0.0 | `coverage_full_study.py` | `coverage_full_study.csv` |  |
 | PASS | §6.1 | rotation pool n | 924 | 924 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
 | PASS | §6.1 Table taxonomy | PRIMARY ORGANIZER n | 96 | 96 | 0.0 | `structural_role_taxonomy.py` | `structural_role_summary.csv` |  |
@@ -122,12 +116,12 @@ Run `python _paper_numbers_audit.py --check` (must exit 0).
 | PASS | §6.4 | MDE(80%) pts/100 ≈2.2 | 2.2 | 2.19067 | 0.05 | `coverage_full_study.py` | `coverage_full_study.csv` | SE=0.78; formula MDE=2.19 |
 | PASS | §6.4 | HasShaper pts/100 | 0 | 0.00307202 | 0.015 | `hasshaper_full_study.py` | `hasshaper_full_study.csv` |  |
 | PASS | §6.4 | HasShaper t | 0 | 0.00448434 | 0.015 | `hasshaper_full_study.py` | `hasshaper_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasHub pts/100 | 1.1 | 1.10372 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasHub p | 0.077 | 0.0772499 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargBig pts/100 | 1.7 | 1.7042 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargBig p | 0.025 | 0.0252575 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargWing pts/100 | 1.29 | 1.28504 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
-| PASS | §6.4.1 tiers | HasMargWing p | 0.122 | 0.121857 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | Appendix F tiers | HasHub pts/100 | 1.1 | 1.10372 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | Appendix F tiers | HasHub p | 0.077 | 0.0772499 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | Appendix F tiers | HasMargBig pts/100 | 1.7 | 1.7042 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | Appendix F tiers | HasMargBig p | 0.025 | 0.0252575 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | Appendix F tiers | HasMargWing pts/100 | 1.29 | 1.28504 | 0.015 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
+| PASS | Appendix F tiers | HasMargWing p | 0.122 | 0.121857 | 0.005 | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER n | 96 | 96 | 0.0 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER mean DA | 0.214 | 0.214056 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |
 | PASS | §6.4.2 identity | PRIMARY ORGANIZER median DA | 0.17 | 0.17021 | 0.0055 | `_identity_resilience_test.py` | `identity_resilience_class_means.csv` |  |

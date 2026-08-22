@@ -31,7 +31,7 @@ from wiring_gate import PLAY_TYPES_8, IU, OUT_DIR, assoc_O, null_O_stats, standa
 from wiring_full_study import pull_edges
 from fragility_gate import build_B_labeled
 
-# Single output folder for all paper figures (Overleaf: upload this folder).
+# Output folder for paper figures.
 FIG_DIR = Path(__file__).resolve().parent / "figures"
 
 # ---- Diverging heatmaps: two DIFFERENT hue families on purpose ---------------

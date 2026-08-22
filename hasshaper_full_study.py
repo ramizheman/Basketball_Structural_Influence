@@ -1,12 +1,9 @@
 """
-CONFIRMATORY-DISCIPLINE — HasShaper (shaper presence alone) vs Talent Accumulation
-====================================================================================
-Fixes an asymmetry: coverage_full_study.py (COVERED) uses PRIMARY = talent-controlled,
-with "talent removed" reported only as a ROBUSTNESS check. The existing
-_shaper_presence_efficiency.py ran HasShaper talent-FREE as its only/primary spec,
-never fitting the talent-controlled primary. This script mirrors coverage_full_study.py's
-exact machinery (same design, same bootstrap, same robustness battery) with COVERED
-replaced by HasShaper, so the two headline tests in Table 5 use symmetric discipline.
+HasShaper (shaper presence alone) vs talent accumulation.
+
+Same design, bootstrap, and robustness battery as coverage_full_study.py, with
+COVERED replaced by HasShaper so the two headline tests in Table 5 are symmetric.
+Primary specification is talent-controlled; talent-removed is a robustness check.
 
 Primary model M1 (no play-type FE):
   PPP_i = b*HasShaper + a1*n_ORG + a2*n_SHAPER + a3*n_TERM + g*TALENT

@@ -129,8 +129,7 @@ def merge_loads_stats_by_id(loads: pd.DataFrame, stats: pd.DataFrame) -> pd.Data
 def build_shaper_universe() -> pd.DataFrame:
     """Rebuild SHAPER list from person_id-keyed loads (Eq. 5 taxonomy).
 
-    Do NOT read structural_role_classification.csv for identity — that table
-    drops player_id and still suffers abbrev cartesian joins via load_merged.
+    Join on player_id, not abbreviated names (abbrev collisions).
     """
     loads = pd.read_csv(LOADS, dtype={"player_id": str})
     loads = loads[loads["yy"].isin([22, 23, 24])].copy()

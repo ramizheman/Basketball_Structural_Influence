@@ -1,13 +1,12 @@
 """
 PLAY-MIX ADAPTATION BY ON-COURT ROLE COMPOSITION  (descriptive, graph-native)
 =============================================================================
-Question (user): given every player's role class (taxonomy) and who is actually on
-the floor each possession (ON_COURT), how does the OFFENSE's play-type mix change
-when the role composition changes?  I.e. when the shaper sits, does the play mix
+How does the offense's play-type mix change when on-court role composition
+changes (ON_COURT lineups)? In particular, when a shaper sits, does the mix
 reorganize?
 
-This is REAL (on-court, not simulated leave-one-out), possession-level (n~650k, not
-23 absences), WITHIN-team (differenced per team-season), and DESCRIPTIVE (no wins /
+This is observed on-court (not simulated leave-one-out), possession-level
+(n~650k), within-team (differenced per team-season), and descriptive (no wins /
 plus-minus / outcomes).
 
 DATA: ON_COURT exists for 2022-23, 2023-24, 2024-25 only (2025-26 missing). Exactly-5

@@ -1,8 +1,8 @@
 """
-PORTABILITY STUDY — FULL CONFIRMATORY RUN (one-shot)  §7.2
-=========================================================
-Run only after the gate passes (portability_gate_result.txt). ONE-SHOT; result
-recorded verbatim in PORTABILITY_PREREGISTRATION.md §8.
+PORTABILITY STUDY — FULL CONFIRMATORY RUN  §7.2
+==============================================
+Run after the gate passes (portability_gate_result.txt). Result is recorded in
+PORTABILITY_PREREGISTRATION.md §8.
 
 T1 (portability) confirmed iff ALL THREE:
   (1) median_p Δ(p) > 0

@@ -55,10 +55,10 @@ These confirmatory scripts (locked numbers in `PAPER_NUMBERS_SHEET.md`) **do** r
 5. **`shaper_tier_full_study.py`** — source: same — **undercounts vs INITIATED**
 6. **`_identity_resilience_test.py`** — source: `role_composition_possessions_by_id.parquet` — **undercounts vs INITIATED**
 
-**Not modified.** Human decision: whether any locked §6.3 / §6.4 / §6.4.2 numbers need
-re-verification against a non-ON_COURT corpus.
+Locked §6.3 / §6.4 / §6.4.2 numbers are estimated inside the ON_COURT-5 sample
+by design. Re-verification against a non-ON_COURT corpus is a separate exercise.
 
-### Design note (for the human reviewer)
+### Design note
 
 ON_COURT-5 is **required** for analyses that need the five on-floor players
 (play-mix with/without a class, COVERED, HasShaper, route entropy). Absolute

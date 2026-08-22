@@ -3,7 +3,7 @@ Shared machinery for the STRUCTURAL ROLE COVERAGE vs TALENT ACCUMULATION study.
 Registered spec: TOPOLOGY_COVERAGE_PREREGISTRATION.md.
 
 Provides:
-  - add_covered(df)   : COVERED indicator (>=1 ORG & >=1 CONN & >=1 TERM) + role counts
+  - add_covered(df)   : COVERED indicator (>=1 ORG & >=1 SHAPER & >=1 TERM) + role counts
   - build_talent(df)  : frozen individual-talent control TALENT_i =
                         mean over the 5 on-court of q_p, where q_p = each player's
                         season points-per-initiation, LEAVE-CURRENT-GAME-OUT.

@@ -78,7 +78,7 @@ def main():
 
     # ---- G2: COVERED separable from talent and from linear counts --------------
     rho_talent = spearman(df["COVERED"].to_numpy(), df["TALENT"].to_numpy())
-    # aux OLS: COVERED ~ 1 + n_ORG + n_CONN + n_TERM
+    # aux OLS: COVERED ~ 1 + n_ORG + n_SHAPER + n_TERM
     Xa = np.column_stack([np.ones(len(df)),
                           df["n_ORGANIZER"].to_numpy(float),
                           df["n_SHAPER"].to_numpy(float),

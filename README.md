@@ -40,13 +40,14 @@ Possession vs initiation edge sources: `DATA_SOURCE_AUDIT.md`.
 | Play-mix / route entropy | `role_composition_playmix.py`, `role_route_graph.py` | `role_composition_playmix.csv`, `role_route_graph.csv` |
 | Covered / +2.35 organizers | `coverage_full_study.py` | `coverage_full_study.csv` |
 | HasShaper null | `hasshaper_full_study.py` | `hasshaper_full_study.csv` |
-| Shaper tiers (exploratory) | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |
+| Shaper tiers (exploratory; Appendix F) | `shaper_tier_full_study.py` | `shaper_tier_full_study.csv` |
 | Identity \(D_A\) | `_identity_resilience_test.py` | `identity_resilience_*.csv` |
 | Portability (n=294) | `portability_*.py` | `portability_*.csv` / `.txt` |
 | Travel score (AUC 0.61) | `travel_fit_screen.py` | `travel_fit_screen.csv` |
-| Cut vs drive (exploratory) | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |
-| Destination-side FDR (63 features) | (frozen table) | `destination_battery_shapers.csv` |
+| Cut vs drive (exploratory; detail Appendix C) | `cut_drive_travel_screen.py` | `cut_drive_travel_screen.csv` |
+| Destination-side FDR (63 features; Appendix C) | (frozen table) | `destination_battery_shapers.csv` |
 | Appendix G 2025–26 shapers | (frozen table) | `shaper_appendix_2526.csv` |
+| Appendix I play-type pair glossary | (manuscript) | — |
 
 Pre-registration protocols for the paper's pre-registered analyses: `PORTABILITY_PREREGISTRATION.md`, `TOPOLOGY_COVERAGE_PREREGISTRATION.md`.
 
