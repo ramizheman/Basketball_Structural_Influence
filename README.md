@@ -26,7 +26,7 @@ python _paper_numbers_audit.py --check
 python make_figures.py
 ```
 
-Manuscript: `paper.tex`.  
+Manuscript: [`paper.tex`](paper.tex) · Abstract: [`abstract.tex`](abstract.tex)  
 Traceability sheet (written by the audit): `PAPER_NUMBERS_SHEET.md`.  
 Possession vs initiation edge sources: `DATA_SOURCE_AUDIT.md`.
 
@@ -60,6 +60,6 @@ Section numbers match `paper.tex` (article class). Figures are regenerated with 
 
 Pre-registration protocols for the paper's pre-registered analyses: `PORTABILITY_PREREGISTRATION.md`, `TOPOLOGY_COVERAGE_PREREGISTRATION.md`.
 
-## License / use
+## License
 
-Research code accompanying the paper. NBA data remain subject to NBA Stats terms of use.
+Paper © 2026 Rami Zheman. Code is released under the MIT License; see [LICENSE](LICENSE) in the repository for details. NBA data remain subject to NBA Stats terms of use.

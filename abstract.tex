@@ -1,0 +1,87 @@
+\documentclass[11pt,letterpaper]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{times}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage[hidelinks]{hyperref}
+\usepackage{microtype}
+
+\pagestyle{empty}
+\setstretch{1.08}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+
+\newcommand{\abssection}[1]{\textbf{#1.}~}
+
+\begin{document}
+
+\begin{center}
+{\LARGE\bfseries Structural Influence:}\\[0.35em]
+{\large\bfseries Measuring the Hidden Wiring of an NBA Offense}\\[1em]
+{\large Rami Zheman}\\[0.25em]
+{\normalsize\textit{Independent Sports Analytics Researcher}\\
+Alexandria, VA}
+\end{center}
+
+\vspace{0.6em}
+
+\abssection{Introduction}
+At the 2024 trade deadline, Dallas gave up a first-round pick for
+Daniel Gafford, a backup center averaging eleven points and eight
+rebounds, and reached the Finals with him starting at center.
+Existing analytics, built around production, efficiency, and usage,
+cannot explain what Dallas was actually buying. NBA front offices
+routinely pay for players whose value is organizational rather than
+statistical, glue guys who hold a system together, yet there has been
+no quantitative way to identify that role or measure how completely
+an offense's identity depends on it. This paper asks whether
+offensive organization can be measured directly, whether some
+low-usage players are load-bearing in a way box scores cannot see,
+and whether removing them changes what a team actually is, not just
+how well it scores.
+
+\abssection{Methods}
+Each team-season is represented as a network connecting players to
+the play types they initiate, built from public NBA play-by-play data
+across three seasons, 2022--23 through 2024--25, covering roughly
+650{,}000 possessions and 924 rotation player-seasons. A team's
+structural fingerprint is a standardized matrix capturing how often
+the same players jointly initiate different play-type pairs. A
+player's structural influence is the change in that fingerprint when
+his initiations are removed, isolated from usage to reveal residual
+influence. Crossing usage and residual influence identifies shapers,
+low-usage players whose absence reorganizes an offense as much as a
+star's. This measure is then validated against real basketball:
+actual on-court and off-court minutes are compared directly, testing
+whether observed team identity shifts when a player sits.
+
+\abssection{Results}
+Shapers, players like Gafford and Rudy Gobert, carry structural
+influence comparable to primary organizers despite scoring less than
+half as much. When a shaper actually leaves the floor, the offense's
+real structure shifts far more than when a usage-matched non-shaper
+leaves, a larger identity change in 81 percent of matched pairs,
+confirmed with real on-off data rather than a hypothetical. The
+hypothetical removal measure and the real on-off shift are strongly
+correlated: a number computed by deleting a player from a dataset
+reliably predicts something that happens on an actual court. Shapers
+reshape what a team runs, more cuts and pick-and-rolls, fewer
+spot-ups and drives, and part of this influence travels with them
+after a trade. None of this moves the scoreboard: structural
+completeness does not raise scoring efficiency. A team can look
+entirely different with a shaper on the floor and score the same
+either way.
+
+\abssection{Conclusion}
+An NBA offense can change its entire operating identity around one
+low-usage player without the scoreboard ever registering it. That
+distinction, between what makes a team score and what makes a team
+itself, has been invisible to conventional analytics and is now
+measurable. For the industry, this offers a reproducible way to
+identify which players a roster cannot afford to lose in any sense
+other than points, informing how front offices value trades, how
+coaches plan around injuries, and how teams protect the identity a
+system was built around.
+
+\end{document}
