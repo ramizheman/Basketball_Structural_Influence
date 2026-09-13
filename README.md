@@ -26,7 +26,7 @@ python _paper_numbers_audit.py --check
 python make_figures.py
 ```
 
-Manuscript: [`paper.tex`](paper.tex) · Abstract: [`abstract.tex`](abstract.tex)  
+Manuscript: [`paper.tex`](paper.tex) · [`Structural_Influence.pdf`](Structural_Influence.pdf) · Abstract: [`abstract.tex`](abstract.tex)  
 Traceability sheet (written by the audit): `PAPER_NUMBERS_SHEET.md`.  
 Possession vs initiation edge sources: `DATA_SOURCE_AUDIT.md`.
 
